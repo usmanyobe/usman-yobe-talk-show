@@ -1,0 +1,509 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>USMAN YOBE TALK SHOW</title>
+  <meta name="description" content="Official platform of Usman Yobe Talk Show powered by ASAWWARA TV.">
+  <meta name="theme-color" content="#050505">
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #050505;
+      color: #ffffff;
+      line-height: 1.7;
+    }
+
+    :root {
+      --blue: #0756b8;
+      --light-blue: #1685ff;
+      --black: #050505;
+      --white: #ffffff;
+      --card: #111820;
+    }
+
+    header {
+      background: #080d14;
+      border-bottom: 3px solid var(--blue);
+      padding: 18px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      color: var(--white);
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--light-blue);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: var(--light-blue);
+    }
+
+    .hero {
+      min-height: 500px;
+      padding: 85px 7%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top, #123e75, transparent 60%),
+        linear-gradient(135deg, #050505, #071a30);
+      border-bottom: 1px solid #173d68;
+    }
+
+    .hero-label {
+      color: #70b5ff;
+      font-size: 13px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+    }
+
+    .hero h1 {
+      color: white;
+      font-size: clamp(34px, 7vw, 60px);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--light-blue);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #d5e3f3;
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--blue);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 5px;
+      border: 1px solid var(--blue);
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background: white;
+      color: var(--blue);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid white;
+    }
+
+    section {
+      padding: 65px 7%;
+      text-align: center;
+      scroll-margin-top: 90px;
+    }
+
+    section h2 {
+      color: white;
+      font-size: 30px;
+      margin-bottom: 18px;
+    }
+
+    section h2 span {
+      color: var(--light-blue);
+    }
+
+    section p {
+      color: #c7d2df;
+      max-width: 750px;
+      margin: auto;
+    }
+
+    .section-line {
+      width: 65px;
+      height: 4px;
+      background: var(--blue);
+      margin: 0 auto 25px;
+      border-radius: 10px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #26394e;
+      padding: 28px 22px;
+      border-radius: 12px;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--light-blue);
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #55aaff;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      margin-bottom: 15px;
+    }
+
+    .news-date {
+      color: #55aaff;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .presenter-box {
+      max-width: 700px;
+      margin: auto;
+      background: #101820;
+      padding: 35px;
+      border: 1px solid #1e5b9c;
+      border-radius: 12px;
+    }
+
+    .presenter-box h3 {
+      color: #55aaff;
+      font-size: 27px;
+      margin-bottom: 10px;
+    }
+
+    .social-links {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .contact-note {
+      margin-top: 25px;
+      color: #9eb5ce;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #080d14;
+      text-align: center;
+      padding: 30px 10px;
+      color: #b7c6d8;
+      border-top: 3px solid var(--blue);
+    }
+
+    footer strong {
+      color: #55aaff;
+    }
+
+    @media(max-width: 600px) {
+      header {
+        justify-content: center;
+        text-align: center;
+      }
+
+      nav {
+        justify-content: center;
+        gap: 12px;
+      }
+
+      nav a {
+        font-size: 12px;
+      }
+
+      .hero {
+        padding: 70px 6%;
+        min-height: 430px;
+      }
+
+      section {
+        padding: 48px 6%;
+      }
+
+      section h2 {
+        font-size: 26px;
+      }
+
+      .presenter-box {
+        padding: 25px 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">USMAN <span>YOBE</span> TALK SHOW</div>
+
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#videos">Videos</a>
+    <a href="#news">News</a>
+    <a href="#presenter">Presenter</a>
+    <a href="#mission">Mission</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero" id="home">
+    <div class="hero-label">OFFICIAL PLATFORM</div>
+
+    <h1>
+      USMAN YOBE<br>
+      <span>TALK SHOW</span>
+    </h1>
+
+    <p>
+      Welcome to the official platform of Usman Yobe Talk Show,
+      powered by ASAWWARA TV — TASHAR AL’UMMA.
+      Bringing voices, ideas and stories closer to the people.
+    </p>
+
+    <div>
+      <a class="btn"
+         href="https://youtube.com/@asawwaratv"
+         target="_blank" rel="noopener">
+        WATCH ON YOUTUBE
+      </a>
+
+      <a class="btn btn-outline" href="#about">
+        EXPLORE MORE
+      </a>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>ABOUT <span>THE SHOW</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      Usman Yobe Talk Show is a media platform dedicated to
+      interviews, education, public awareness, community
+      development and important discussions that matter to society.
+      We provide a platform for people to share their voices
+      and inspiring stories.
+    </p>
+  </section>
+
+  <section id="videos">
+    <h2>LATEST <span>VIDEOS</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      Watch our programmes, interviews and special discussions
+      on the official ASAWWARA TV YouTube channel.
+    </p>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Exclusive Interviews</h3>
+        <p>Meet leaders, professionals and inspiring personalities.</p>
+        <a class="btn"
+           href="https://youtube.com/@asawwaratv"
+           target="_blank" rel="noopener">
+          WATCH VIDEOS
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Usman Yobe Talk Show</h3>
+        <p>Important conversations and special guests.</p>
+        <a class="btn"
+           href="https://youtube.com/@asawwaratv"
+           target="_blank" rel="noopener">
+          WATCH EPISODES
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>Community Programmes</h3>
+        <p>Stories and discussions from our communities.</p>
+        <a class="btn"
+           href="https://youtube.com/@asawwaratv"
+           target="_blank" rel="noopener">
+          EXPLORE
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="news">
+    <h2>NEWS & <span>UPDATES</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      Stay connected for announcements, programme updates
+      and important community information.
+    </p>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="news-date">OFFICIAL UPDATES</div>
+        <h3>Programme Announcements</h3>
+        <p>Follow our social media pages for upcoming programmes.</p>
+      </div>
+
+      <div class="card">
+        <div class="news-date">COMMUNITY NEWS</div>
+        <h3>Community Awareness</h3>
+        <p>Our platform promotes education, peace and development.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="presenter">
+    <h2>MEET THE <span>PRESENTER</span></h2>
+    <div class="section-line"></div>
+
+    <div class="presenter-box">
+      <h3>USMAN YOBE</h3>
+      <p>
+        Usman Sabo Mai Doki, popularly known as Usman Yobe,
+        is the presenter of Usman Yobe Talk Show, bringing
+        voices, stories and conversations to the public.
+      </p>
+    </div>
+  </section>
+
+  <section id="mission">
+    <h2>OUR <span>MISSION</span></h2>
+    <div class="section-line"></div>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Education</h3>
+        <p>Promoting knowledge and public awareness.</p>
+      </div>
+
+      <div class="card">
+        <h3>Peace</h3>
+        <p>Encouraging unity and peaceful coexistence.</p>
+      </div>
+
+      <div class="card">
+        <h3>Youth Empowerment</h3>
+        <p>Inspiring young people and supporting development.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>CONNECT <span>WITH US</span></h2>
+    <div class="section-line"></div>
+
+    <p>
+      Follow Usman Yobe Talk Show on social media
+      and stay connected with our latest updates.
+    </p>
+
+    <div class="social-links">
+
+      <a class="btn"
+         href="https://youtube.com/@asawwaratv"
+         target="_blank" rel="noopener">
+        YOUTUBE
+      </a>
+
+      <a class="btn"
+         href="https://www.tiktok.com/@usman1yobe"
+         target="_blank" rel="noopener">
+        TIKTOK
+      </a>
+
+      <a class="btn"
+         href="https://www.facebook.com/share/1C69g7FDMm/"
+         target="_blank" rel="noopener">
+        FACEBOOK
+      </a>
+
+    </div>
+
+    <div class="contact-note">
+      Powered by ASAWWARA TV — TASHAR AL’UMMA
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 <strong>USMAN YOBE TALK SHOW</strong></p>
+  <p>Powered by ASAWWARA TV — TASHAR AL’UMMA</p>
+  <p>All Rights Reserved.</p>
+</footer>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./service-worker.js")
+        .catch(error => console.log("Service worker error:", error));
+    });
+  }
+</script>
+
+</body>
+</html>
