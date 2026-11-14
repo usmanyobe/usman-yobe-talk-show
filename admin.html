@@ -70,6 +70,11 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .help{
   font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px
 }
+.opportunity-note{
+  background:#eef5ff;border-left:4px solid #bd8b25;
+  padding:12px;border-radius:7px;margin:12px 0;
+  font-size:13px;line-height:1.6
+}
 </style>
 </head>
 
@@ -85,7 +90,6 @@ onerror="this.style.display='none'">
 
 <div class="container">
 
-<!-- LOGIN -->
 <div id="loginSection" class="card">
 <h3>Admin Login</h3>
 <p class="small">Shiga da email da password ɗinka na Admin.</p>
@@ -97,7 +101,6 @@ onerror="this.style.display='none'">
 <div id="loginMessage" class="message"></div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
 <div class="card">
@@ -109,7 +112,6 @@ onerror="this.style.display='none'">
 <p class="status">ADMIN ACCESS ACTIVE</p>
 </div>
 
-<!-- PUBLISH -->
 <div class="card">
 
 <h3 id="formTitle">Publish New Story</h3>
@@ -126,12 +128,17 @@ onerror="this.style.display='none'">
 <option value="Matasa">Matasa</option>
 <option value="Sports">Sports</option>
 <option value="Education">Education</option>
+<option value="Damar Rayuwa">DAMAR RAYUWA</option>
 </select>
 
-<hr>
+<div id="opportunityGuide" class="opportunity-note">
+<strong>DAMAR RAYUWA</strong><br>
+Zaɓi wannan Category domin wallafa guraben aiki,
+scholarship, horo, tallafin matasa da sanarwar jarrabawa.
+Ka tabbatar bayanin damar ya fito daga sahihin tushe.
+</div>
 
-<h3>Hoton Labari</h3>
-<label>Zaɓi Hoto daga Gallery</label>
+<label>Hoton Labari</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
 
 <button type="button" id="uploadImageBtn" onclick="uploadImage()">Upload Image</button>
@@ -151,7 +158,7 @@ onerror="this.style.display='none'">
 
 <p class="help">
 Zaɓi bidiyo daga wayarka, sannan danna Upload Video.
-Matsakaicin girman bidiyo a yanzu 50MB ne.
+Matsakaicin girman bidiyo 50MB ne.
 </p>
 
 <button type="button" id="uploadVideoBtn" onclick="uploadVideo()">Upload Video</button>
@@ -169,7 +176,17 @@ Matsakaicin girman bidiyo a yanzu 50MB ne.
 <textarea id="excerpt" placeholder="Takaitaccen labari"></textarea>
 
 <label>Full News Story</label>
-<textarea id="content" placeholder="Rubuta cikakken labari anan..."></textarea>
+<textarea id="content" placeholder="Rubuta cikakken bayani anan..."></textarea>
+
+<div class="opportunity-note">
+<strong>Shawara ga Admin:</strong><br>
+Idan kana wallafa damar rayuwa, ka rubuta:
+<br>• Sunan kamfani ko ƙungiyar da ta fitar da damar.
+<br>• Waɗanda za su iya nema.
+<br>• Yadda za a nemi damar ko official application link.
+<br>• Ranar rufe neman damar.
+<br>• Lambar tuntuɓa idan akwai.
+</div>
 
 <label>Publication Status</label>
 <select id="status">
@@ -183,9 +200,8 @@ Matsakaicin girman bidiyo a yanzu 50MB ne.
 <div id="formMessage" class="message"></div>
 </div>
 
-<!-- MANAGE NEWS -->
 <div class="card">
-<h3>Manage News</h3>
+<h3>Manage News & Opportunities</h3>
 <button class="secondary" onclick="loadPosts()">Refresh News</button>
 <div id="posts">Loading news...</div>
 </div>
@@ -195,7 +211,6 @@ Matsakaicin girman bidiyo a yanzu 50MB ne.
 
 <script>
 
-// SUPABASE CONNECTION
 const SUPABASE_URL =
 "https://latxtetkscajmbqppnad.supabase.co";
 
@@ -212,7 +227,6 @@ let currentPosts = [];
 let imageObjectURL = null;
 let videoObjectURL = null;
 
-// MESSAGE
 function showMessage(id,message,type){
   const box = document.getElementById(id);
   box.textContent = message;
@@ -224,7 +238,6 @@ function hideMessage(id){
   document.getElementById(id).style.display = "none";
 }
 
-// HTML SECURITY
 function escapeHTML(value){
   return String(value ?? "").replace(/[&<>"']/g,char=>({
     "&":"&amp;",
@@ -235,7 +248,15 @@ function escapeHTML(value){
   })[char]);
 }
 
-// ADMIN PERMISSION CHECK
+function isValidHttpURL(value){
+  try{
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  }catch{
+    return false;
+  }
+}
+
 async function verifyAdmin(){
 
   const {data:userData,error:userError} =
@@ -248,29 +269,20 @@ async function verifyAdmin(){
   const {data:isAdmin,error:adminError} =
     await db.rpc("is_admin");
 
-  if(adminError){
-    throw new Error(adminError.message);
-  }
+  if(adminError) throw new Error(adminError.message);
 
   if(isAdmin !== true){
     throw new Error("Ba ka da izinin Admin.");
   }
-
 }
 
-// LOGIN
 async function login(){
 
   hideMessage("loginMessage");
 
-  const email =
-    document.getElementById("email").value.trim();
-
-  const password =
-    document.getElementById("password").value;
-
-  const btn =
-    document.getElementById("loginBtn");
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const btn = document.getElementById("loginBtn");
 
   if(!email || !password){
     showMessage("loginMessage","Saka email da password.","error");
@@ -283,8 +295,7 @@ async function login(){
   try{
 
     const {error} = await db.auth.signInWithPassword({
-      email,
-      password
+      email,password
     });
 
     if(error) throw error;
@@ -293,11 +304,7 @@ async function login(){
 
   }catch(error){
 
-    showMessage(
-      "loginMessage",
-      "Matsalar shiga: " + error.message,
-      "error"
-    );
+    showMessage("loginMessage","Matsalar shiga: "+error.message,"error");
 
   }finally{
 
@@ -307,53 +314,39 @@ async function login(){
   }
 }
 
-// CHECK ADMIN
 async function checkAdmin(){
 
   try{
 
     await verifyAdmin();
 
-    document.getElementById("loginSection")
-      .classList.add("hidden");
-
-    document.getElementById("dashboard")
-      .classList.remove("hidden");
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
 
     await loadPosts();
 
   }catch(error){
 
     await db.auth.signOut();
-
     showLogin();
 
     showMessage(
       "loginMessage",
-      "Ba a tabbatar da Admin ba: " + error.message,
+      "Ba a tabbatar da Admin ba: "+error.message,
       "error"
     );
 
   }
-
 }
 
-// SHOW LOGIN
 function showLogin(){
-
-  document.getElementById("loginSection")
-    .classList.remove("hidden");
-
-  document.getElementById("dashboard")
-    .classList.add("hidden");
-
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
 }
 
-// LOGOUT
 async function logout(){
 
   await db.auth.signOut();
-
   showLogin();
 
   document.getElementById("password").value = "";
@@ -363,10 +356,22 @@ async function logout(){
     "Ka fita daga Admin Dashboard.",
     "success"
   );
-
 }
 
-// PREVIEW IMAGE
+// CATEGORY GUIDE
+document.getElementById("category").addEventListener("change",function(){
+
+  const guide = document.getElementById("opportunityGuide");
+
+  if(this.value === "Damar Rayuwa"){
+    guide.style.display = "block";
+  }else{
+    guide.style.display = "none";
+  }
+
+});
+
+// IMAGE PREVIEW
 function previewSelectedImage(){
 
   const file = document.getElementById("imageFile").files[0];
@@ -380,15 +385,11 @@ function previewSelectedImage(){
     return;
   }
 
-  if(imageObjectURL){
-    URL.revokeObjectURL(imageObjectURL);
-  }
+  if(imageObjectURL) URL.revokeObjectURL(imageObjectURL);
 
   imageObjectURL = URL.createObjectURL(file);
-
   preview.src = imageObjectURL;
   preview.style.display = "block";
-
 }
 
 // UPLOAD IMAGE
@@ -409,7 +410,7 @@ async function uploadImage(){
     return;
   }
 
-  if(file.size > 5 * 1024 * 1024){
+  if(file.size > 5*1024*1024){
     showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");
     return;
   }
@@ -421,10 +422,10 @@ async function uploadImage(){
 
     await verifyAdmin();
 
-    const fileName = Date.now() + "-" +
+    const fileName = Date.now()+"-"+
       file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
 
-    const path = "news/" + fileName;
+    const path = "news/"+fileName;
 
     const {error} = await db.storage
       .from("news-images")
@@ -440,25 +441,14 @@ async function uploadImage(){
       .from("news-images")
       .getPublicUrl(path);
 
-    document.getElementById("imageUrl").value =
-      data.publicUrl;
+    document.getElementById("imageUrl").value = data.publicUrl;
+    document.getElementById("imagePreview").src = data.publicUrl;
 
-    document.getElementById("imagePreview").src =
-      data.publicUrl;
-
-    showMessage(
-      "uploadMessage",
-      "An ɗora hoton cikin nasara!",
-      "success"
-    );
+    showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
 
   }catch(error){
 
-    showMessage(
-      "uploadMessage",
-      "Matsala: " + error.message,
-      "error"
-    );
+    showMessage("uploadMessage","Matsala: "+error.message,"error");
 
   }finally{
 
@@ -466,10 +456,9 @@ async function uploadImage(){
     btn.textContent = "Upload Image";
 
   }
-
 }
 
-// PREVIEW VIDEO
+// VIDEO PREVIEW
 function previewSelectedVideo(){
 
   const file = document.getElementById("videoFile").files[0];
@@ -483,16 +472,12 @@ function previewSelectedVideo(){
     return;
   }
 
-  if(videoObjectURL){
-    URL.revokeObjectURL(videoObjectURL);
-  }
+  if(videoObjectURL) URL.revokeObjectURL(videoObjectURL);
 
   videoObjectURL = URL.createObjectURL(file);
-
   preview.src = videoObjectURL;
   preview.style.display = "block";
   preview.load();
-
 }
 
 // UPLOAD VIDEO
@@ -504,29 +489,17 @@ async function uploadVideo(){
   hideMessage("videoUploadMessage");
 
   if(!file){
-    showMessage(
-      "videoUploadMessage",
-      "Da farko zaɓi bidiyo daga Gallery na waya.",
-      "error"
-    );
+    showMessage("videoUploadMessage","Da farko zaɓi bidiyo daga Gallery na waya.","error");
     return;
   }
 
   if(!file.type.startsWith("video/")){
-    showMessage(
-      "videoUploadMessage",
-      "Fayil ɗin da ka zaɓa ba bidiyo ba ne.",
-      "error"
-    );
+    showMessage("videoUploadMessage","Fayil ɗin da ka zaɓa ba bidiyo ba ne.","error");
     return;
   }
 
-  if(file.size > 50 * 1024 * 1024){
-    showMessage(
-      "videoUploadMessage",
-      "Bidiyon ya wuce 50MB. Ka rage girmansa ko ka zaɓi wani bidiyo.",
-      "error"
-    );
+  if(file.size > 50*1024*1024){
+    showMessage("videoUploadMessage","Bidiyon ya wuce 50MB.","error");
     return;
   }
 
@@ -546,10 +519,8 @@ async function uploadVideo(){
       ? file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
       : "mp4";
 
-    const fileName =
-      Date.now() + "-" + safeName + "." + (extension || "mp4");
-
-    const path = "videos/" + fileName;
+    const fileName = Date.now()+"-"+safeName+"."+(extension||"mp4");
+    const path = "videos/"+fileName;
 
     const {error} = await db.storage
       .from("news-videos")
@@ -565,8 +536,7 @@ async function uploadVideo(){
       .from("news-videos")
       .getPublicUrl(path);
 
-    document.getElementById("videoUrl").value =
-      data.publicUrl;
+    document.getElementById("videoUrl").value = data.publicUrl;
 
     const preview = document.getElementById("videoPreview");
 
@@ -581,17 +551,13 @@ async function uploadVideo(){
 
     showMessage(
       "videoUploadMessage",
-      "An ɗora bidiyon cikin nasara! An saka URL ɗinsa a akwatin Video URL.",
+      "An ɗora bidiyon cikin nasara!",
       "success"
     );
 
   }catch(error){
 
-    showMessage(
-      "videoUploadMessage",
-      "An kasa ɗora bidiyon: " + error.message,
-      "error"
-    );
+    showMessage("videoUploadMessage","An kasa ɗora bidiyon: "+error.message,"error");
 
   }finally{
 
@@ -599,43 +565,23 @@ async function uploadVideo(){
     btn.textContent = "Upload Video";
 
   }
-
 }
 
-// SAVE NEWS
+// SAVE POST
 async function savePost(){
 
   hideMessage("formMessage");
 
-  const title =
-    document.getElementById("newsTitle").value.trim();
-
-  const category =
-    document.getElementById("category").value;
-
-  const image_url =
-    document.getElementById("imageUrl").value.trim();
-
-  const video_url =
-    document.getElementById("videoUrl").value.trim();
-
-  const excerpt =
-    document.getElementById("excerpt").value.trim();
-
-  const content =
-    document.getElementById("content").value.trim();
-
-  const status =
-    document.getElementById("status").value;
+  const title = document.getElementById("newsTitle").value.trim();
+  const category = document.getElementById("category").value;
+  const image_url = document.getElementById("imageUrl").value.trim();
+  const video_url = document.getElementById("videoUrl").value.trim();
+  const excerpt = document.getElementById("excerpt").value.trim();
+  const content = document.getElementById("content").value.trim();
+  const status = document.getElementById("status").value;
 
   if(!title || !content){
-
-    showMessage(
-      "formMessage",
-      "Saka taken labari da cikakken labari.",
-      "error"
-    );
-
+    showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
     return;
   }
 
@@ -650,6 +596,7 @@ async function savePost(){
   }
 
   const btn = document.getElementById("saveBtn");
+  const isEditing = editingId !== null;
 
   btn.disabled = true;
   btn.textContent = "Ana adanawa...";
@@ -661,20 +608,20 @@ async function savePost(){
     const post = {
       title,
       category,
-      image_url: image_url || null,
-      video_url: video_url || null,
-      excerpt: excerpt || null,
+      image_url:image_url||null,
+      video_url:video_url||null,
+      excerpt:excerpt||null,
       content,
       status,
-      updated_at: new Date().toISOString(),
-      published_at: status === "published"
+      updated_at:new Date().toISOString(),
+      published_at:status==="published"
         ? new Date().toISOString()
         : null
     };
 
     let result;
 
-    if(editingId !== null){
+    if(isEditing){
 
       result = await db
         .from("news_posts")
@@ -693,7 +640,9 @@ async function savePost(){
 
     showMessage(
       "formMessage",
-      "An adana labarin cikin nasara!",
+      category === "Damar Rayuwa"
+        ? "An wallafa DAMAR RAYUWA cikin nasara!"
+        : "An adana labarin cikin nasara!",
       "success"
     );
 
@@ -702,33 +651,14 @@ async function savePost(){
 
   }catch(error){
 
-    showMessage(
-      "formMessage",
-      "Matsala: " + error.message,
-      "error"
-    );
+    showMessage("formMessage","Matsala: "+error.message,"error");
 
   }finally{
 
     btn.disabled = false;
-    btn.textContent = editingId !== null
-      ? "Save Changes"
-      : "Publish Story";
+    btn.textContent = editingId !== null ? "Save Changes" : "Publish Story";
 
   }
-
-}
-
-// CHECK URL
-function isValidHttpURL(value){
-
-  try{
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:";
-  }catch{
-    return false;
-  }
-
 }
 
 // CLEAR FORM
@@ -742,15 +672,20 @@ function clearForm(){
   document.getElementById("videoFile").value = "";
   document.getElementById("imagePreview").style.display = "none";
   document.getElementById("imagePreview").src = "";
-  document.getElementById("videoPreview").pause();
-  document.getElementById("videoPreview").removeAttribute("src");
-  document.getElementById("videoPreview").load();
-  document.getElementById("videoPreview").style.display = "none";
+
+  const video = document.getElementById("videoPreview");
+  video.pause();
+  video.removeAttribute("src");
+  video.load();
+  video.style.display = "none";
+
   document.getElementById("videoUrl").value = "";
   document.getElementById("excerpt").value = "";
   document.getElementById("content").value = "";
   document.getElementById("category").value = "News";
   document.getElementById("status").value = "published";
+
+  document.getElementById("opportunityGuide").style.display = "none";
 
   if(imageObjectURL){
     URL.revokeObjectURL(imageObjectURL);
@@ -762,22 +697,17 @@ function clearForm(){
     videoObjectURL = null;
   }
 
-  document.getElementById("formTitle").textContent =
-    "Publish New Story";
-
-  document.getElementById("saveBtn").textContent =
-    "Publish Story";
+  document.getElementById("formTitle").textContent = "Publish New Story";
+  document.getElementById("saveBtn").textContent = "Publish Story";
 
   hideMessage("uploadMessage");
   hideMessage("videoUploadMessage");
-
 }
 
-// LOAD NEWS
+// LOAD POSTS
 async function loadPosts(){
 
   const area = document.getElementById("posts");
-
   area.textContent = "Loading news...";
 
   try{
@@ -791,7 +721,7 @@ async function loadPosts(){
 
     currentPosts = data || [];
 
-    if(currentPosts.length === 0){
+    if(currentPosts.length===0){
       area.textContent = "Babu labari tukuna.";
       return;
     }
@@ -808,9 +738,15 @@ async function loadPosts(){
           ${escapeHTML(post.status)}
         </p>
 
-        <p>${escapeHTML(post.excerpt || "")}</p>
+        <p>${escapeHTML(post.excerpt||"")}</p>
 
-        ${post.video_url ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>' : ''}
+        ${post.category==="Damar Rayuwa"
+          ? '<p class="small">DAMAR RAYUWA</p>'
+          : ''}
+
+        ${post.video_url
+          ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>'
+          : ''}
 
         <div class="actions">
 
@@ -832,51 +768,37 @@ async function loadPosts(){
 
   }catch(error){
 
-    area.textContent = "Matsala: " + error.message;
+    area.textContent = "Matsala: "+error.message;
 
   }
-
 }
 
-// EDIT NEWS
+// EDIT POST
 function editPost(id){
 
   const post = currentPosts.find(
-    item => String(item.id) === String(id)
+    item=>String(item.id)===String(id)
   );
 
   if(!post) return;
 
   editingId = post.id;
 
-  document.getElementById("newsTitle").value =
-    post.title || "";
+  document.getElementById("newsTitle").value = post.title||"";
 
-  document.getElementById("category").value =
-    post.category || "News";
+  document.getElementById("category").value = post.category||"News";
 
-  document.getElementById("imageUrl").value =
-    post.image_url || "";
+  document.getElementById("category").dispatchEvent(new Event("change"));
 
-  document.getElementById("videoUrl").value =
-    post.video_url || "";
+  document.getElementById("imageUrl").value = post.image_url||"";
+  document.getElementById("videoUrl").value = post.video_url||"";
+  document.getElementById("excerpt").value = post.excerpt||"";
+  document.getElementById("content").value = post.content||"";
+  document.getElementById("status").value = post.status||"draft";
 
-  document.getElementById("excerpt").value =
-    post.excerpt || "";
+  document.getElementById("formTitle").textContent = "Edit News";
+  document.getElementById("saveBtn").textContent = "Save Changes";
 
-  document.getElementById("content").value =
-    post.content || "";
-
-  document.getElementById("status").value =
-    post.status || "draft";
-
-  document.getElementById("formTitle").textContent =
-    "Edit News";
-
-  document.getElementById("saveBtn").textContent =
-    "Save Changes";
-
-  // Nuna hoton da ke akwai
   const imagePreview = document.getElementById("imagePreview");
 
   if(post.image_url && isValidHttpURL(post.image_url)){
@@ -886,7 +808,6 @@ function editPost(id){
     imagePreview.style.display = "none";
   }
 
-  // Nuna bidiyon da ke akwai
   const videoPreview = document.getElementById("videoPreview");
 
   if(post.video_url && isValidHttpURL(post.video_url)){
@@ -898,14 +819,10 @@ function editPost(id){
     videoPreview.style.display = "none";
   }
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-// DELETE NEWS
+// DELETE POST
 async function deletePost(id){
 
   if(!confirm("Da gaske kana son goge wannan labari?")){
@@ -924,21 +841,19 @@ async function deletePost(id){
     if(error) throw error;
 
     alert("An goge labarin.");
-
     await loadPosts();
 
   }catch(error){
 
-    alert("Matsala: " + error.message);
+    alert("Matsala: "+error.message);
 
   }
-
 }
 
 // AUTH SESSION
 db.auth.onAuthStateChange((event,session)=>{
 
-  if(event === "SIGNED_OUT"){
+  if(event==="SIGNED_OUT"){
     showLogin();
   }
 
