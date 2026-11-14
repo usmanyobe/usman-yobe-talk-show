@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#071b49">
 
 <title>USMAN YOBE TALK SHOW</title>
-<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, bidiyo, ilimi, kasuwanci da shirye-shirye.">
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, bidiyo, ilimi, kasuwanci da damar rayuwa.">
 <link rel="manifest" href="manifest.json">
 
 <style>
@@ -21,13 +21,14 @@
  --light:#f1f4f9;
  --text:#172033;
  --muted:#68758a;
+ --green:#087b48;
 }
 
 body{
  font-family:Arial,sans-serif;
  background:var(--light);
  color:var(--text);
- padding-bottom:78px;
+ padding-bottom:85px;
 }
 
 button,input{font-family:inherit}
@@ -312,6 +313,146 @@ header{
  font-weight:bold;
 }
 
+/* DAMAR RAYUWA */
+.opportunity-hero{
+ background:linear-gradient(135deg,#071b49,#0755d9);
+ color:white;
+ padding:23px 18px;
+ border-radius:13px;
+ margin:12px 0 18px;
+}
+
+.opportunity-hero h1{
+ font-size:25px;
+ margin:10px 0;
+ line-height:1.35;
+}
+
+.opportunity-hero p{
+ color:#e1eaff;
+ line-height:1.7;
+ font-size:14px;
+}
+
+.opportunity-categories{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:10px;
+ margin:15px 0 22px;
+}
+
+.opportunity-type{
+ background:white;
+ border:1px solid #e0e6ef;
+ border-radius:10px;
+ padding:14px 8px;
+ text-align:center;
+ cursor:pointer;
+ min-height:100px;
+}
+
+.opportunity-type.active{
+ border:2px solid var(--blue);
+ background:#edf4ff;
+}
+
+.opportunity-type .emoji{
+ display:block;
+ font-size:27px;
+ margin-bottom:7px;
+}
+
+.opportunity-type strong{
+ display:block;
+ font-size:13px;
+ line-height:1.4;
+ color:var(--navy);
+}
+
+.opportunity-type small{
+ display:block;
+ color:var(--muted);
+ font-size:11px;
+ margin-top:4px;
+}
+
+.opportunity-card{
+ background:white;
+ border-radius:12px;
+ overflow:hidden;
+ margin-bottom:14px;
+ box-shadow:0 2px 10px #0000000c;
+}
+
+.opportunity-card img{
+ width:100%;
+ max-height:220px;
+ object-fit:cover;
+ display:block;
+}
+
+.opportunity-content{padding:15px}
+
+.opportunity-label{
+ display:inline-block;
+ background:#e4f5eb;
+ color:#087b48;
+ padding:6px 9px;
+ border-radius:5px;
+ font-size:11px;
+ font-weight:bold;
+ margin-bottom:8px;
+}
+
+.opportunity-content h3{
+ color:var(--navy);
+ font-size:18px;
+ line-height:1.4;
+ margin:7px 0;
+}
+
+.opportunity-content p{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.7;
+}
+
+.opportunity-date{
+ font-size:11px;
+ color:#758196;
+ margin-top:10px;
+}
+
+.opportunity-button{
+ background:var(--green);
+ color:white;
+ border:0;
+ border-radius:7px;
+ padding:11px 15px;
+ font-weight:bold;
+ margin-top:13px;
+ cursor:pointer;
+}
+
+.opportunity-search{
+ width:100%;
+ padding:12px;
+ border:1px solid #d8dfeb;
+ border-radius:9px;
+ margin:0 0 15px;
+ font-size:14px;
+}
+
+.opportunity-notice{
+ background:#fff7df;
+ border-left:4px solid var(--gold);
+ padding:12px;
+ border-radius:7px;
+ font-size:12px;
+ line-height:1.7;
+ margin:15px 0;
+}
+
 footer{
  background:var(--navy);
  color:white;
@@ -348,7 +489,7 @@ footer p{
  background:var(--navy);
  display:flex;
  justify-content:space-around;
- padding:9px 3px calc(9px + env(safe-area-inset-bottom));
+ padding:9px 2px calc(9px + env(safe-area-inset-bottom));
  z-index:60;
 }
 
@@ -356,15 +497,16 @@ footer p{
  background:none;
  border:0;
  color:#cbd6ec;
- font-size:11px;
+ font-size:10px;
  display:flex;
  flex-direction:column;
  align-items:center;
  gap:4px;
  cursor:pointer;
+ min-width:0;
 }
 
-.bottom-nav button span:first-child{font-size:21px}
+.bottom-nav button span:first-child{font-size:20px}
 .bottom-nav button.active{color:var(--gold)}
 
 .article-modal{
@@ -417,7 +559,7 @@ footer p{
  position:fixed;
  top:85px;
  right:12px;
- width:250px;
+ width:260px;
  max-width:calc(100vw - 24px);
  background:white;
  color:var(--text);
@@ -475,13 +617,15 @@ footer p{
 [dir="rtl"] .breaking-content,
 [dir="rtl"] .post-content,
 [dir="rtl"] .modal-content,
-[dir="rtl"] .video-card-content{text-align:right}
+[dir="rtl"] .video-card-content,
+[dir="rtl"] .opportunity-content{text-align:right}
 
 @media(min-width:650px){
  .container{padding:20px}
  .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
  .post-image{height:205px}
  .breaking-content h1{font-size:30px}
+ .opportunity-categories{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
 @media(min-width:850px){
@@ -513,7 +657,7 @@ footer p{
  <div class="search">
   <input id="search" type="search"
    placeholder="Nemo labarai..."
-   oninput="renderPosts();renderVideos()">
+   oninput="renderPosts();renderVideos();renderOpportunities()">
  </div>
 </header>
 
@@ -523,6 +667,7 @@ footer p{
  <h3 id="menuTitle">☰ Menu</h3>
 
  <button onclick="menuNavigate('home')">⌂ <span data-i18n="home">Gida</span></button>
+ <button onclick="menuNavigate('opportunities')">💼 <span data-i18n="opportunities">Damar Rayuwa</span></button>
  <button onclick="menuNavigate('videos')">▶ <span data-i18n="videos">Bidiyoyi</span></button>
  <button onclick="menuNavigate('live')">📡 <span data-i18n="live">Live TV</span></button>
  <button onclick="menuNavigate('more')">▦ <span data-i18n="more">Game da Mu</span></button>
@@ -542,6 +687,7 @@ footer p{
  <button onclick="filterCategory('Youth',this)" data-i18n="youth">Matasa</button>
  <button onclick="filterCategory('Sports',this)" data-i18n="sports">Wasanni</button>
  <button onclick="filterCategory('Education',this)" data-i18n="education">Ilimi</button>
+ <button onclick="menuNavigate('opportunities')" data-i18n="opportunities">Damar Rayuwa</button>
 </nav>
 
 <main class="container">
@@ -557,9 +703,89 @@ footer p{
    </div>
   </div>
 
+  <div class="opportunity-hero">
+   <div style="font-size:35px">💼</div>
+   <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
+   <p data-i18n="opportunityHeroText">
+    Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.
+   </p>
+   <button class="hero-button" onclick="showSection('opportunities',document.getElementById('opNav'))"
+    data-i18n="exploreOpportunities">Duba Damar Rayuwa</button>
+  </div>
+
   <h2 class="section-title" data-i18n="latest">📰 Sabbin Labarai</h2>
   <div id="posts">
    <div class="empty">Ana loda sabbin labarai...</div>
+  </div>
+
+ </section>
+
+ <!-- DAMAR RAYUWA -->
+ <section id="opportunities" style="display:none">
+
+  <div class="opportunity-hero">
+   <div style="font-size:38px">💼</div>
+   <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
+   <p data-i18n="opportunityHeroText">
+    Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.
+   </p>
+  </div>
+
+  <div class="opportunity-notice" data-i18n="opportunityNotice">
+   Muhimmin bayani: Ka tabbatar da sahihancin kowace dama kafin ka tura bayananka ko ka biya kuɗi.
+  </div>
+
+  <h2 class="section-title" data-i18n="browseOpportunities">Nau'o'in Damar Rayuwa</h2>
+
+  <div class="opportunity-categories">
+   <button class="opportunity-type active" onclick="filterOpportunityType('All',this)">
+    <span class="emoji">🌍</span>
+    <strong data-i18n="allOpportunities">Duk Damar Rayuwa</strong>
+    <small data-i18n="allTypes">Dukkan nau'o'i</small>
+   </button>
+
+   <button class="opportunity-type" onclick="filterOpportunityType('Jobs',this)">
+    <span class="emoji">💼</span>
+    <strong data-i18n="jobs">Ayyukan Yi</strong>
+    <small data-i18n="jobsSmall">Guraben aiki</small>
+   </button>
+
+   <button class="opportunity-type" onclick="filterOpportunityType('Scholarship',this)">
+    <span class="emoji">🎓</span>
+    <strong data-i18n="scholarship">Scholarship</strong>
+    <small data-i18n="scholarshipSmall">Tallafin karatu</small>
+   </button>
+
+   <button class="opportunity-type" onclick="filterOpportunityType('Training',this)">
+    <span class="emoji">🛠️</span>
+    <strong data-i18n="training">Horaswa</strong>
+    <small data-i18n="trainingSmall">Koyon sana'o'i</small>
+   </button>
+
+   <button class="opportunity-type" onclick="filterOpportunityType('Business Grant',this)">
+    <span class="emoji">💰</span>
+    <strong data-i18n="grants">Tallafi</strong>
+    <small data-i18n="grantsSmall">Matasa da kasuwanci</small>
+   </button>
+
+   <button class="opportunity-type" onclick="filterOpportunityType('Exams',this)">
+    <span class="emoji">📚</span>
+    <strong data-i18n="exams">JAMB / WAEC / NECO</strong>
+    <small data-i18n="examsSmall">Sanarwar jarrabawa</small>
+   </button>
+  </div>
+
+  <h2 class="section-title" data-i18n="availableOpportunities">Sabbin Damammaki</h2>
+
+  <input
+   id="opportunitySearch"
+   class="opportunity-search"
+   type="search"
+   placeholder="Nemo guraben aiki, scholarship..."
+   oninput="renderOpportunities()">
+
+  <div id="opportunityPosts">
+   <div class="empty">Ana loda damar rayuwa...</div>
   </div>
 
  </section>
@@ -624,12 +850,19 @@ footer p{
  <button class="active" onclick="showSection('home',this)">
   <span>⌂</span><span data-i18n="home">Gida</span>
  </button>
+
+ <button id="opNav" onclick="showSection('opportunities',this)">
+  <span>💼</span><span data-i18n="opportunities">Dama</span>
+ </button>
+
  <button onclick="showSection('videos',this)">
   <span>▶</span><span data-i18n="videos">Bidiyoyi</span>
  </button>
+
  <button onclick="showSection('live',this)">
   <span>📡</span><span data-i18n="live">Live TV</span>
  </button>
+
  <button onclick="showSection('more',this)">
   <span>▦</span><span data-i18n="more">Game da Mu</span>
  </button>
@@ -645,7 +878,6 @@ footer p{
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// SUPABASE SETTINGS - KEEP YOUR EXISTING PROJECT
 const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
 
@@ -653,6 +885,7 @@ const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let posts = [];
 let currentCategory = "All";
+let currentOpportunityType = "All";
 
 const translations = {
  en:{
@@ -670,7 +903,22 @@ const translations = {
   watchYouTube:"Watch YouTube",read:"Read Story →",share:"Share ↗",
   loading:"Loading latest news...",noNews:"No news available yet.",
   noVideos:"No videos available yet.",error:"Unable to load news. Please try again.",
-  close:"Close",dateLocale:"en-GB",sharePrompt:"Copy this text to share:"
+  close:"Close",dateLocale:"en-GB",sharePrompt:"Copy this text to share:",
+  opportunities:"Opportunities",opportunityHeroTitle:"LIFE OPPORTUNITIES",
+  opportunityHeroText:"Find jobs, scholarships, training and other opportunities for growth.",
+  exploreOpportunities:"Explore Opportunities",
+  opportunityNotice:"Important: Verify every opportunity from its official source before sending personal information or paying money.",
+  browseOpportunities:"Browse Opportunity Categories",
+  allOpportunities:"All Opportunities",allTypes:"All categories",
+  jobs:"Jobs",jobsSmall:"Employment opportunities",
+  scholarship:"Scholarships",scholarshipSmall:"Education support",
+  training:"Training",trainingSmall:"Skills and vocational training",
+  grants:"Business Grants",grantsSmall:"Youth and business support",
+  exams:"JAMB / WAEC / NECO",examsSmall:"Examination updates",
+  availableOpportunities:"Latest Opportunities",
+  noOpportunities:"No opportunities have been published yet. Please check again later.",
+  opportunityRead:"View Details →",opportunitySearch:"Search jobs, scholarships, training...",
+  opportunityDate:"Published",noMatchingOpportunities:"No matching opportunities found."
  },
  ha:{
   home:"Gida",news:"Labarai",politics:"Siyasa",entertainment:"Nishadi",
@@ -687,7 +935,22 @@ const translations = {
   watchYouTube:"Kalli YouTube",read:"Karanta labari →",share:"Raba ↗",
   loading:"Ana loda sabbin labarai...",noNews:"Babu labari tukuna.",
   noVideos:"Babu bidiyo tukuna.",error:"An samu matsala wajen ɗauko labarai. A sake gwadawa.",
-  close:"Rufe",dateLocale:"ha-NG",sharePrompt:"Kwafi wannan rubutu domin rabawa:"
+  close:"Rufe",dateLocale:"ha-NG",sharePrompt:"Kwafi wannan rubutu domin rabawa:",
+  opportunities:"Damar Rayuwa",opportunityHeroTitle:"DAMAR RAYUWA",
+  opportunityHeroText:"Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.",
+  exploreOpportunities:"Duba Damar Rayuwa",
+  opportunityNotice:"Muhimmin bayani: Ka tabbatar da sahihancin kowace dama daga asalin mai bayarwa kafin ka tura bayananka ko ka biya kuɗi.",
+  browseOpportunities:"Zaɓi Nau'in Damar Rayuwa",
+  allOpportunities:"Duk Damar Rayuwa",allTypes:"Dukkan nau'o'i",
+  jobs:"Ayyukan Yi",jobsSmall:"Guraben aiki",
+  scholarship:"Scholarship",scholarshipSmall:"Tallafin karatu",
+  training:"Horaswa",trainingSmall:"Koyon sana'o'i",
+  grants:"Tallafi",grantsSmall:"Matasa da kasuwanci",
+  exams:"JAMB / WAEC / NECO",examsSmall:"Sanarwar jarrabawa",
+  availableOpportunities:"Sabbin Damammaki",
+  noOpportunities:"Babu damar rayuwa da aka wallafa tukuna. Ka sake dubawa daga baya.",
+  opportunityRead:"Duba Cikakken Bayani →",opportunitySearch:"Nemo aiki, scholarship, horo...",
+  opportunityDate:"An wallafa",noMatchingOpportunities:"Ba a samu damar da ta dace da bincikenka ba."
  },
  ar:{
   home:"الرئيسية",news:"الأخبار",politics:"السياسة",entertainment:"الترفيه",
@@ -704,7 +967,22 @@ const translations = {
   watchYouTube:"شاهد على يوتيوب",read:"اقرأ الخبر ←",share:"مشاركة ↗",
   loading:"جارٍ تحميل آخر الأخبار...",noNews:"لا توجد أخبار حتى الآن.",
   noVideos:"لا توجد فيديوهات حتى الآن.",error:"تعذر تحميل الأخبار. يرجى المحاولة مرة أخرى.",
-  close:"إغلاق",dateLocale:"ar",sharePrompt:"انسخ هذا النص للمشاركة:"
+  close:"إغلاق",dateLocale:"ar",sharePrompt:"انسخ هذا النص للمشاركة:",
+  opportunities:"الفرص",opportunityHeroTitle:"فرص الحياة",
+  opportunityHeroText:"ابحث عن الوظائف والمنح الدراسية والتدريب وفرص التطور.",
+  exploreOpportunities:"استكشف الفرص",
+  opportunityNotice:"مهم: تحقق من مصدر كل فرصة قبل إرسال بياناتك الشخصية أو دفع أي أموال.",
+  browseOpportunities:"تصفح أنواع الفرص",
+  allOpportunities:"جميع الفرص",allTypes:"كل الفئات",
+  jobs:"الوظائف",jobsSmall:"فرص العمل",
+  scholarship:"المنح الدراسية",scholarshipSmall:"دعم التعليم",
+  training:"التدريب",trainingSmall:"التدريب المهني",
+  grants:"دعم الأعمال",grantsSmall:"دعم الشباب والأعمال",
+  exams:"JAMB / WAEC / NECO",examsSmall:"تحديثات الامتحانات",
+  availableOpportunities:"أحدث الفرص",
+  noOpportunities:"لم يتم نشر أي فرص حتى الآن. يرجى التحقق لاحقاً.",
+  opportunityRead:"عرض التفاصيل ←",opportunitySearch:"ابحث عن وظائف ومنح وتدريب...",
+  opportunityDate:"تاريخ النشر",noMatchingOpportunities:"لم يتم العثور على فرص مطابقة."
  }
 };
 
@@ -746,6 +1024,7 @@ function displayCategory(category){
  if(value === "Business") return t.business;
  if(value === "Sports") return t.sports;
  if(value === "Education") return t.education;
+ if(value === "Damar Rayuwa") return t.opportunities;
 
  return value || t.news;
 }
@@ -770,6 +1049,7 @@ function setLanguage(lang){
  });
 
  document.getElementById("search").placeholder = t.search;
+ document.getElementById("opportunitySearch").placeholder = t.opportunitySearch;
  document.getElementById("menuTitle").textContent = "☰ " + t.menu;
  document.getElementById("languageTitle").textContent = t.language;
 
@@ -782,6 +1062,7 @@ function setLanguage(lang){
  renderTopStory();
  renderPosts();
  renderVideos();
+ renderOpportunities();
 }
 
 function toggleMenu(){
@@ -796,11 +1077,11 @@ function closeMenu(){
 
 function menuNavigate(id){
  closeMenu();
- const indexes = {home:0,videos:1,live:2,more:3};
+ const indexes = {home:0,opportunities:1,videos:2,live:3,more:4};
  showSection(id,document.querySelectorAll(".bottom-nav button")[indexes[id]]);
 }
 
-// LOAD PUBLISHED NEWS
+// LOAD PUBLISHED POSTS
 async function loadNews(){
  const t = translations[currentLanguage];
 
@@ -808,6 +1089,9 @@ async function loadNews(){
   '<div class="empty">'+t.loading+'</div>';
 
  document.getElementById("videoPosts").innerHTML =
+  '<div class="empty">'+t.loading+'</div>';
+
+ document.getElementById("opportunityPosts").innerHTML =
   '<div class="empty">'+t.loading+'</div>';
 
  const {data,error} = await db
@@ -818,10 +1102,16 @@ async function loadNews(){
 
  if(error){
   console.error("News loading error:",error);
+
   document.getElementById("posts").innerHTML =
    '<div class="empty">'+t.error+'</div>';
+
   document.getElementById("videoPosts").innerHTML =
    '<div class="empty">'+t.error+'</div>';
+
+  document.getElementById("opportunityPosts").innerHTML =
+   '<div class="empty">'+t.error+'</div>';
+
   return;
  }
 
@@ -830,9 +1120,10 @@ async function loadNews(){
  renderTopStory();
  renderPosts();
  renderVideos();
+ renderOpportunities();
 }
 
-// MAIN BREAKING NEWS
+// BREAKING NEWS
 function renderTopStory(){
  const t = translations[currentLanguage];
  const first = posts.length ? posts[0] : null;
@@ -861,11 +1152,12 @@ function renderTopStory(){
  `;
 }
 
-// CATEGORY FILTERING
+// CATEGORY FILTER
 function matchesCategory(post){
  if(currentCategory === "All") return true;
 
  const category = String(post.category || "");
+
  if(currentCategory === "News"){
   return category === "News" || category === "General News";
  }
@@ -877,13 +1169,15 @@ function matchesCategory(post){
  return category.toLowerCase() === currentCategory.toLowerCase();
 }
 
+// RENDER NEWS
 function renderPosts(){
  const t = translations[currentLanguage];
  const query = document.getElementById("search").value.toLowerCase().trim();
 
  const filtered = posts.filter(p=>{
   const text = [p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
-  return matchesCategory(p) && text.includes(query);
+  return p.category !== "Damar Rayuwa" &&
+   matchesCategory(p) && text.includes(query);
  });
 
  const container = document.getElementById("posts");
@@ -929,7 +1223,126 @@ function renderPosts(){
  `;
 }
 
-// VIDEOS - PLAY DIRECTLY INSIDE THE APP
+// DETECT OPPORTUNITY TYPE FROM TITLE AND CONTENT
+function detectOpportunityType(post){
+ const text = [
+  post.title || "",
+  post.excerpt || "",
+  post.content || ""
+ ].join(" ").toLowerCase();
+
+ if(/scholarship|scholarships|bursary|grant for study|tallafin karatu|karatu|bursary/i.test(text)){
+  return "Scholarship";
+ }
+
+ if(/jamb|waec|neco|nabteb|jarrabawa|examination/i.test(text)){
+  return "Exams";
+ }
+
+ if(/training|vocational|skill acquisition|horaswa|koyon sana|koyon fasaha/i.test(text)){
+  return "Training";
+ }
+
+ if(/business grant|business support|entrepreneur|small business|tallafin kasuwanci|tallafin sana|tallafin matasa/i.test(text)){
+  return "Business Grant";
+ }
+
+ if(/job|jobs|employment|vacancy|vacancies|recruitment|aikin yi|gurbin aiki|daukar ma'aikata|daukar aiki/i.test(text)){
+  return "Jobs";
+ }
+
+ return "Other";
+}
+
+function opportunityTypeName(type){
+ const t = translations[currentLanguage];
+
+ const names = {
+  Jobs:t.jobs,
+  Scholarship:t.scholarship,
+  Training:t.training,
+  "Business Grant":t.grants,
+  Exams:t.exams,
+  Other:t.opportunities
+ };
+
+ return names[type] || t.opportunities;
+}
+
+function filterOpportunityType(type,button){
+ currentOpportunityType = type;
+
+ document.querySelectorAll(".opportunity-type").forEach(b=>{
+  b.classList.remove("active");
+ });
+
+ button.classList.add("active");
+ renderOpportunities();
+}
+
+// RENDER OPPORTUNITIES
+function renderOpportunities(){
+ const t = translations[currentLanguage];
+
+ const globalSearch = document.getElementById("search").value.toLowerCase().trim();
+ const localSearch = document.getElementById("opportunitySearch").value.toLowerCase().trim();
+
+ const query = (globalSearch + " " + localSearch).trim();
+
+ const opportunities = posts.filter(p=>{
+  return String(p.category || "").toLowerCase() === "damar rayuwa";
+ });
+
+ const filtered = opportunities.filter(p=>{
+  const text = [p.title,p.excerpt,p.content].join(" ").toLowerCase();
+  const type = detectOpportunityType(p);
+
+  const matchesType =
+   currentOpportunityType === "All" ||
+   type === currentOpportunityType;
+
+  return matchesType && text.includes(query);
+ });
+
+ const container = document.getElementById("opportunityPosts");
+
+ if(!opportunities.length){
+  container.innerHTML = '<div class="empty">💼<br><br>'+t.noOpportunities+'</div>';
+  return;
+ }
+
+ if(!filtered.length){
+  container.innerHTML = '<div class="empty">'+t.noMatchingOpportunities+'</div>';
+  return;
+ }
+
+ container.innerHTML = filtered.map(p=>{
+  const image = safeURL(p.image_url);
+  const index = posts.findIndex(item=>item.id === p.id);
+  const date = p.published_at
+   ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
+   : "";
+
+  const type = detectOpportunityType(p);
+
+  return `
+   <article class="opportunity-card">
+    ${image ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : ""}
+    <div class="opportunity-content">
+     <span class="opportunity-label">💼 ${escapeHTML(opportunityTypeName(type))}</span>
+     <h3>${escapeHTML(p.title)}</h3>
+     <p>${escapeHTML(p.excerpt || p.content || "")}</p>
+     <div class="opportunity-date">${escapeHTML(t.opportunityDate)}: ${escapeHTML(date)}</div>
+     <button class="opportunity-button" onclick="openArticle(${index})">
+      ${escapeHTML(t.opportunityRead)}
+     </button>
+    </div>
+   </article>
+  `;
+ }).join("");
+}
+
+// VIDEOS
 function renderVideos(){
  const t = translations[currentLanguage];
  const query = document.getElementById("search").value.toLowerCase().trim();
@@ -1007,9 +1420,10 @@ function showSection(id,button){
  window.scrollTo({top:0,behavior:"smooth"});
 
  if(id === "videos") renderVideos();
+ if(id === "opportunities") renderOpportunities();
 }
 
-// OPEN FULL ARTICLE
+// OPEN ARTICLE DETAILS
 function openArticle(index){
  const p = posts[index];
  if(!p) return;
@@ -1020,6 +1434,9 @@ function openArticle(index){
  const date = p.published_at
   ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
   : "";
+
+ const isOpportunity =
+  String(p.category || "").toLowerCase() === "damar rayuwa";
 
  const details = document.getElementById("articleDetails");
  details.dir = currentLanguage === "ar" ? "rtl" : "ltr";
@@ -1043,6 +1460,12 @@ function openArticle(index){
   <div style="line-height:1.9;white-space:pre-wrap;margin-top:12px">
    ${escapeHTML(p.content || p.excerpt || "")}
   </div>
+
+  ${isOpportunity ? `
+   <div class="opportunity-notice">
+    ${escapeHTML(t.opportunityNotice)}
+   </div>
+  ` : ""}
 
   <div class="post-actions">
    <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
@@ -1076,11 +1499,11 @@ function sharePost(index){
  }
 }
 
-// START APP
+// INITIALIZE APP
 setLanguage(currentLanguage);
 loadNews();
 
-// REFRESH NEWS EVERY 60 SECONDS
+// AUTOMATIC REFRESH
 setInterval(loadNews,60000);
 </script>
 
