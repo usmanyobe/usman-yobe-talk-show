@@ -1,60 +1,360 @@
-
 <!DOCTYPE html>
 <html lang="ha">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#071b49">
-<title>Usman Yobe Talk Show</title>
-<meta name="description" content="Usman Yobe Talk Show - Tashar Al'umma. Labarai, siyasa, kasuwanci da nishadi.">
+
+<title>USMAN YOBE TALK SHOW</title>
+
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, siyasa, kasuwanci, nishadi da tattaunawa.">
+
+<link rel="manifest" href="manifest.json">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,sans-serif;background:#f1f4f9;color:#172033;padding-bottom:75px}
-header{background:#071b49;color:white;padding:18px 15px;position:sticky;top:0;z-index:10}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;border-radius:50%;background:#fff;color:#073477;display:grid;place-items:center;font-weight:900;font-size:13px;border:3px solid #f6c900}
-.brand h2{font-size:19px}
-.brand small{color:#f6c900;font-size:11px}
-.header-actions{display:flex;gap:15px;margin-left:auto}
-.header-actions button{background:none;border:0;color:white;font-size:21px;cursor:pointer}
-.search{margin-top:15px}
-.search input{width:100%;padding:12px;border:0;border-radius:10px;font-size:15px;outline:none}
-.categories{display:flex;gap:9px;overflow-x:auto;padding:14px;background:white;scrollbar-width:none}
-.categories button{white-space:nowrap;border:1px solid #dce3ee;background:#f4f6fa;padding:10px 15px;border-radius:25px;font-weight:bold;color:#172b50}
-.categories button.active{background:#0755d9;color:white;border-color:#0755d9}
-.container{max-width:850px;margin:auto;padding:12px}
-.section-title{font-size:19px;margin:17px 0 12px;color:#09245b}
-.breaking{background:#071b49;color:white;border-radius:14px;overflow:hidden;margin-bottom:18px}
-.breaking-top{background:#e52222;padding:9px 14px;font-weight:bold;letter-spacing:1px}
-.breaking-content{padding:20px}
-.breaking-content h1{font-size:25px;line-height:1.3;margin:8px 0}
-.breaking-content p{color:#dce5fa;line-height:1.6;font-size:14px}
-.tag{display:inline-block;background:#e52222;color:white;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:bold}
-.post{background:white;border-radius:13px;overflow:hidden;margin-bottom:13px;box-shadow:0 2px 9px #0000000b}
-.post-image{height:155px;background:linear-gradient(135deg,#09245b,#1468cb);display:grid;place-items:center;color:white;font-size:48px}
-.post-content{padding:14px}
-.post-content h3{font-size:17px;line-height:1.4;margin:8px 0}
-.post-content p{font-size:13px;color:#68758a;line-height:1.5}
-.post-meta{font-size:11px;color:#7a879b;margin-top:10px;display:flex;justify-content:space-between}
-.post-actions{display:flex;gap:15px;margin-top:12px}
-.post-actions button{border:0;background:none;color:#0755d9;font-weight:bold;cursor:pointer}
-.empty{padding:30px;text-align:center;color:#667085;background:white;border-radius:12px}
-.video-box{background:#071b49;color:white;padding:22px;border-radius:12px;text-align:center;margin:15px 0}
-.video-box button{background:#e52222;color:white;border:0;padding:12px 20px;border-radius:8px;margin-top:12px}
-footer{background:#071b49;color:white;text-align:center;padding:25px 12px;margin-top:25px}
-footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
-.social{display:flex;justify-content:center;gap:20px;margin-top:15px}
-.social a{color:#f6c900;text-decoration:none;font-weight:bold}
-.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:#071b49;display:flex;justify-content:space-around;padding:10px 3px calc(10px + env(safe-area-inset-bottom));z-index:20}
-.bottom-nav button{background:none;border:0;color:#cbd6ec;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
-.bottom-nav button span{font-size:21px}
-.bottom-nav button.active{color:#f6c900}
-.article-modal{display:none;position:fixed;inset:0;background:#0009;z-index:30;padding:15px;overflow-y:auto}
-.modal-content{background:white;border-radius:14px;padding:20px;max-width:600px;margin:30px auto}
-.modal-content h2{margin:12px 0}
-.close{float:right;border:0;background:#eee;border-radius:7px;padding:8px 12px}
-@media(min-width:650px){.post-image{height:210px}.container{padding:20px}}
+* {
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+}
+
+body {
+ font-family:Arial,sans-serif;
+ background:#f1f4f9;
+ color:#172033;
+ padding-bottom:75px;
+}
+
+header {
+ background:#071b49;
+ color:white;
+ padding:18px 15px;
+ position:sticky;
+ top:0;
+ z-index:10;
+}
+
+.brand {
+ display:flex;
+ align-items:center;
+ gap:12px;
+}
+
+.logo {
+ width:48px;
+ height:48px;
+ border-radius:50%;
+ background:white;
+ color:#073477;
+ display:grid;
+ place-items:center;
+ font-weight:900;
+ font-size:13px;
+ border:3px solid #f6c900;
+ text-align:center;
+}
+
+.brand h2 {
+ font-size:19px;
+}
+
+.brand small {
+ color:#f6c900;
+ font-size:11px;
+}
+
+.header-actions {
+ display:flex;
+ gap:15px;
+ margin-left:auto;
+}
+
+.header-actions button {
+ background:none;
+ border:0;
+ color:white;
+ font-size:21px;
+ cursor:pointer;
+}
+
+.search {
+ margin-top:15px;
+}
+
+.search input {
+ width:100%;
+ padding:12px;
+ border:0;
+ border-radius:10px;
+ font-size:15px;
+ outline:none;
+}
+
+.categories {
+ display:flex;
+ gap:9px;
+ overflow-x:auto;
+ padding:14px;
+ background:white;
+ scrollbar-width:none;
+}
+
+.categories button {
+ white-space:nowrap;
+ border:1px solid #dce3ee;
+ background:#f4f6fa;
+ padding:10px 15px;
+ border-radius:25px;
+ font-weight:bold;
+ color:#172b50;
+}
+
+.categories button.active {
+ background:#0755d9;
+ color:white;
+ border-color:#0755d9;
+}
+
+.container {
+ max-width:850px;
+ margin:auto;
+ padding:12px;
+}
+
+.section-title {
+ font-size:19px;
+ margin:17px 0 12px;
+ color:#09245b;
+}
+
+.breaking {
+ background:#071b49;
+ color:white;
+ border-radius:14px;
+ overflow:hidden;
+ margin-bottom:18px;
+}
+
+.breaking-top {
+ background:#e52222;
+ padding:9px 14px;
+ font-weight:bold;
+ letter-spacing:1px;
+}
+
+.breaking-content {
+ padding:20px;
+}
+
+.breaking-content h1 {
+ font-size:25px;
+ line-height:1.3;
+ margin:8px 0;
+}
+
+.breaking-content p {
+ color:#dce5fa;
+ line-height:1.6;
+ font-size:14px;
+}
+
+.tag {
+ display:inline-block;
+ background:#e52222;
+ color:white;
+ padding:5px 9px;
+ border-radius:5px;
+ font-size:11px;
+ font-weight:bold;
+}
+
+.post {
+ background:white;
+ border-radius:13px;
+ overflow:hidden;
+ margin-bottom:13px;
+ box-shadow:0 2px 9px #0000000b;
+}
+
+.post-image {
+ height:155px;
+ background:linear-gradient(135deg,#09245b,#1468cb);
+ display:grid;
+ place-items:center;
+ color:white;
+ font-size:48px;
+}
+
+.post-content {
+ padding:14px;
+}
+
+.post-content h3 {
+ font-size:17px;
+ line-height:1.4;
+ margin:8px 0;
+}
+
+.post-content p {
+ font-size:13px;
+ color:#68758a;
+ line-height:1.6;
+}
+
+.post-meta {
+ font-size:11px;
+ color:#7a879b;
+ margin-top:10px;
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+}
+
+.post-actions {
+ display:flex;
+ gap:15px;
+ margin-top:12px;
+}
+
+.post-actions button {
+ border:0;
+ background:none;
+ color:#0755d9;
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.empty {
+ padding:30px;
+ text-align:center;
+ color:#667085;
+ background:white;
+ border-radius:12px;
+}
+
+.video-box {
+ background:#071b49;
+ color:white;
+ padding:22px;
+ border-radius:12px;
+ text-align:center;
+ margin:15px 0;
+}
+
+.video-box button {
+ background:#e52222;
+ color:white;
+ border:0;
+ padding:12px 20px;
+ border-radius:8px;
+ margin-top:12px;
+}
+
+footer {
+ background:#071b49;
+ color:white;
+ text-align:center;
+ padding:25px 12px;
+ margin-top:25px;
+}
+
+footer p {
+ font-size:12px;
+ color:#ccd7ec;
+ margin-top:8px;
+}
+
+.social {
+ display:flex;
+ justify-content:center;
+ gap:20px;
+ margin-top:15px;
+}
+
+.social a {
+ color:#f6c900;
+ text-decoration:none;
+ font-weight:bold;
+}
+
+.bottom-nav {
+ position:fixed;
+ bottom:0;
+ left:0;
+ width:100%;
+ background:#071b49;
+ display:flex;
+ justify-content:space-around;
+ padding:10px 3px calc(10px + env(safe-area-inset-bottom));
+ z-index:20;
+}
+
+.bottom-nav button {
+ background:none;
+ border:0;
+ color:#cbd6ec;
+ font-size:11px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ gap:4px;
+ cursor:pointer;
+}
+
+.bottom-nav button span {
+ font-size:21px;
+}
+
+.bottom-nav button.active {
+ color:#f6c900;
+}
+
+.article-modal {
+ display:none;
+ position:fixed;
+ inset:0;
+ background:#0009;
+ z-index:30;
+ padding:15px;
+ overflow-y:auto;
+}
+
+.modal-content {
+ background:white;
+ border-radius:14px;
+ padding:20px;
+ max-width:600px;
+ margin:30px auto;
+}
+
+.modal-content h2 {
+ margin:12px 0;
+}
+
+.close {
+ float:right;
+ border:0;
+ background:#eee;
+ border-radius:7px;
+ padding:8px 12px;
+}
+
+.article-image {
+ width:100%;
+ max-height:300px;
+ object-fit:cover;
+ border-radius:10px;
+ margin:12px 0;
+}
+
+@media(min-width:650px) {
+ .post-image {
+  height:210px;
+ }
+ .container {
+  padding:20px;
+ }
+}
 </style>
 </head>
 
@@ -63,17 +363,24 @@ footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
 <header>
  <div class="brand">
   <div class="logo">UY<br>TV</div>
+
   <div>
    <h2>USMAN YOBE</h2>
    <h2 style="color:#f6c900">TALK SHOW</h2>
    <small>TASHAR AL'UMMA</small>
   </div>
+
   <div class="header-actions">
    <button onclick="document.getElementById('search').focus()">⌕</button>
   </div>
  </div>
+
  <div class="search">
-  <input id="search" type="search" placeholder="Nemo labarai..." oninput="renderPosts()">
+  <input
+   id="search"
+   type="search"
+   placeholder="Nemo labarai..."
+   oninput="renderPosts()">
  </div>
 </header>
 
@@ -84,162 +391,467 @@ footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
  <button onclick="filterCategory('Entertainment',this)">Entertainment</button>
  <button onclick="filterCategory('Business',this)">Business</button>
  <button onclick="filterCategory('Youth',this)">Matasa</button>
+ <button onclick="filterCategory('Sports',this)">Sports</button>
+ <button onclick="filterCategory('Education',this)">Education</button>
 </nav>
 
 <main class="container">
 
  <section id="home">
+
   <div class="breaking">
    <div class="breaking-top">🔴 BREAKING NEWS</div>
+
    <div class="breaking-content">
     <span class="tag">USMAN YOBE TALK SHOW</span>
+
     <h1>Labaran Yobe da Arewa</h1>
-    <p>Ku kasance tare da mu domin samun sahihan labarai, rahotanni, siyasa, kasuwanci da nishadi.</p>
+
+    <p>
+     Ku kasance tare da mu domin samun sahihan labarai,
+     rahotanni, siyasa, kasuwanci da nishadi.
+    </p>
    </div>
   </div>
 
   <h2 class="section-title">📰 Sabbin Labarai</h2>
-  <div id="posts"></div>
+
+  <div id="posts">
+   <div class="empty">Ana loda sabbin labarai...</div>
+  </div>
+
  </section>
 
  <section id="videos" style="display:none">
+
   <h2 class="section-title">▶ Bidiyoyi da Shirye-shirye</h2>
+
   <div class="video-box">
    <div style="font-size:45px">📺</div>
+
    <h2>USMAN YOBE TALK SHOW</h2>
+
    <p>Hirarraki, rahotanni da shirye-shiryen musamman.</p>
-   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank')">Kalli YouTube</button>
+
+   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank')">
+    Kalli YouTube
+   </button>
   </div>
+
  </section>
 
  <section id="live" style="display:none">
+
   <h2 class="section-title">🔴 Live TV</h2>
+
   <div class="video-box">
    <div style="font-size:45px">📡</div>
+
    <h2>ASAWWARA TV</h2>
-   <p>Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.</p>
+
+   <p>
+    Shirin kallon tasharmu kai tsaye zai kasance nan
+    idan an haɗa live stream.
+   </p>
   </div>
+
  </section>
 
  <section id="more" style="display:none">
+
   <h2 class="section-title">Game da Mu</h2>
+
   <div class="post-content" style="background:white;border-radius:12px">
+
    <h2>USMAN YOBE TALK SHOW</h2>
+
    <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
-   <p style="margin-top:12px">Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.</p>
+
+   <p style="margin-top:12px">
+    Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.
+   </p>
+
    <div class="social">
     <a href="https://www.tiktok.com/@usman1yobe" target="_blank">TikTok</a>
+
     <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank">Facebook</a>
+
+    <a href="https://www.youtube.com/@ASAWWARATV" target="_blank">YouTube</a>
    </div>
+
   </div>
+
  </section>
 
 </main>
 
 <footer>
  <h3>USMAN YOBE TALK SHOW</h3>
+
  <p>TASHAR AL'UMMA</p>
+
  <p>© 2026 Usman Yobe Talk Show. All Rights Reserved.</p>
 </footer>
 
 <nav class="bottom-nav">
- <button class="active" onclick="showSection('home',this)"><span>⌂</span>Home</button>
- <button onclick="showSection('videos',this)"><span>▶</span>Videos</button>
- <button onclick="showSection('live',this)"><span>📡</span>Live TV</button>
- <button onclick="showSection('more',this)"><span>▦</span>More</button>
+
+ <button class="active" onclick="showSection('home',this)">
+  <span>⌂</span>Home
+ </button>
+
+ <button onclick="showSection('videos',this)">
+  <span>▶</span>Videos
+ </button>
+
+ <button onclick="showSection('live',this)">
+  <span>📡</span>Live TV
+ </button>
+
+ <button onclick="showSection('more',this)">
+  <span>▦</span>More
+ </button>
+
 </nav>
 
 <div class="article-modal" id="articleModal">
+
  <div class="modal-content">
+
   <button class="close" onclick="closeArticle()">Close ✕</button>
+
   <div id="articleDetails" style="padding-top:35px"></div>
+
  </div>
+
 </div>
 
+<!-- SUPABASE CONNECTION -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const posts = [
- {title:"Barka da zuwa Usman Yobe Talk Show",category:"News",icon:"📰",date:"Sanarwa",body:"Wannan ita ce tashar labarai da tattaunawa ta Usman Yobe Talk Show. Za mu riƙa kawo muku labarai da shirye-shirye."},
- {title:"Dandalin siyasa da shugabanci",category:"Politics",icon:"🏛️",date:"Shirye-shirye",body:"Ku kasance tare da mu domin tattaunawa kan siyasa, shugabanci da ci gaban al'umma."},
- {title:"Kannywood da masana'antar fina-finai",category:"Entertainment",icon:"🎬",date:"Nishadi",body:"Sabbin shirye-shirye da tattaunawa kan harkokin fina-finai da nishadi."},
- {title:"Kasuwanci da bunkasar tattalin arziki",category:"Business",icon:"📈",date:"Kasuwanci",body:"Labaran kasuwanci, sana'o'i da hanyoyin bunkasa tattalin arziki."},
- {title:"Matasa A Yau",category:"Youth",icon:"🎤",date:"Matasa",body:"Dandalin tattaunawa da matasa kan ilimi, sana'a da ci gaban al'umma."}
-];
+
+// SUPABASE SETTINGS
+const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
+
+const db = window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
+
+// NEWS DATA
+let posts = [];
 
 let currentCategory = "All";
 
-function renderPosts(){
- const query=document.getElementById("search").value.toLowerCase();
- const filtered=posts.filter(p=>
-  (currentCategory==="All"||p.category===currentCategory)&&
-  (p.title.toLowerCase().includes(query)||p.body.toLowerCase().includes(query))
- );
- const container=document.getElementById("posts");
- if(!filtered.length){
-  container.innerHTML='<div class="empty">Ba a samu labari da ya dace ba.</div>';
-  return;
- }
- container.innerHTML=filtered.map((p,i)=>`
-  <article class="post">
-   <div class="post-image">${p.icon}</div>
-   <div class="post-content">
-    <span class="tag">${p.category}</span>
-    <h3>${escapeHTML(p.title)}</h3>
-    <p>${escapeHTML(p.body)}</p>
-    <div class="post-meta"><span>${p.date}</span><span>Usman Yobe Talk Show</span></div>
-    <div class="post-actions">
-     <button onclick="openArticle(${posts.indexOf(p)})">Karanta labari →</button>
-     <button onclick="sharePost(${posts.indexOf(p)})">Share ↗</button>
-    </div>
-   </div>
-  </article>
- `).join("");
-}
-
-function escapeHTML(value){
- return String(value).replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+// HTML SECURITY
+function escapeHTML(value) {
+ return String(value || "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
  }[c]));
 }
 
-function filterCategory(category,button){
- currentCategory=category;
- document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- showSection("home",document.querySelector(".bottom-nav button"));
+// SAFE URL CHECK
+function safeURL(value) {
+ try {
+  const url = new URL(value);
+
+  if (url.protocol === "https:" || url.protocol === "http:") {
+   return url.href;
+  }
+
+  return "";
+ } catch {
+  return "";
+ }
+}
+
+// CATEGORY TRANSLATION
+function displayCategory(category) {
+
+ if (category === "General News") return "News";
+
+ if (category === "Matasa") return "Youth";
+
+ return category || "News";
+}
+
+// LOAD PUBLISHED NEWS FROM SUPABASE
+async function loadNews() {
+
+ const container = document.getElementById("posts");
+
+ container.innerHTML =
+  '<div class="empty">Ana loda sabbin labarai...</div>';
+
+ const { data, error } = await db
+  .from("news_posts")
+  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at")
+  .eq("status", "published")
+  .order("published_at", { ascending: false });
+
+ if (error) {
+
+  console.error("News loading error:", error);
+
+  container.innerHTML =
+   '<div class="empty">An samu matsala wajen ɗauko labarai. A sake gwadawa.</div>';
+
+  return;
+ }
+
+ posts = data || [];
+
  renderPosts();
 }
 
-function showSection(id,button){
- document.querySelectorAll("main section").forEach(s=>s.style.display="none");
- document.getElementById(id).style.display="block";
- document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.remove("active"));
- if(button)button.classList.add("active");
- window.scrollTo(0,0);
+// DISPLAY NEWS
+function renderPosts() {
+
+ const query = document
+  .getElementById("search")
+  .value
+  .toLowerCase();
+
+ const filtered = posts.filter(p => {
+
+  const category = displayCategory(p.category);
+
+  return (
+   (currentCategory === "All" || category === currentCategory) &&
+
+   (
+    (p.title || "").toLowerCase().includes(query) ||
+    (p.excerpt || "").toLowerCase().includes(query) ||
+    (p.content || "").toLowerCase().includes(query)
+   )
+  );
+
+ });
+
+ const container = document.getElementById("posts");
+
+ if (!filtered.length) {
+
+  container.innerHTML =
+   '<div class="empty">Babu labari tukuna.</div>';
+
+  return;
+ }
+
+ container.innerHTML = filtered.map(p => {
+
+  const image = safeURL(p.image_url);
+
+  const video = safeURL(p.video_url);
+
+  const index = posts.findIndex(item => item.id === p.id);
+
+  return `
+
+   <article class="post">
+
+    ${
+     image
+     ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" style="margin:0;width:100%;border-radius:0;max-height:260px">`
+     : `<div class="post-image">📰</div>`
+    }
+
+    <div class="post-content">
+
+     <span class="tag">
+      ${escapeHTML(displayCategory(p.category))}
+     </span>
+
+     <h3>${escapeHTML(p.title)}</h3>
+
+     <p>${escapeHTML(p.excerpt || p.content)}</p>
+
+     <div class="post-meta">
+
+      <span>
+       ${
+        p.published_at
+        ? new Date(p.published_at).toLocaleDateString("ha-NG")
+        : ""
+       }
+      </span>
+
+      <span>Usman Yobe Talk Show</span>
+
+     </div>
+
+     <div class="post-actions">
+
+      <button onclick="openArticle(${index})">
+       Karanta labari →
+      </button>
+
+      <button onclick="sharePost(${index})">
+       Share ↗
+      </button>
+
+     </div>
+
+     ${
+      video
+      ? `<p style="margin-top:12px">
+          <a href="${escapeHTML(video)}" target="_blank" rel="noopener">
+           ▶ Kalli bidiyo
+          </a>
+         </p>`
+      : ""
+     }
+
+    </div>
+
+   </article>
+
+  `;
+
+ }).join("");
+
 }
 
-function openArticle(index){
- const p=posts[index];
- document.getElementById("articleDetails").innerHTML=`
-  <span class="tag">${escapeHTML(p.category)}</span>
+// CATEGORY FILTER
+function filterCategory(category, button) {
+
+ currentCategory = category;
+
+ document
+  .querySelectorAll(".categories button")
+  .forEach(b => b.classList.remove("active"));
+
+ button.classList.add("active");
+
+ showSection(
+  "home",
+  document.querySelector(".bottom-nav button")
+ );
+
+ renderPosts();
+}
+
+// BOTTOM NAVIGATION
+function showSection(id, button) {
+
+ document
+  .querySelectorAll("main section")
+  .forEach(s => s.style.display = "none");
+
+ document.getElementById(id).style.display = "block";
+
+ document
+  .querySelectorAll(".bottom-nav button")
+  .forEach(b => b.classList.remove("active"));
+
+ if (button) button.classList.add("active");
+
+ window.scrollTo(0, 0);
+}
+
+// OPEN FULL NEWS
+function openArticle(index) {
+
+ const p = posts[index];
+
+ if (!p) return;
+
+ const image = safeURL(p.image_url);
+
+ const video = safeURL(p.video_url);
+
+ document.getElementById("articleDetails").innerHTML = `
+
+  <span class="tag">
+   ${escapeHTML(displayCategory(p.category))}
+  </span>
+
   <h2>${escapeHTML(p.title)}</h2>
-  <p style="color:#64748b;margin:10px 0">${escapeHTML(p.date)} | Usman Yobe Talk Show</p>
-  <p style="line-height:1.8">${escapeHTML(p.body)}</p>
+
+  <p style="color:#64748b;margin:10px 0">
+
+   ${
+    p.published_at
+    ? new Date(p.published_at).toLocaleDateString("ha-NG")
+    : ""
+   }
+
+   | Usman Yobe Talk Show
+
+  </p>
+
+  ${
+   image
+   ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}">`
+   : ""
+  }
+
+  <div style="line-height:1.8;white-space:pre-wrap">
+   ${escapeHTML(p.content)}
+  </div>
+
+  ${
+   video
+   ? `<p style="margin-top:15px">
+       <a href="${escapeHTML(video)}" target="_blank" rel="noopener">
+        ▶ Kalli bidiyo
+       </a>
+      </p>`
+   : ""
+  }
+
  `;
- document.getElementById("articleModal").style.display="block";
+
+ document.getElementById("articleModal").style.display = "block";
 }
-function closeArticle(){
- document.getElementById("articleModal").style.display="none";
+
+// CLOSE ARTICLE
+function closeArticle() {
+
+ document.getElementById("articleModal").style.display = "none";
+
 }
-function sharePost(index){
- const p=posts[index];
- const text=p.title+" - Usman Yobe Talk Show";
- if(navigator.share){
-  navigator.share({title:p.title,text:text,url:location.href}).catch(()=>{});
- }else{
-  window.prompt("Kwafi wannan rubutu domin rabawa:",text);
+
+// SHARE NEWS
+function sharePost(index) {
+
+ const p = posts[index];
+
+ if (!p) return;
+
+ const text = p.title + " - Usman Yobe Talk Show";
+
+ if (navigator.share) {
+
+  navigator.share({
+   title: p.title,
+   text: text,
+   url: location.href
+  }).catch(() => {});
+
+ } else {
+
+  window.prompt(
+   "Kwafi wannan rubutu domin rabawa:",
+   text
+  );
+
  }
+
 }
-renderPosts();
+
+// START WEBSITE
+loadNews();
+
+// AUTOMATIC REFRESH EVERY 60 SECONDS
+setInterval(loadNews, 60000);
+
 </script>
 
 </body>
