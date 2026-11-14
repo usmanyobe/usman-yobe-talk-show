@@ -808,7 +808,20 @@ const translations = {
  }
 };
 
-let currentLanguage = "ha";
+const savedLanguage = localStorage.getItem("usman_yobe_language");
+
+const deviceLanguage = (
+  navigator.language || navigator.userLanguage || "en"
+).toLowerCase();
+
+let currentLanguage =
+  savedLanguage && ["ha", "en", "ar"].includes(savedLanguage)
+    ? savedLanguage
+    : deviceLanguage.startsWith("ha")
+    ? "ha"
+    : deviceLanguage.startsWith("ar")
+    ? "ar"
+    : "en";
 
 // HTML SECURITY
 function escapeHTML(value) {
