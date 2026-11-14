@@ -12,87 +12,63 @@
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:#f2f4f8;
-  color:#182333;
+  margin:0;background:#f2f4f8;color:#182333;
   font-family:Arial,sans-serif
 }
 header{
-  background:#101827;
-  color:white;
-  padding:22px 15px;
-  text-align:center
+  background:#101827;color:white;padding:22px 15px;text-align:center
 }
-header img{
-  width:75px;
-  height:75px;
-  object-fit:contain
-}
+header img{width:75px;height:75px;object-fit:contain}
 header h2{margin:8px 0 4px}
 header p{margin:5px;color:#d4dbea;font-size:13px}
 .container{max-width:850px;margin:22px auto;padding:15px}
 .card{
-  background:white;
-  padding:20px;
-  border-radius:13px;
-  margin-bottom:18px;
-  box-shadow:0 3px 14px #0000000c
+  background:white;padding:20px;border-radius:13px;
+  margin-bottom:18px;box-shadow:0 3px 14px #0000000c
 }
 h3{margin-top:0;color:#17253a}
 input,textarea,select{
-  width:100%;
-  padding:13px;
-  margin:7px 0 13px;
-  border:1px solid #ccd3df;
-  border-radius:8px;
-  font-size:15px
+  width:100%;padding:13px;margin:7px 0 13px;
+  border:1px solid #ccd3df;border-radius:8px;font-size:15px
 }
 textarea{min-height:130px;resize:vertical}
+label{font-weight:bold;font-size:14px}
 button{
-  padding:12px 17px;
-  border:0;
-  border-radius:8px;
-  background:#bd8b25;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  margin:4px
+  padding:12px 17px;border:0;border-radius:8px;
+  background:#bd8b25;color:white;font-weight:bold;
+  cursor:pointer;margin:4px
 }
 button.secondary{background:#26364d}
 button.danger{background:#c0392b}
-button:disabled{opacity:.5}
+button:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}
 .message{
-  padding:12px;
-  border-radius:8px;
-  margin:10px 0;
-  display:none;
-  overflow-wrap:anywhere
+  padding:12px;border-radius:8px;margin:10px 0;
+  display:none;overflow-wrap:anywhere
 }
 .success{background:#e2f7e9;color:#176b32}
 .error{background:#ffe5e5;color:#a11}
 .post{
-  border:1px solid #e1e5eb;
-  padding:15px;
-  border-radius:9px;
-  margin:12px 0
+  border:1px solid #e1e5eb;padding:15px;
+  border-radius:9px;margin:12px 0
 }
 .post h4{margin:5px 0}
 .small{font-size:12px;color:#697586}
 .actions{display:flex;flex-wrap:wrap;gap:5px}
 .toprow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px
 }
 .status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#e2f7e9;
-  color:#176b32;
-  font-size:12px
+  display:inline-block;padding:5px 9px;border-radius:20px;
+  background:#e2f7e9;color:#176b32;font-size:12px
+}
+.preview{
+  display:none;width:100%;max-height:280px;
+  margin:10px 0;border-radius:10px;background:#101827
+}
+.help{
+  font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px
 }
 </style>
 </head>
@@ -115,11 +91,9 @@ onerror="this.style.display='none'">
 <p class="small">Shiga da email da password ɗinka na Admin.</p>
 
 <input id="email" type="email" placeholder="Admin Email" autocomplete="username">
-
 <input id="password" type="password" placeholder="Password" autocomplete="current-password">
 
 <button id="loginBtn" onclick="login()">Login</button>
-
 <div id="loginMessage" class="message"></div>
 </div>
 
@@ -154,20 +128,42 @@ onerror="this.style.display='none'">
 <option value="Education">Education</option>
 </select>
 
+<hr>
+
+<h3>Hoton Labari</h3>
 <label>Zaɓi Hoto daga Gallery</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
 
-<button type="button" onclick="uploadImage()">Upload Image</button>
-
+<button type="button" id="uploadImageBtn" onclick="uploadImage()">Upload Image</button>
 <div id="uploadMessage" class="message"></div>
 
-<img id="imagePreview" style="display:none;max-width:100%;max-height:250px;">
+<img id="imagePreview" class="preview" alt="Image preview">
 
 <label>Image URL (ko saka URL kai tsaye)</label>
 <input id="imageUrl" type="url" placeholder="Image URL (optional)">
 
-<label>Video URL</label>
+<hr>
+
+<h3>Bidiyon Labari</h3>
+
+<label>Zaɓi Bidiyo daga Gallery na waya</label>
+<input id="videoFile" type="file" accept="video/*" onchange="previewSelectedVideo()">
+
+<p class="help">
+Zaɓi bidiyo daga wayarka, sannan danna Upload Video.
+Matsakaicin girman bidiyo a yanzu 50MB ne.
+</p>
+
+<button type="button" id="uploadVideoBtn" onclick="uploadVideo()">Upload Video</button>
+
+<div id="videoUploadMessage" class="message"></div>
+
+<video id="videoPreview" class="preview" controls playsinline preload="metadata"></video>
+
+<label>Video URL (ko saka URL kai tsaye)</label>
 <input id="videoUrl" type="url" placeholder="Video URL (optional)">
+
+<hr>
 
 <label>Short News Summary</label>
 <textarea id="excerpt" placeholder="Takaitaccen labari"></textarea>
@@ -213,6 +209,8 @@ const db = window.supabase.createClient(
 
 let editingId = null;
 let currentPosts = [];
+let imageObjectURL = null;
+let videoObjectURL = null;
 
 // MESSAGE
 function showMessage(id,message,type){
@@ -237,6 +235,29 @@ function escapeHTML(value){
   })[char]);
 }
 
+// ADMIN PERMISSION CHECK
+async function verifyAdmin(){
+
+  const {data:userData,error:userError} =
+    await db.auth.getUser();
+
+  if(userError || !userData.user){
+    throw new Error("Ka fara shiga Admin.");
+  }
+
+  const {data:isAdmin,error:adminError} =
+    await db.rpc("is_admin");
+
+  if(adminError){
+    throw new Error(adminError.message);
+  }
+
+  if(isAdmin !== true){
+    throw new Error("Ba ka da izinin Admin.");
+  }
+
+}
+
 // LOGIN
 async function login(){
 
@@ -252,11 +273,7 @@ async function login(){
     document.getElementById("loginBtn");
 
   if(!email || !password){
-    showMessage(
-      "loginMessage",
-      "Saka email da password.",
-      "error"
-    );
+    showMessage("loginMessage","Saka email da password.","error");
     return;
   }
 
@@ -265,20 +282,12 @@ async function login(){
 
   try{
 
-    const {data,error} =
-      await db.auth.signInWithPassword({
-        email,
-        password
-      });
+    const {error} = await db.auth.signInWithPassword({
+      email,
+      password
+    });
 
-    if(error){
-      showMessage(
-        "loginMessage",
-        error.message,
-        "error"
-      );
-      return;
-    }
+    if(error) throw error;
 
     await checkAdmin();
 
@@ -298,55 +307,12 @@ async function login(){
   }
 }
 
-// CHECK ADMIN USING DATABASE FUNCTION
+// CHECK ADMIN
 async function checkAdmin(){
 
   try{
 
-    const {data:userData,error:userError} =
-      await db.auth.getUser();
-
-    if(userError || !userData.user){
-      showLogin();
-      showMessage(
-        "loginMessage",
-        "Ba a tabbatar da account ba. Ka sake Login.",
-        "error"
-      );
-      return;
-    }
-
-    const {data:isAdmin,error:adminError} =
-      await db.rpc("is_admin");
-
-    if(adminError){
-
-      showLogin();
-
-      showMessage(
-        "loginMessage",
-        "Matsalar tabbatar da Admin: " +
-        adminError.message,
-        "error"
-      );
-
-      return;
-    }
-
-    if(isAdmin !== true){
-
-      await db.auth.signOut();
-
-      showLogin();
-
-      showMessage(
-        "loginMessage",
-        "Ba a ba wannan account ikon Admin ba.",
-        "error"
-      );
-
-      return;
-    }
+    await verifyAdmin();
 
     document.getElementById("loginSection")
       .classList.add("hidden");
@@ -354,19 +320,22 @@ async function checkAdmin(){
     document.getElementById("dashboard")
       .classList.remove("hidden");
 
-    loadPosts();
+    await loadPosts();
 
   }catch(error){
+
+    await db.auth.signOut();
 
     showLogin();
 
     showMessage(
       "loginMessage",
-      "Kuskure: " + error.message,
+      "Ba a tabbatar da Admin ba: " + error.message,
       "error"
     );
 
   }
+
 }
 
 // SHOW LOGIN
@@ -396,8 +365,10 @@ async function logout(){
   );
 
 }
+
 // PREVIEW IMAGE
 function previewSelectedImage(){
+
   const file = document.getElementById("imageFile").files[0];
   const preview = document.getElementById("imagePreview");
 
@@ -405,26 +376,41 @@ function previewSelectedImage(){
 
   if(!file.type.startsWith("image/")){
     alert("Zaɓi hoto kawai.");
+    document.getElementById("imageFile").value = "";
     return;
   }
 
-  preview.src = URL.createObjectURL(file);
+  if(imageObjectURL){
+    URL.revokeObjectURL(imageObjectURL);
+  }
+
+  imageObjectURL = URL.createObjectURL(file);
+
+  preview.src = imageObjectURL;
   preview.style.display = "block";
+
 }
 
 // UPLOAD IMAGE
 async function uploadImage(){
 
   const file = document.getElementById("imageFile").files[0];
-  const btn = document.querySelector('button[onclick="uploadImage()"]');
+  const btn = document.getElementById("uploadImageBtn");
+
+  hideMessage("uploadMessage");
 
   if(!file){
-    alert("Da farko zaɓi hoto daga Gallery.");
+    showMessage("uploadMessage","Da farko zaɓi hoto daga Gallery.","error");
+    return;
+  }
+
+  if(!file.type.startsWith("image/")){
+    showMessage("uploadMessage","Zaɓi hoto kawai.","error");
     return;
   }
 
   if(file.size > 5 * 1024 * 1024){
-    alert("Hoton bai kamata ya wuce 5MB ba.");
+    showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");
     return;
   }
 
@@ -433,24 +419,16 @@ async function uploadImage(){
 
   try{
 
-    const {data:userData} = await db.auth.getUser();
-
-    if(!userData.user){
-      throw new Error("Ka fara shiga Admin.");
-    }
-
-    const {data:isAdmin} = await db.rpc("is_admin");
-
-    if(isAdmin !== true){
-      throw new Error("Ba ka da izinin Admin.");
-    }
+    await verifyAdmin();
 
     const fileName = Date.now() + "-" +
       file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
 
+    const path = "news/" + fileName;
+
     const {error} = await db.storage
       .from("news-images")
-      .upload("news/" + fileName,file,{
+      .upload(path,file,{
         cacheControl:"3600",
         upsert:false,
         contentType:file.type
@@ -460,7 +438,7 @@ async function uploadImage(){
 
     const {data} = db.storage
       .from("news-images")
-      .getPublicUrl("news/" + fileName);
+      .getPublicUrl(path);
 
     document.getElementById("imageUrl").value =
       data.publicUrl;
@@ -468,11 +446,19 @@ async function uploadImage(){
     document.getElementById("imagePreview").src =
       data.publicUrl;
 
-    alert("An ɗora hoton cikin nasara!");
+    showMessage(
+      "uploadMessage",
+      "An ɗora hoton cikin nasara!",
+      "success"
+    );
 
   }catch(error){
 
-    alert("Matsala: " + error.message);
+    showMessage(
+      "uploadMessage",
+      "Matsala: " + error.message,
+      "error"
+    );
 
   }finally{
 
@@ -480,7 +466,142 @@ async function uploadImage(){
     btn.textContent = "Upload Image";
 
   }
+
 }
+
+// PREVIEW VIDEO
+function previewSelectedVideo(){
+
+  const file = document.getElementById("videoFile").files[0];
+  const preview = document.getElementById("videoPreview");
+
+  if(!file) return;
+
+  if(!file.type.startsWith("video/")){
+    alert("Zaɓi bidiyo kawai.");
+    document.getElementById("videoFile").value = "";
+    return;
+  }
+
+  if(videoObjectURL){
+    URL.revokeObjectURL(videoObjectURL);
+  }
+
+  videoObjectURL = URL.createObjectURL(file);
+
+  preview.src = videoObjectURL;
+  preview.style.display = "block";
+  preview.load();
+
+}
+
+// UPLOAD VIDEO
+async function uploadVideo(){
+
+  const file = document.getElementById("videoFile").files[0];
+  const btn = document.getElementById("uploadVideoBtn");
+
+  hideMessage("videoUploadMessage");
+
+  if(!file){
+    showMessage(
+      "videoUploadMessage",
+      "Da farko zaɓi bidiyo daga Gallery na waya.",
+      "error"
+    );
+    return;
+  }
+
+  if(!file.type.startsWith("video/")){
+    showMessage(
+      "videoUploadMessage",
+      "Fayil ɗin da ka zaɓa ba bidiyo ba ne.",
+      "error"
+    );
+    return;
+  }
+
+  if(file.size > 50 * 1024 * 1024){
+    showMessage(
+      "videoUploadMessage",
+      "Bidiyon ya wuce 50MB. Ka rage girmansa ko ka zaɓi wani bidiyo.",
+      "error"
+    );
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Ana ɗora bidiyo...";
+
+  try{
+
+    await verifyAdmin();
+
+    const safeName = file.name
+      .replace(/\.[^/.]+$/,"")
+      .replace(/[^a-zA-Z0-9_-]/g,"-")
+      .substring(0,60);
+
+    const extension = file.name.includes(".")
+      ? file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
+      : "mp4";
+
+    const fileName =
+      Date.now() + "-" + safeName + "." + (extension || "mp4");
+
+    const path = "videos/" + fileName;
+
+    const {error} = await db.storage
+      .from("news-videos")
+      .upload(path,file,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(error) throw error;
+
+    const {data} = db.storage
+      .from("news-videos")
+      .getPublicUrl(path);
+
+    document.getElementById("videoUrl").value =
+      data.publicUrl;
+
+    const preview = document.getElementById("videoPreview");
+
+    if(videoObjectURL){
+      URL.revokeObjectURL(videoObjectURL);
+      videoObjectURL = null;
+    }
+
+    preview.src = data.publicUrl;
+    preview.style.display = "block";
+    preview.load();
+
+    showMessage(
+      "videoUploadMessage",
+      "An ɗora bidiyon cikin nasara! An saka URL ɗinsa a akwatin Video URL.",
+      "success"
+    );
+
+  }catch(error){
+
+    showMessage(
+      "videoUploadMessage",
+      "An kasa ɗora bidiyon: " + error.message,
+      "error"
+    );
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent = "Upload Video";
+
+  }
+
+}
+
 // SAVE NEWS
 async function savePost(){
 
@@ -518,12 +639,24 @@ async function savePost(){
     return;
   }
 
+  if(image_url && !isValidHttpURL(image_url)){
+    showMessage("formMessage","Image URL ba daidai ba ne.","error");
+    return;
+  }
+
+  if(video_url && !isValidHttpURL(video_url)){
+    showMessage("formMessage","Video URL ba daidai ba ne.","error");
+    return;
+  }
+
   const btn = document.getElementById("saveBtn");
 
   btn.disabled = true;
   btn.textContent = "Ana adanawa...";
 
   try{
+
+    await verifyAdmin();
 
     const post = {
       title,
@@ -556,16 +689,7 @@ async function savePost(){
 
     }
 
-    if(result.error){
-
-      showMessage(
-        "formMessage",
-        result.error.message,
-        "error"
-      );
-
-      return;
-    }
+    if(result.error) throw result.error;
 
     showMessage(
       "formMessage",
@@ -587,8 +711,22 @@ async function savePost(){
   }finally{
 
     btn.disabled = false;
-    btn.textContent = "Publish Story";
+    btn.textContent = editingId !== null
+      ? "Save Changes"
+      : "Publish Story";
 
+  }
+
+}
+
+// CHECK URL
+function isValidHttpURL(value){
+
+  try{
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  }catch{
+    return false;
   }
 
 }
@@ -601,19 +739,37 @@ function clearForm(){
   document.getElementById("newsTitle").value = "";
   document.getElementById("imageUrl").value = "";
   document.getElementById("imageFile").value = "";
+  document.getElementById("videoFile").value = "";
   document.getElementById("imagePreview").style.display = "none";
   document.getElementById("imagePreview").src = "";
+  document.getElementById("videoPreview").pause();
+  document.getElementById("videoPreview").removeAttribute("src");
+  document.getElementById("videoPreview").load();
+  document.getElementById("videoPreview").style.display = "none";
   document.getElementById("videoUrl").value = "";
   document.getElementById("excerpt").value = "";
   document.getElementById("content").value = "";
   document.getElementById("category").value = "News";
   document.getElementById("status").value = "published";
 
+  if(imageObjectURL){
+    URL.revokeObjectURL(imageObjectURL);
+    imageObjectURL = null;
+  }
+
+  if(videoObjectURL){
+    URL.revokeObjectURL(videoObjectURL);
+    videoObjectURL = null;
+  }
+
   document.getElementById("formTitle").textContent =
     "Publish New Story";
 
   document.getElementById("saveBtn").textContent =
     "Publish Story";
+
+  hideMessage("uploadMessage");
+  hideMessage("videoUploadMessage");
 
 }
 
@@ -631,20 +787,13 @@ async function loadPosts(){
       .select("*")
       .order("created_at",{ascending:false});
 
-    if(error){
-
-      area.textContent = "Error: " + error.message;
-      return;
-
-    }
+    if(error) throw error;
 
     currentPosts = data || [];
 
     if(currentPosts.length === 0){
-
       area.textContent = "Babu labari tukuna.";
       return;
-
     }
 
     area.innerHTML = currentPosts.map(post=>`
@@ -660,6 +809,8 @@ async function loadPosts(){
         </p>
 
         <p>${escapeHTML(post.excerpt || "")}</p>
+
+        ${post.video_url ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>' : ''}
 
         <div class="actions">
 
@@ -725,6 +876,28 @@ function editPost(id){
   document.getElementById("saveBtn").textContent =
     "Save Changes";
 
+  // Nuna hoton da ke akwai
+  const imagePreview = document.getElementById("imagePreview");
+
+  if(post.image_url && isValidHttpURL(post.image_url)){
+    imagePreview.src = post.image_url;
+    imagePreview.style.display = "block";
+  }else{
+    imagePreview.style.display = "none";
+  }
+
+  // Nuna bidiyon da ke akwai
+  const videoPreview = document.getElementById("videoPreview");
+
+  if(post.video_url && isValidHttpURL(post.video_url)){
+    videoPreview.src = post.video_url;
+    videoPreview.style.display = "block";
+    videoPreview.load();
+  }else{
+    videoPreview.removeAttribute("src");
+    videoPreview.style.display = "none";
+  }
+
   window.scrollTo({
     top:0,
     behavior:"smooth"
@@ -741,17 +914,14 @@ async function deletePost(id){
 
   try{
 
+    await verifyAdmin();
+
     const {error} = await db
       .from("news_posts")
       .delete()
       .eq("id",id);
 
-    if(error){
-
-      alert("An samu matsala: " + error.message);
-      return;
-
-    }
+    if(error) throw error;
 
     alert("An goge labarin.");
 
