@@ -1,14 +1,13 @@
+
 <!DOCTYPE html>
-<html lang="ha">
+<html lang="ha" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#071b49">
 
 <title>USMAN YOBE TALK SHOW</title>
-
-<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, siyasa, kasuwanci, nishadi da tattaunawa.">
-
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. News, politics, business and entertainment.">
 <link rel="manifest" href="manifest.json">
 
 <style>
@@ -31,7 +30,7 @@ header {
  padding:18px 15px;
  position:sticky;
  top:0;
- z-index:10;
+ z-index:50;
 }
 
 .brand {
@@ -49,14 +48,8 @@ header {
  flex:0 0 auto;
 }
 
-.brand h2 {
- font-size:19px;
-}
-
-.brand small {
- color:#f6c900;
- font-size:11px;
-}
+.brand h2 {font-size:19px}
+.brand small {color:#f6c900;font-size:11px}
 
 .header-actions {
  display:flex;
@@ -68,13 +61,11 @@ header {
  background:none;
  border:0;
  color:white;
- font-size:21px;
+ font-size:25px;
  cursor:pointer;
 }
 
-.search {
- margin-top:15px;
-}
+.search {margin-top:15px}
 
 .search input {
  width:100%;
@@ -102,6 +93,7 @@ header {
  border-radius:25px;
  font-weight:bold;
  color:#172b50;
+ cursor:pointer;
 }
 
 .categories button.active {
@@ -137,9 +129,7 @@ header {
  letter-spacing:1px;
 }
 
-.breaking-content {
- padding:20px;
-}
+.breaking-content {padding:20px}
 
 .breaking-content h1 {
  font-size:25px;
@@ -180,9 +170,7 @@ header {
  font-size:48px;
 }
 
-.post-content {
- padding:14px;
-}
+.post-content {padding:14px}
 
 .post-content h3 {
  font-size:17px;
@@ -243,6 +231,7 @@ header {
  padding:12px 20px;
  border-radius:8px;
  margin-top:12px;
+ cursor:pointer;
 }
 
 footer {
@@ -296,20 +285,16 @@ footer p {
  cursor:pointer;
 }
 
-.bottom-nav button span {
- font-size:21px;
-}
+.bottom-nav button span {font-size:21px}
 
-.bottom-nav button.active {
- color:#f6c900;
-}
+.bottom-nav button.active {color:#f6c900}
 
 .article-modal {
  display:none;
  position:fixed;
  inset:0;
  background:#0009;
- z-index:30;
+ z-index:100;
  padding:15px;
  overflow-y:auto;
 }
@@ -322,9 +307,7 @@ footer p {
  margin:30px auto;
 }
 
-.modal-content h2 {
- margin:12px 0;
-}
+.modal-content h2 {margin:12px 0}
 
 .close {
  float:right;
@@ -332,6 +315,7 @@ footer p {
  background:#eee;
  border-radius:7px;
  padding:8px 12px;
+ cursor:pointer;
 }
 
 .article-image {
@@ -342,13 +326,100 @@ footer p {
  margin:12px 0;
 }
 
+/* MENU */
+.menu-panel {
+ display:none;
+ position:fixed;
+ top:85px;
+ right:12px;
+ width:250px;
+ max-width:calc(100vw - 24px);
+ background:white;
+ color:#172033;
+ border-radius:12px;
+ padding:15px;
+ box-shadow:0 5px 20px #0003;
+ z-index:90;
+ max-height:75vh;
+ overflow-y:auto;
+}
+
+.menu-panel.show {display:block}
+
+.menu-panel h3 {
+ margin:5px 0 12px;
+ color:#071b49;
+ font-size:17px;
+}
+
+.menu-panel button {
+ width:100%;
+ padding:12px;
+ border:0;
+ background:#f1f4f9;
+ border-radius:8px;
+ margin:4px 0;
+ text-align:start;
+ font-weight:bold;
+ cursor:pointer;
+ color:#172033;
+}
+
+.menu-panel button:active {
+ background:#dce8ff;
+}
+
+.menu-panel .language-title {
+ margin-top:15px;
+ padding-top:12px;
+ border-top:1px solid #ddd;
+}
+
+.menu-panel button.selected-language {
+ background:#0755d9;
+ color:white;
+}
+
+.menu-overlay {
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:80;
+}
+
+.menu-overlay.show {display:block}
+
+[dir="rtl"] .menu-panel {
+ right:auto;
+ left:12px;
+}
+
+[dir="rtl"] .brand {
+ flex-direction:row;
+}
+
+[dir="rtl"] .header-actions {
+ margin-left:0;
+ margin-right:auto;
+}
+
+[dir="rtl"] .post-meta {
+ flex-direction:row;
+}
+
+[dir="rtl"] .post-actions {
+ flex-direction:row;
+}
+
+[dir="rtl"] .breaking-content,
+[dir="rtl"] .post-content,
+[dir="rtl"] .modal-content {
+ text-align:right;
+}
+
 @media(min-width:650px) {
- .post-image {
-  height:210px;
- }
- .container {
-  padding:20px;
- }
+ .post-image {height:210px}
+ .container {padding:20px}
 }
 </style>
 </head>
@@ -357,7 +428,9 @@ footer p {
 
 <header>
  <div class="brand">
-  <img class="logo" src="74556.png" alt="USMAN YOBE TALK SHOW official logo">
+
+  <img class="logo" src="74556.png"
+   alt="USMAN YOBE TALK SHOW official logo">
 
   <div>
    <h2>USMAN YOBE</h2>
@@ -366,28 +439,91 @@ footer p {
   </div>
 
   <div class="header-actions">
-   <button onclick="document.getElementById('search').focus()">⌕</button>
+   <button aria-label="Search"
+    onclick="document.getElementById('search').focus()">⌕</button>
+
+   <button aria-label="Menu"
+    onclick="toggleMenu()">☰</button>
   </div>
+
  </div>
 
  <div class="search">
-  <input
-   id="search"
-   type="search"
+  <input id="search" type="search"
    placeholder="Nemo labarai..."
    oninput="renderPosts()">
  </div>
 </header>
 
+<!-- MENU OVERLAY -->
+<div class="menu-overlay" id="menuOverlay"
+ onclick="closeMenu()"></div>
+
+<!-- MENU PANEL -->
+<div class="menu-panel" id="menuPanel">
+
+ <h3 id="menuTitle">☰ Menu</h3>
+
+ <button onclick="menuNavigate('home')">
+  ⌂ <span data-i18n="home">Gida</span>
+ </button>
+
+ <button onclick="menuNavigate('videos')">
+  ▶ <span data-i18n="videos">Bidiyoyi</span>
+ </button>
+
+ <button onclick="menuNavigate('live')">
+  📡 <span data-i18n="live">Live TV</span>
+ </button>
+
+ <button onclick="menuNavigate('more')">
+  ▦ <span data-i18n="more">Game da Mu</span>
+ </button>
+
+ <h3 class="language-title" id="languageTitle">
+  🌐 Language / Harshe
+ </h3>
+
+ <button id="lang-en" onclick="setLanguage('en')">
+  🇬🇧 English
+ </button>
+
+ <button id="lang-ha" onclick="setLanguage('ha')">
+  🇳🇬 Hausa
+ </button>
+
+ <button id="lang-ar" onclick="setLanguage('ar')">
+  🇸🇦 العربية
+ </button>
+
+</div>
+
 <nav class="categories" id="categories">
- <button class="active" onclick="filterCategory('All',this)">Home</button>
- <button onclick="filterCategory('News',this)">News</button>
- <button onclick="filterCategory('Politics',this)">Politics</button>
- <button onclick="filterCategory('Entertainment',this)">Entertainment</button>
- <button onclick="filterCategory('Business',this)">Business</button>
- <button onclick="filterCategory('Youth',this)">Matasa</button>
- <button onclick="filterCategory('Sports',this)">Sports</button>
- <button onclick="filterCategory('Education',this)">Education</button>
+
+ <button class="active" onclick="filterCategory('All',this)"
+  data-i18n="home">Home</button>
+
+ <button onclick="filterCategory('News',this)"
+  data-i18n="news">News</button>
+
+ <button onclick="filterCategory('Politics',this)"
+  data-i18n="politics">Politics</button>
+
+ <button onclick="filterCategory('Entertainment',this)"
+  data-i18n="entertainment">Entertainment</button>
+
+ <button onclick="filterCategory('Business',this)"
+  data-i18n="business">Business</button>
+
+ <button onclick="filterCategory('Youth',this)"
+  data-i18n="youth">Matasa</button>
+
+ <button onclick="filterCategory('Sports',this)"
+  data-i18n="sports">Sports</button>
+
+ <button onclick="filterCategory('Education',this)"
+  data-i18n="education">Education</button>
+
 </nav>
 
 <main class="container">
@@ -395,21 +531,28 @@ footer p {
  <section id="home">
 
   <div class="breaking">
-   <div class="breaking-top">🔴 BREAKING NEWS</div>
+
+   <div class="breaking-top" data-i18n="breaking">
+    🔴 BREAKING NEWS
+   </div>
 
    <div class="breaking-content">
+
     <span class="tag">USMAN YOBE TALK SHOW</span>
 
-    <h1>Labaran Yobe da Arewa</h1>
+    <h1 data-i18n="welcome">Labaran Yobe da Arewa</h1>
 
-    <p>
+    <p data-i18n="welcomeText">
      Ku kasance tare da mu domin samun sahihan labarai,
      rahotanni, siyasa, kasuwanci da nishadi.
     </p>
+
    </div>
   </div>
 
-  <h2 class="section-title">📰 Sabbin Labarai</h2>
+  <h2 class="section-title" data-i18n="latest">
+   📰 Sabbin Labarai
+  </h2>
 
   <div id="posts">
    <div class="empty">Ana loda sabbin labarai...</div>
@@ -419,91 +562,105 @@ footer p {
 
  <section id="videos" style="display:none">
 
-  <h2 class="section-title">▶ Bidiyoyi da Shirye-shirye</h2>
+  <h2 class="section-title" data-i18n="videosTitle">
+   ▶ Bidiyoyi da Shirye-shirye
+  </h2>
 
   <div class="video-box">
+
    <div style="font-size:45px">📺</div>
 
    <h2>USMAN YOBE TALK SHOW</h2>
 
-   <p>Hirarraki, rahotanni da shirye-shiryen musamman.</p>
+   <p data-i18n="videoDescription">
+    Hirarraki, rahotanni da shirye-shiryen musamman.
+   </p>
 
-   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank')">
+   <button onclick="window.open(
+    'https://www.youtube.com/@ASAWWARATV','_blank')"
+    data-i18n="watch">
     Kalli YouTube
    </button>
-  </div>
 
+  </div>
  </section>
 
  <section id="live" style="display:none">
 
-  <h2 class="section-title">🔴 Live TV</h2>
+  <h2 class="section-title" data-i18n="liveTitle">
+   🔴 Live TV
+  </h2>
 
   <div class="video-box">
+
    <div style="font-size:45px">📡</div>
 
    <h2>ASAWWARA TV</h2>
 
-   <p>
+   <p data-i18n="liveDescription">
     Shirin kallon tasharmu kai tsaye zai kasance nan
     idan an haɗa live stream.
    </p>
-  </div>
 
+  </div>
  </section>
 
  <section id="more" style="display:none">
 
-  <h2 class="section-title">Game da Mu</h2>
+  <h2 class="section-title" data-i18n="more">
+   Game da Mu
+  </h2>
 
-  <div class="post-content" style="background:white;border-radius:12px">
+  <div class="post-content"
+   style="background:white;border-radius:12px">
 
    <h2>USMAN YOBE TALK SHOW</h2>
 
    <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
 
-   <p style="margin-top:12px">
+   <p style="margin-top:12px" data-i18n="aboutText">
     Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.
    </p>
 
    <div class="social">
-    <a href="https://www.tiktok.com/@usman1yobe" target="_blank">TikTok</a>
 
-    <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank">Facebook</a>
+    <a href="https://www.tiktok.com/@usman1yobe"
+     target="_blank" rel="noopener">TikTok</a>
 
-    <a href="https://www.youtube.com/@ASAWWARATV" target="_blank">YouTube</a>
+    <a href="https://www.facebook.com/share/1C69g7FDMm/"
+     target="_blank" rel="noopener">Facebook</a>
+
+    <a href="https://www.youtube.com/@ASAWWARATV"
+     target="_blank" rel="noopener">YouTube</a>
+
    </div>
-
   </div>
-
  </section>
 
 </main>
 
 <footer>
  <h3>USMAN YOBE TALK SHOW</h3>
-
  <p>TASHAR AL'UMMA</p>
-
  <p>© 2026 Usman Yobe Talk Show. All Rights Reserved.</p>
 </footer>
 
 <nav class="bottom-nav">
 
  <button class="active" onclick="showSection('home',this)">
-  <span>⌂</span>Home
+  <span>⌂</span><span data-i18n="home">Home</span>
  </button>
 
  <button onclick="showSection('videos',this)">
-  <span>▶</span>Videos
+  <span>▶</span><span data-i18n="videos">Videos</span>
  </button>
 
  <button onclick="showSection('live',this)">
-  <span>📡</span>Live TV
+  <span>📡</span><span data-i18n="live">Live TV</span>
  </button>
 
  <button onclick="showSection('more',this)">
-  <span>▦</span>More
+  <span>▦</span><span data-i18n="more">More</span>
  </button>
 
 </nav>
@@ -512,23 +669,26 @@ footer p {
 
  <div class="modal-content">
 
-  <button class="close" onclick="closeArticle()">Close ✕</button>
+  <button class="close" onclick="closeArticle()">
+   Close ✕
+  </button>
 
   <div id="articleDetails" style="padding-top:35px"></div>
 
  </div>
-
 </div>
 
-<!-- SUPABASE CONNECTION -->
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 // SUPABASE SETTINGS
-const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
+const SUPABASE_URL =
+ "https://latxtetkscajmbqppnad.supabase.co";
 
-const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
+const SUPABASE_KEY =
+ "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
 
 const db = window.supabase.createClient(
  SUPABASE_URL,
@@ -537,8 +697,118 @@ const db = window.supabase.createClient(
 
 // NEWS DATA
 let posts = [];
-
 let currentCategory = "All";
+
+// LANGUAGE SYSTEM
+const translations = {
+
+ en: {
+  menu:"Menu",
+  language:"🌐 Language",
+  home:"Home",
+  news:"News",
+  politics:"Politics",
+  entertainment:"Entertainment",
+  business:"Business",
+  youth:"Youth",
+  sports:"Sports",
+  education:"Education",
+  videos:"Videos",
+  live:"Live TV",
+  more:"About Us",
+  search:"Search news...",
+  breaking:"🔴 BREAKING NEWS",
+  welcome:"News from Yobe and Northern Nigeria",
+  welcomeText:"Stay with us for reliable news, reports, politics, business and entertainment.",
+  latest:"📰 Latest News",
+  videosTitle:"▶ Videos and Programs",
+  videoDescription:"Interviews, reports and special programs.",
+  liveTitle:"🔴 Live TV",
+  liveDescription:"Watch our television station live here when live streaming is connected.",
+  aboutText:"We bring you news, discussions, community awareness and entertainment.",
+  watch:"Watch YouTube",
+  loading:"Loading latest news...",
+  noNews:"No news available yet.",
+  read:"Read Story →",
+  share:"Share ↗",
+  close:"Close",
+  error:"Unable to load news. Please try again.",
+  dateLocale:"en-GB",
+  sharePrompt:"Copy this text to share:"
+ },
+
+ ha: {
+  menu:"Menu",
+  language:"🌐 Harshe",
+  home:"Gida",
+  news:"Labarai",
+  politics:"Siyasa",
+  entertainment:"Nishadi",
+  business:"Kasuwanci",
+  youth:"Matasa",
+  sports:"Wasanni",
+  education:"Ilimi",
+  videos:"Bidiyoyi",
+  live:"Live TV",
+  more:"Game da Mu",
+  search:"Nemo labarai...",
+  breaking:"🔴 LABARI DA DUMI-DUMI",
+  welcome:"Labaran Yobe da Arewa",
+  welcomeText:"Ku kasance tare da mu domin samun sahihan labarai, rahotanni, siyasa, kasuwanci da nishadi.",
+  latest:"📰 Sabbin Labarai",
+  videosTitle:"▶ Bidiyoyi da Shirye-shirye",
+  videoDescription:"Hirarraki, rahotanni da shirye-shiryen musamman.",
+  liveTitle:"🔴 Live TV",
+  liveDescription:"Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.",
+  aboutText:"Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.",
+  watch:"Kalli YouTube",
+  loading:"Ana loda sabbin labarai...",
+  noNews:"Babu labari tukuna.",
+  read:"Karanta labari →",
+  share:"Raba ↗",
+  close:"Rufe",
+  error:"An samu matsala wajen ɗauko labarai. A sake gwadawa.",
+  dateLocale:"ha-NG",
+  sharePrompt:"Kwafi wannan rubutu domin rabawa:"
+ },
+
+ ar: {
+  menu:"القائمة",
+  language:"🌐 اللغة",
+  home:"الرئيسية",
+  news:"الأخبار",
+  politics:"السياسة",
+  entertainment:"الترفيه",
+  business:"الأعمال",
+  youth:"الشباب",
+  sports:"الرياضة",
+  education:"التعليم",
+  videos:"الفيديو",
+  live:"البث المباشر",
+  more:"من نحن",
+  search:"ابحث عن الأخبار...",
+  breaking:"🔴 أخبار عاجلة",
+  welcome:"أخبار ولاية يوبي وشمال نيجيريا",
+  welcomeText:"تابعونا للحصول على الأخبار الموثوقة والتقارير والسياسة والأعمال والترفيه.",
+  latest:"📰 آخر الأخبار",
+  videosTitle:"▶ الفيديو والبرامج",
+  videoDescription:"مقابلات وتقارير وبرامج خاصة.",
+  liveTitle:"🔴 البث المباشر",
+  liveDescription:"ستتمكنون من مشاهدة قناتنا مباشرة هنا عند ربط البث المباشر.",
+  aboutText:"نقدم الأخبار والمناقشات والتوعية المجتمعية والترفيه.",
+  watch:"شاهد على يوتيوب",
+  loading:"جارٍ تحميل آخر الأخبار...",
+  noNews:"لا توجد أخبار حتى الآن.",
+  read:"اقرأ الخبر ←",
+  share:"مشاركة ↗",
+  close:"إغلاق",
+  error:"تعذر تحميل الأخبار. يرجى المحاولة مرة أخرى.",
+  dateLocale:"ar",
+  sharePrompt:"انسخ هذا النص للمشاركة:"
+ }
+};
+
+let currentLanguage = "ha";
 
 // HTML SECURITY
 function escapeHTML(value) {
@@ -551,12 +821,15 @@ function escapeHTML(value) {
  }[c]));
 }
 
-// SAFE URL CHECK
+// SAFE URL
 function safeURL(value) {
  try {
   const url = new URL(value);
 
-  if (url.protocol === "https:" || url.protocol === "http:") {
+  if (
+   url.protocol === "https:" ||
+   url.protocol === "http:"
+  ) {
    return url.href;
   }
 
@@ -566,36 +839,142 @@ function safeURL(value) {
  }
 }
 
-// CATEGORY TRANSLATION
+// TRANSLATE CATEGORY
 function displayCategory(category) {
 
- if (category === "General News") return "News";
+ const t = translations[currentLanguage];
 
- if (category === "Matasa") return "Youth";
+ if (
+  category === "General News" ||
+  category === "News"
+ ) return t.news;
 
- return category || "News";
+ if (
+  category === "Matasa" ||
+  category === "Youth"
+ ) return t.youth;
+
+ if (category === "Politics") return t.politics;
+ if (category === "Entertainment") return t.entertainment;
+ if (category === "Business") return t.business;
+ if (category === "Sports") return t.sports;
+ if (category === "Education") return t.education;
+
+ return category || t.news;
 }
 
-// LOAD PUBLISHED NEWS FROM SUPABASE
+// APPLY LANGUAGE
+function setLanguage(lang) {
+
+ if (!translations[lang]) return;
+
+ currentLanguage = lang;
+
+ try {
+  localStorage.setItem("usman_yobe_language", lang);
+ } catch(e) {}
+
+ const t = translations[lang];
+
+ const isArabic = lang === "ar";
+
+ document.documentElement.lang = lang;
+ document.documentElement.dir = isArabic ? "rtl" : "ltr";
+ document.body.dir = isArabic ? "rtl" : "ltr";
+
+ // Update all translated text
+ document.querySelectorAll("[data-i18n]").forEach(element => {
+
+  const key = element.getAttribute("data-i18n");
+
+  if (t[key] !== undefined) {
+   element.textContent = t[key];
+  }
+
+ });
+
+ // Search placeholder
+ document.getElementById("search").placeholder = t.search;
+
+ // Menu title
+ document.getElementById("menuTitle").textContent = "☰ " + t.menu;
+
+ document.getElementById("languageTitle").textContent = t.language;
+
+ // Language selection highlight
+ ["en","ha","ar"].forEach(code => {
+
+  const button = document.getElementById("lang-" + code);
+
+  button.classList.toggle(
+   "selected-language",
+   code === lang
+  );
+
+ });
+
+ // Close menu
+ closeMenu();
+
+ // Update news
+ renderPosts();
+}
+
+// MENU
+function toggleMenu() {
+
+ const panel = document.getElementById("menuPanel");
+ const overlay = document.getElementById("menuOverlay");
+
+ panel.classList.toggle("show");
+ overlay.classList.toggle("show");
+
+}
+
+function closeMenu() {
+
+ document.getElementById("menuPanel").classList.remove("show");
+ document.getElementById("menuOverlay").classList.remove("show");
+
+}
+
+function menuNavigate(id) {
+
+ closeMenu();
+
+ const buttons = document.querySelectorAll(".bottom-nav button");
+
+ const indexes = {
+  home:0,
+  videos:1,
+  live:2,
+  more:3
+ };
+
+ showSection(id,buttons[indexes[id]]);
+}
+
+// LOAD NEWS FROM SUPABASE
 async function loadNews() {
 
  const container = document.getElementById("posts");
+ const t = translations[currentLanguage];
 
  container.innerHTML =
-  '<div class="empty">Ana loda sabbin labarai...</div>';
+  '<div class="empty">' + t.loading + '</div>';
 
  const { data, error } = await db
   .from("news_posts")
   .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at")
-  .eq("status", "published")
-  .order("published_at", { ascending: false });
+  .eq("status","published")
+  .order("published_at",{ascending:false});
 
  if (error) {
 
-  console.error("News loading error:", error);
+  console.error("News loading error:",error);
 
   container.innerHTML =
-   '<div class="empty">An samu matsala wajen ɗauko labarai. A sake gwadawa.</div>';
+   '<div class="empty">' + t.error + '</div>';
 
   return;
  }
@@ -608,23 +987,37 @@ async function loadNews() {
 // DISPLAY NEWS
 function renderPosts() {
 
+ const t = translations[currentLanguage];
+
  const query = document
   .getElementById("search")
   .value
-  .toLowerCase();
+  .toLowerCase()
+  .trim();
 
  const filtered = posts.filter(p => {
 
   const category = displayCategory(p.category);
 
   return (
-   (currentCategory === "All" || category === currentCategory) &&
+
+   (
+    currentCategory === "All" ||
+    (
+     currentCategory === "News" &&
+     (p.category === "News" || p.category === "General News")
+    ) ||
+    category === t[currentCategory.toLowerCase()]
+   )
+
+   &&
 
    (
     (p.title || "").toLowerCase().includes(query) ||
     (p.excerpt || "").toLowerCase().includes(query) ||
     (p.content || "").toLowerCase().includes(query)
    )
+
   );
 
  });
@@ -634,7 +1027,7 @@ function renderPosts() {
  if (!filtered.length) {
 
   container.innerHTML =
-   '<div class="empty">Babu labari tukuna.</div>';
+   '<div class="empty">' + t.noNews + '</div>';
 
   return;
  }
@@ -642,7 +1035,6 @@ function renderPosts() {
  container.innerHTML = filtered.map(p => {
 
   const image = safeURL(p.image_url);
-
   const video = safeURL(p.video_url);
 
   const index = posts.findIndex(item => item.id === p.id);
@@ -653,7 +1045,10 @@ function renderPosts() {
 
     ${
      image
-     ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" style="margin:0;width:100%;border-radius:0;max-height:260px">`
+     ? `<img class="article-image"
+        src="${escapeHTML(image)}"
+        alt="${escapeHTML(p.title)}"
+        style="margin:0;width:100%;border-radius:0;max-height:260px">`
      : `<div class="post-image">📰</div>`
     }
 
@@ -672,7 +1067,7 @@ function renderPosts() {
       <span>
        ${
         p.published_at
-        ? new Date(p.published_at).toLocaleDateString("ha-NG")
+        ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
         : ""
        }
       </span>
@@ -684,11 +1079,11 @@ function renderPosts() {
      <div class="post-actions">
 
       <button onclick="openArticle(${index})">
-       Karanta labari →
+       ${t.read}
       </button>
 
       <button onclick="sharePost(${index})">
-       Share ↗
+       ${t.share}
       </button>
 
      </div>
@@ -696,8 +1091,9 @@ function renderPosts() {
      ${
       video
       ? `<p style="margin-top:12px">
-          <a href="${escapeHTML(video)}" target="_blank" rel="noopener">
-           ▶ Kalli bidiyo
+          <a href="${escapeHTML(video)}"
+           target="_blank" rel="noopener">
+           ▶ ${t.watch}
           </a>
          </p>`
       : ""
@@ -714,12 +1110,11 @@ function renderPosts() {
 }
 
 // CATEGORY FILTER
-function filterCategory(category, button) {
+function filterCategory(category,button) {
 
  currentCategory = category;
 
- document
-  .querySelectorAll(".categories button")
+ document.querySelectorAll(".categories button")
   .forEach(b => b.classList.remove("active"));
 
  button.classList.add("active");
@@ -733,21 +1128,19 @@ function filterCategory(category, button) {
 }
 
 // BOTTOM NAVIGATION
-function showSection(id, button) {
+function showSection(id,button) {
 
- document
-  .querySelectorAll("main section")
+ document.querySelectorAll("main section")
   .forEach(s => s.style.display = "none");
 
  document.getElementById(id).style.display = "block";
 
- document
-  .querySelectorAll(".bottom-nav button")
+ document.querySelectorAll(".bottom-nav button")
   .forEach(b => b.classList.remove("active"));
 
  if (button) button.classList.add("active");
 
- window.scrollTo(0, 0);
+ window.scrollTo(0,0);
 }
 
 // OPEN FULL NEWS
@@ -757,11 +1150,16 @@ function openArticle(index) {
 
  if (!p) return;
 
- const image = safeURL(p.image_url);
+ const t = translations[currentLanguage];
 
+ const image = safeURL(p.image_url);
  const video = safeURL(p.video_url);
 
- document.getElementById("articleDetails").innerHTML = `
+ const details = document.getElementById("articleDetails");
+
+ details.dir = currentLanguage === "ar" ? "rtl" : "ltr";
+
+ details.innerHTML = `
 
   <span class="tag">
    ${escapeHTML(displayCategory(p.category))}
@@ -773,7 +1171,7 @@ function openArticle(index) {
 
    ${
     p.published_at
-    ? new Date(p.published_at).toLocaleDateString("ha-NG")
+    ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
     : ""
    }
 
@@ -783,7 +1181,9 @@ function openArticle(index) {
 
   ${
    image
-   ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}">`
+   ? `<img class="article-image"
+       src="${escapeHTML(image)}"
+       alt="${escapeHTML(p.title)}">`
    : ""
   }
 
@@ -794,8 +1194,9 @@ function openArticle(index) {
   ${
    video
    ? `<p style="margin-top:15px">
-       <a href="${escapeHTML(video)}" target="_blank" rel="noopener">
-        ▶ Kalli bidiyo
+       <a href="${escapeHTML(video)}"
+        target="_blank" rel="noopener">
+        ▶ ${t.watch}
        </a>
       </p>`
    : ""
@@ -820,42 +1221,61 @@ function sharePost(index) {
 
  if (!p) return;
 
+ const t = translations[currentLanguage];
+
  const text = p.title + " - Usman Yobe Talk Show";
 
  if (navigator.share) {
 
   navigator.share({
-   title: p.title,
-   text: text,
-   url: location.href
+   title:p.title,
+   text:text,
+   url:location.href
   }).catch(() => {});
 
  } else {
 
-  window.prompt(
-   "Kwafi wannan rubutu domin rabawa:",
-   text
-  );
+  window.prompt(t.sharePrompt,text);
 
  }
 
 }
 
-// START WEBSITE
+// START APP
+try {
+
+ const savedLanguage =
+  localStorage.getItem("usman_yobe_language");
+
+ if (savedLanguage && translations[savedLanguage]) {
+  currentLanguage = savedLanguage;
+ }
+
+} catch(e) {}
+
+setLanguage(currentLanguage);
+
 loadNews();
 
 // AUTOMATIC REFRESH EVERY 60 SECONDS
-setInterval(loadNews, 60000);
+setInterval(loadNews,60000);
 
 </script>
+
+<!-- SERVICE WORKER -->
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .then(() => console.log("App is ready"))
-      .catch(error => console.log("Service Worker Error:", error));
-  });
+
+ window.addEventListener("load",() => {
+
+  navigator.serviceWorker.register("./service-worker.js")
+   .then(() => console.log("App is ready"))
+   .catch(error => console.log("Service Worker Error:",error));
+
+ });
+
 }
 </script>
+
 </body>
 </html>
