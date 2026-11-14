@@ -11,77 +11,35 @@
 
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;background:#f2f4f8;color:#182333;
-  font-family:Arial,sans-serif
-}
-header{
-  background:#101827;color:white;padding:22px 15px;text-align:center
-}
+body{margin:0;background:#f2f4f8;color:#182333;font-family:Arial,sans-serif}
+header{background:#101827;color:white;padding:22px 15px;text-align:center}
 header img{width:75px;height:75px;object-fit:contain}
 header h2{margin:8px 0 4px}
 header p{margin:5px;color:#d4dbea;font-size:13px}
 .container{max-width:850px;margin:22px auto;padding:15px}
-.card{
-  background:white;padding:20px;border-radius:13px;
-  margin-bottom:18px;box-shadow:0 3px 14px #0000000c
-}
+.card{background:white;padding:20px;border-radius:13px;margin-bottom:18px;box-shadow:0 3px 14px #0000000c}
 h3{margin-top:0;color:#17253a}
-input,textarea,select{
-  width:100%;padding:13px;margin:7px 0 13px;
-  border:1px solid #ccd3df;border-radius:8px;font-size:15px;
-  background:white;color:#182333
-}
+input,textarea,select{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #ccd3df;border-radius:8px;font-size:15px;background:white;color:#182333}
 textarea{min-height:110px;resize:vertical}
 label{font-weight:bold;font-size:14px}
-button{
-  padding:12px 17px;border:0;border-radius:8px;
-  background:#bd8b25;color:white;font-weight:bold;
-  cursor:pointer;margin:4px
-}
+button{padding:12px 17px;border:0;border-radius:8px;background:#bd8b25;color:white;font-weight:bold;cursor:pointer;margin:4px}
 button.secondary{background:#26364d}
 button.danger{background:#c0392b}
 button:disabled{opacity:.5;cursor:not-allowed}
 .hidden{display:none!important}
-.message{
-  padding:12px;border-radius:8px;margin:10px 0;
-  display:none;overflow-wrap:anywhere
-}
+.message{padding:12px;border-radius:8px;margin:10px 0;display:none;overflow-wrap:anywhere}
 .success{background:#e2f7e9;color:#176b32}
 .error{background:#ffe5e5;color:#a11}
-.post{
-  border:1px solid #e1e5eb;padding:15px;
-  border-radius:9px;margin:12px 0
-}
+.post{border:1px solid #e1e5eb;padding:15px;border-radius:9px;margin:12px 0}
 .post h4{margin:5px 0}
 .small{font-size:12px;color:#697586}
 .actions{display:flex;flex-wrap:wrap;gap:5px}
-.toprow{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:10px
-}
-.status{
-  display:inline-block;padding:5px 9px;border-radius:20px;
-  background:#e2f7e9;color:#176b32;font-size:12px
-}
-.preview{
-  display:none;width:100%;max-height:280px;
-  margin:10px 0;border-radius:10px;background:#101827
-}
-.help{
-  font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px
-}
-.opportunity-note{
-  background:#eef5ff;border-left:4px solid #bd8b25;
-  padding:12px;border-radius:7px;margin:12px 0;
-  font-size:13px;line-height:1.6
-}
-.opportunity-fields{
-  border:1px solid #d9e2f0;
-  background:#f8faff;
-  padding:15px;border-radius:10px;
-  margin:15px 0
-}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;background:#e2f7e9;color:#176b32;font-size:12px}
+.preview{display:none;width:100%;max-height:280px;margin:10px 0;border-radius:10px;background:#101827}
+.help{font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px}
+.opportunity-note{background:#eef5ff;border-left:4px solid #bd8b25;padding:12px;border-radius:7px;margin:12px 0;font-size:13px;line-height:1.6}
+.opportunity-fields{border:1px solid #d9e2f0;background:#f8faff;padding:15px;border-radius:10px;margin:15px 0}
 .opportunity-fields h3{margin-bottom:8px}
 hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 </style>
@@ -90,8 +48,7 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <body>
 
 <header>
-<img src="logo.png" alt="Usman Yobe Talk Show Logo"
-onerror="this.style.display='none'">
+<img src="logo.png" alt="Usman Yobe Talk Show Logo" onerror="this.style.display='none'">
 <h2>USMAN YOBE TALK SHOW</h2>
 <p>...one voice, one community, one future</p>
 <p>ADMIN DASHBOARD</p>
@@ -102,10 +59,8 @@ onerror="this.style.display='none'">
 <div id="loginSection" class="card">
 <h3>Admin Login</h3>
 <p class="small">Shiga da email da password ɗinka na Admin.</p>
-
 <input id="email" type="email" placeholder="Admin Email" autocomplete="username">
 <input id="password" type="password" placeholder="Password" autocomplete="current-password">
-
 <button id="loginBtn" onclick="login()">Login</button>
 <div id="loginMessage" class="message"></div>
 </div>
@@ -142,13 +97,10 @@ onerror="this.style.display='none'">
 
 <div id="opportunityGuide" class="opportunity-note hidden">
 <strong>DAMAR RAYUWA</strong><br>
-Zaɓi nau'in damar da kake wallafawa. Ka cika bayanan neman damar domin masu karatu su san yadda za su nema.
-Ka tabbatar bayanin ya fito daga sahihin tushe.
+Zaɓi nau'in damar da kake wallafawa. Ka cika bayanan neman damar domin masu karatu su san yadda za su nema. Ka tabbatar bayanin ya fito daga sahihin tushe.
 </div>
 
-<!-- OPPORTUNITY DETAILS -->
 <div id="opportunityFields" class="opportunity-fields hidden">
-
 <h3>Opportunity Information</h3>
 <p class="help">Waɗannan bayanai za su bayyana a shafin cikakken damar rayuwa.</p>
 
@@ -182,17 +134,14 @@ Ka tabbatar bayanin ya fito daga sahihin tushe.
 <strong>MUHIMMI:</strong><br>
 Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hanyar da ba ka tabbatar da ita ba.
 </div>
-
 </div>
 
 <hr>
 
 <label>Hoton Labari</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
-
 <button type="button" id="uploadImageBtn" onclick="uploadImage()">Upload Image</button>
 <div id="uploadMessage" class="message"></div>
-
 <img id="imagePreview" class="preview" alt="Image preview">
 
 <label>Image URL (ko saka URL kai tsaye)</label>
@@ -201,19 +150,11 @@ Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hany
 <hr>
 
 <h3>Bidiyon Labari</h3>
-
 <label>Zaɓi Bidiyo daga Gallery na waya</label>
 <input id="videoFile" type="file" accept="video/*" onchange="previewSelectedVideo()">
-
-<p class="help">
-Zaɓi bidiyo daga wayarka, sannan danna Upload Video.
-Matsakaicin girman bidiyo 50MB ne.
-</p>
-
+<p class="help">Zaɓi bidiyo daga wayarka, sannan danna Upload Video. Matsakaicin girman bidiyo 50MB ne.</p>
 <button type="button" id="uploadVideoBtn" onclick="uploadVideo()">Upload Video</button>
-
 <div id="videoUploadMessage" class="message"></div>
-
 <video id="videoPreview" class="preview" controls playsinline preload="metadata"></video>
 
 <label>Video URL (ko saka URL kai tsaye)</label>
@@ -235,8 +176,8 @@ Matsakaicin girman bidiyo 50MB ne.
 
 <button id="saveBtn" onclick="savePost()">Publish Story</button>
 <button class="secondary" onclick="clearForm()">Clear</button>
-
 <div id="formMessage" class="message"></div>
+
 </div>
 
 <div class="card">
@@ -249,17 +190,10 @@ Matsakaicin girman bidiyo 50MB ne.
 </div>
 
 <script>
+const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
+const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
 
-const SUPABASE_URL =
-"https://latxtetkscajmbqppnad.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let editingId = null;
 let currentPosts = [];
@@ -279,11 +213,7 @@ function hideMessage(id){
 
 function escapeHTML(value){
   return String(value ?? "").replace(/[&<>"']/g,char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[char]);
 }
 
@@ -297,26 +227,15 @@ function isValidHttpURL(value){
 }
 
 async function verifyAdmin(){
+  const {data:userData,error:userError} = await db.auth.getUser();
+  if(userError || !userData.user) throw new Error("Ka fara shiga Admin.");
 
-  const {data:userData,error:userError} =
-    await db.auth.getUser();
-
-  if(userError || !userData.user){
-    throw new Error("Ka fara shiga Admin.");
-  }
-
-  const {data:isAdmin,error:adminError} =
-    await db.rpc("is_admin");
-
+  const {data:isAdmin,error:adminError} = await db.rpc("is_admin");
   if(adminError) throw new Error(adminError.message);
-
-  if(isAdmin !== true){
-    throw new Error("Ba ka da izinin Admin.");
-  }
+  if(isAdmin !== true) throw new Error("Ba ka da izinin Admin.");
 }
 
 async function login(){
-
   hideMessage("loginMessage");
 
   const email = document.getElementById("email").value.trim();
@@ -332,49 +251,27 @@ async function login(){
   btn.textContent = "Ana shiga...";
 
   try{
-
-    const {error} = await db.auth.signInWithPassword({
-      email,password
-    });
-
+    const {error} = await db.auth.signInWithPassword({email,password});
     if(error) throw error;
-
     await checkAdmin();
-
   }catch(error){
-
     showMessage("loginMessage","Matsalar shiga: "+error.message,"error");
-
   }finally{
-
     btn.disabled = false;
     btn.textContent = "Login";
-
   }
 }
 
 async function checkAdmin(){
-
   try{
-
     await verifyAdmin();
-
     document.getElementById("loginSection").classList.add("hidden");
     document.getElementById("dashboard").classList.remove("hidden");
-
     await loadPosts();
-
   }catch(error){
-
     await db.auth.signOut();
     showLogin();
-
-    showMessage(
-      "loginMessage",
-      "Ba a tabbatar da Admin ba: "+error.message,
-      "error"
-    );
-
+    showMessage("loginMessage","Ba a tabbatar da Admin ba: "+error.message,"error");
   }
 }
 
@@ -384,41 +281,23 @@ function showLogin(){
 }
 
 async function logout(){
-
   await db.auth.signOut();
   showLogin();
-
   document.getElementById("password").value = "";
-
-  showMessage(
-    "loginMessage",
-    "Ka fita daga Admin Dashboard.",
-    "success"
-  );
+  showMessage("loginMessage","Ka fita daga Admin Dashboard.","success");
 }
 
-// SHOW OR HIDE OPPORTUNITY FIELDS
 function updateOpportunityFields(){
-
-  const isOpportunity =
-    document.getElementById("category").value === "Damar Rayuwa";
-
-  document.getElementById("opportunityGuide")
-    .classList.toggle("hidden",!isOpportunity);
-
-  document.getElementById("opportunityFields")
-    .classList.toggle("hidden",!isOpportunity);
+  const isOpportunity = document.getElementById("category").value === "Damar Rayuwa";
+  document.getElementById("opportunityGuide").classList.toggle("hidden",!isOpportunity);
+  document.getElementById("opportunityFields").classList.toggle("hidden",!isOpportunity);
 }
 
-document.getElementById("category")
-.addEventListener("change",updateOpportunityFields);
+document.getElementById("category").addEventListener("change",updateOpportunityFields);
 
-// IMAGE PREVIEW
 function previewSelectedImage(){
-
   const file = document.getElementById("imageFile").files[0];
   const preview = document.getElementById("imagePreview");
-
   if(!file) return;
 
   if(!file.type.startsWith("image/")){
@@ -428,30 +307,24 @@ function previewSelectedImage(){
   }
 
   if(imageObjectURL) URL.revokeObjectURL(imageObjectURL);
-
   imageObjectURL = URL.createObjectURL(file);
   preview.src = imageObjectURL;
   preview.style.display = "block";
 }
 
-// UPLOAD IMAGE
 async function uploadImage(){
-
   const file = document.getElementById("imageFile").files[0];
   const btn = document.getElementById("uploadImageBtn");
-
   hideMessage("uploadMessage");
 
   if(!file){
     showMessage("uploadMessage","Da farko zaɓi hoto daga Gallery.","error");
     return;
   }
-
   if(!file.type.startsWith("image/")){
     showMessage("uploadMessage","Zaɓi hoto kawai.","error");
     return;
   }
-
   if(file.size > 5*1024*1024){
     showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");
     return;
@@ -461,51 +334,32 @@ async function uploadImage(){
   btn.textContent = "Ana ɗora hoto...";
 
   try{
-
     await verifyAdmin();
 
-    const fileName = Date.now()+"-"+
-      file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
-
+    const fileName = Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
     const path = "news/"+fileName;
 
-    const {error} = await db.storage
-      .from("news-images")
-      .upload(path,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      });
-
+    const {error} = await db.storage.from("news-images").upload(path,file,{
+      cacheControl:"3600",upsert:false,contentType:file.type
+    });
     if(error) throw error;
 
-    const {data} = db.storage
-      .from("news-images")
-      .getPublicUrl(path);
-
+    const {data} = db.storage.from("news-images").getPublicUrl(path);
     document.getElementById("imageUrl").value = data.publicUrl;
     document.getElementById("imagePreview").src = data.publicUrl;
 
     showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
-
   }catch(error){
-
     showMessage("uploadMessage","Matsala: "+error.message,"error");
-
   }finally{
-
     btn.disabled = false;
     btn.textContent = "Upload Image";
-
   }
 }
 
-// VIDEO PREVIEW
 function previewSelectedVideo(){
-
   const file = document.getElementById("videoFile").files[0];
   const preview = document.getElementById("videoPreview");
-
   if(!file) return;
 
   if(!file.type.startsWith("video/")){
@@ -515,31 +369,25 @@ function previewSelectedVideo(){
   }
 
   if(videoObjectURL) URL.revokeObjectURL(videoObjectURL);
-
   videoObjectURL = URL.createObjectURL(file);
   preview.src = videoObjectURL;
   preview.style.display = "block";
   preview.load();
 }
 
-// UPLOAD VIDEO
 async function uploadVideo(){
-
   const file = document.getElementById("videoFile").files[0];
   const btn = document.getElementById("uploadVideoBtn");
-
   hideMessage("videoUploadMessage");
 
   if(!file){
     showMessage("videoUploadMessage","Da farko zaɓi bidiyo daga Gallery na waya.","error");
     return;
   }
-
   if(!file.type.startsWith("video/")){
     showMessage("videoUploadMessage","Fayil ɗin da ka zaɓa ba bidiyo ba ne.","error");
     return;
   }
-
   if(file.size > 50*1024*1024){
     showMessage("videoUploadMessage","Bidiyon ya wuce 50MB.","error");
     return;
@@ -549,13 +397,10 @@ async function uploadVideo(){
   btn.textContent = "Ana ɗora bidiyo...";
 
   try{
-
     await verifyAdmin();
 
-    const safeName = file.name
-      .replace(/\.[^/.]+$/,"")
-      .replace(/[^a-zA-Z0-9_-]/g,"-")
-      .substring(0,60);
+    const safeName = file.name.replace(/\.[^/.]+$/,"")
+      .replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
 
     const extension = file.name.includes(".")
       ? file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
@@ -564,54 +409,33 @@ async function uploadVideo(){
     const fileName = Date.now()+"-"+safeName+"."+(extension||"mp4");
     const path = "videos/"+fileName;
 
-    const {error} = await db.storage
-      .from("news-videos")
-      .upload(path,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      });
-
+    const {error} = await db.storage.from("news-videos").upload(path,file,{
+      cacheControl:"3600",upsert:false,contentType:file.type
+    });
     if(error) throw error;
 
-    const {data} = db.storage
-      .from("news-videos")
-      .getPublicUrl(path);
-
+    const {data} = db.storage.from("news-videos").getPublicUrl(path);
     document.getElementById("videoUrl").value = data.publicUrl;
 
     const preview = document.getElementById("videoPreview");
-
     if(videoObjectURL){
       URL.revokeObjectURL(videoObjectURL);
       videoObjectURL = null;
     }
-
     preview.src = data.publicUrl;
     preview.style.display = "block";
     preview.load();
 
-    showMessage(
-      "videoUploadMessage",
-      "An ɗora bidiyon cikin nasara!",
-      "success"
-    );
-
+    showMessage("videoUploadMessage","An ɗora bidiyon cikin nasara!","success");
   }catch(error){
-
     showMessage("videoUploadMessage","An kasa ɗora bidiyon: "+error.message,"error");
-
   }finally{
-
     btn.disabled = false;
     btn.textContent = "Upload Video";
-
   }
 }
 
-// SAVE POST
 async function savePost(){
-
   hideMessage("formMessage");
 
   const title = document.getElementById("newsTitle").value.trim();
@@ -621,53 +445,31 @@ async function savePost(){
   const excerpt = document.getElementById("excerpt").value.trim();
   const content = document.getElementById("content").value.trim();
   const status = document.getElementById("status").value;
-
   const isOpportunity = category === "Damar Rayuwa";
 
-  const opportunity_type = isOpportunity
-    ? document.getElementById("opportunityType").value
-    : null;
-
-  const eligibility = isOpportunity
-    ? document.getElementById("eligibility").value.trim()
-    : null;
-
-  const application_deadline = isOpportunity
-    ? document.getElementById("applicationDeadline").value || null
-    : null;
-
-  const how_to_apply = isOpportunity
-    ? document.getElementById("howToApply").value.trim()
-    : null;
-
-  const application_url = isOpportunity
-    ? document.getElementById("applicationUrl").value.trim()
-    : null;
-
-  const contact_info = isOpportunity
-    ? document.getElementById("contactInfo").value.trim()
-    : null;
+  const opportunity_type = isOpportunity ? document.getElementById("opportunityType").value : null;
+  const eligibility = isOpportunity ? document.getElementById("eligibility").value.trim() : null;
+  const application_deadline = isOpportunity ? document.getElementById("applicationDeadline").value || null : null;
+  const how_to_apply = isOpportunity ? document.getElementById("howToApply").value.trim() : null;
+  const application_url = isOpportunity ? document.getElementById("applicationUrl").value.trim() : null;
+  const contact_info = isOpportunity ? document.getElementById("contactInfo").value.trim() : null;
 
   if(!title || !content){
     showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
     return;
   }
-
   if(image_url && !isValidHttpURL(image_url)){
     showMessage("formMessage","Image URL ba daidai ba ne.","error");
     return;
   }
-
   if(video_url && !isValidHttpURL(video_url)){
     showMessage("formMessage","Video URL ba daidai ba ne.","error");
     return;
   }
-
   if(isOpportunity && !opportunity_type){
     showMessage("formMessage","Da fatan zaɓi nau'in damar rayuwa.","error");
     return;
   }
-
   if(application_url && !isValidHttpURL(application_url)){
     showMessage("formMessage","Application Link ba daidai ba ne. Saka cikakken URL.","error");
     return;
@@ -680,7 +482,6 @@ async function savePost(){
   btn.textContent = "Ana adanawa...";
 
   try{
-
     await verifyAdmin();
 
     const post = {
@@ -698,35 +499,20 @@ async function savePost(){
       application_url:application_url||null,
       contact_info,
       updated_at:new Date().toISOString(),
-      published_at:status==="published"
-        ? new Date().toISOString()
-        : null
+      published_at:status==="published" ? new Date().toISOString() : null
     };
 
     let result;
-
     if(isEditing){
-
-      result = await db
-        .from("news_posts")
-        .update(post)
-        .eq("id",editingId);
-
+      result = await db.from("news_posts").update(post).eq("id",editingId);
     }else{
-
-      result = await db
-        .from("news_posts")
-        .insert(post);
-
+      result = await db.from("news_posts").insert(post);
     }
 
     if(result.error) throw result.error;
 
-    showMessage(
-      "formMessage",
-      isOpportunity
-        ? "An adana DAMAR RAYUWA cikin nasara!"
-        : "An adana labarin cikin nasara!",
+    showMessage("formMessage",
+      isOpportunity ? "An adana DAMAR RAYUWA cikin nasara!" : "An adana labarin cikin nasara!",
       "success"
     );
 
@@ -734,27 +520,24 @@ async function savePost(){
     await loadPosts();
 
   }catch(error){
-
     showMessage("formMessage","Matsala: "+error.message,"error");
-
   }finally{
-
     btn.disabled = false;
     btn.textContent = editingId !== null ? "Save Changes" : "Publish Story";
-
   }
 }
 
-// CLEAR FORM
 function clearForm(){
-
   editingId = null;
 
-  document.getElementById("newsTitle").value = "";
-  document.getElementById("imageUrl").value = "";
+  [
+    "newsTitle","imageUrl","videoUrl","excerpt","content",
+    "opportunityType","eligibility","applicationDeadline",
+    "howToApply","applicationUrl","contactInfo"
+  ].forEach(id=>document.getElementById(id).value="");
+
   document.getElementById("imageFile").value = "";
   document.getElementById("videoFile").value = "";
-
   document.getElementById("imagePreview").style.display = "none";
   document.getElementById("imagePreview").src = "";
 
@@ -764,19 +547,8 @@ function clearForm(){
   video.load();
   video.style.display = "none";
 
-  document.getElementById("videoUrl").value = "";
-  document.getElementById("excerpt").value = "";
-  document.getElementById("content").value = "";
-
   document.getElementById("category").value = "News";
   document.getElementById("status").value = "published";
-
-  document.getElementById("opportunityType").value = "";
-  document.getElementById("eligibility").value = "";
-  document.getElementById("applicationDeadline").value = "";
-  document.getElementById("howToApply").value = "";
-  document.getElementById("applicationUrl").value = "";
-  document.getElementById("contactInfo").value = "";
 
   updateOpportunityFields();
 
@@ -784,7 +556,6 @@ function clearForm(){
     URL.revokeObjectURL(imageObjectURL);
     imageObjectURL = null;
   }
-
   if(videoObjectURL){
     URL.revokeObjectURL(videoObjectURL);
     videoObjectURL = null;
@@ -797,21 +568,15 @@ function clearForm(){
   hideMessage("videoUploadMessage");
 }
 
-// LOAD POSTS
 async function loadPosts(){
-
   const area = document.getElementById("posts");
   area.textContent = "Loading news...";
 
   try{
-
-    const {data,error} = await db
-      .from("news_posts")
-      .select("*")
-      .order("created_at",{ascending:false});
+    const {data,error} = await db.from("news_posts")
+      .select("*").order("created_at",{ascending:false});
 
     if(error) throw error;
-
     currentPosts = data || [];
 
     if(currentPosts.length===0){
@@ -820,92 +585,57 @@ async function loadPosts(){
     }
 
     area.innerHTML = currentPosts.map(post=>`
-
       <div class="post">
-
         <h4>${escapeHTML(post.title)}</h4>
-
-        <p class="small">
-          ${escapeHTML(post.category)}
-          |
-          ${escapeHTML(post.status)}
-        </p>
-
+        <p class="small">${escapeHTML(post.category)} | ${escapeHTML(post.status)}</p>
         <p>${escapeHTML(post.excerpt||"")}</p>
 
-        ${post.category==="Damar Rayuwa"
-          ? `<p class="small">
-              DAMAR RAYUWA |
-              ${escapeHTML(post.opportunity_type||"Ba a zaɓa ba")}
-            </p>`
-          : ''}
+        ${post.category==="Damar Rayuwa" ? `
+          <p class="small">DAMAR RAYUWA | ${escapeHTML(post.opportunity_type||"Ba a zaɓa ba")}</p>
+          ${post.application_deadline ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>` : ""}
+          ${post.application_url ? `<p class="small">Application link: An saka</p>` : ""}
+        ` : ""}
 
-        ${post.application_deadline
-          ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>`
-          : ''}
-
-        ${post.video_url
-          ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>'
-          : ''}
+        ${post.video_url ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>' : ""}
 
         <div class="actions">
-
-          <button class="secondary"
-            onclick="editPost(${Number(post.id)})">
-            Edit
-          </button>
-
-          <button class="danger"
-            onclick="deletePost(${Number(post.id)})">
-            Delete
-          </button>
-
+          <button class="secondary" data-action="edit" data-id="${escapeHTML(post.id)}">Edit</button>
+          <button class="danger" data-action="delete" data-id="${escapeHTML(post.id)}">Delete</button>
         </div>
-
       </div>
-
     `).join("");
 
   }catch(error){
-
     area.textContent = "Matsala: "+error.message;
-
   }
 }
 
-// EDIT POST
+// Edit/Delete event handling supports numeric and UUID IDs.
+document.getElementById("posts").addEventListener("click",event=>{
+  const button = event.target.closest("button[data-action]");
+  if(!button) return;
+
+  const id = button.dataset.id;
+  if(button.dataset.action==="edit") editPost(id);
+  if(button.dataset.action==="delete") deletePost(id);
+});
+
 function editPost(id){
-
-  const post = currentPosts.find(
-    item=>String(item.id)===String(id)
-  );
-
+  const post = currentPosts.find(item=>String(item.id)===String(id));
   if(!post) return;
 
   editingId = post.id;
 
   document.getElementById("newsTitle").value = post.title||"";
   document.getElementById("category").value = post.category||"News";
-
   updateOpportunityFields();
 
-  document.getElementById("opportunityType").value =
-    post.opportunity_type||"";
-
-  document.getElementById("eligibility").value =
-    post.eligibility||"";
-
-  document.getElementById("applicationDeadline").value =
-    post.application_deadline||"";
-
-  document.getElementById("howToApply").value =
-    post.how_to_apply||"";
-
-  document.getElementById("applicationUrl").value =
-    post.application_url||"";
-
-  document.getElementById("contactInfo").value =
-    post.contact_info||"";
+  document.getElementById("opportunityType").value = post.opportunity_type||"";
+  document.getElementById("eligibility").value = post.eligibility||"";
+  document.getElementById("applicationDeadline").value = post.application_deadline||"";
+  document.getElementById("howToApply").value = post.how_to_apply||"";
+  document.getElementById("applicationUrl").value = post.application_url||"";
+  document.getElementById("contactInfo").value = post.contact_info||"";
 
   document.getElementById("imageUrl").value = post.image_url||"";
   document.getElementById("videoUrl").value = post.video_url||"";
@@ -917,7 +647,6 @@ function editPost(id){
   document.getElementById("saveBtn").textContent = "Save Changes";
 
   const imagePreview = document.getElementById("imagePreview");
-
   if(post.image_url && isValidHttpURL(post.image_url)){
     imagePreview.src = post.image_url;
     imagePreview.style.display = "block";
@@ -926,7 +655,6 @@ function editPost(id){
   }
 
   const videoPreview = document.getElementById("videoPreview");
-
   if(post.video_url && isValidHttpURL(post.video_url)){
     videoPreview.src = post.video_url;
     videoPreview.style.display = "block";
@@ -939,59 +667,33 @@ function editPost(id){
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
-// DELETE POST
 async function deletePost(id){
-
-  if(!confirm("Da gaske kana son goge wannan labari?")){
-    return;
-  }
+  if(!confirm("Da gaske kana son goge wannan labari?")) return;
 
   try{
-
     await verifyAdmin();
-
-    const {error} = await db
-      .from("news_posts")
-      .delete()
-      .eq("id",id);
-
+    const {error} = await db.from("news_posts").delete().eq("id",id);
     if(error) throw error;
 
     alert("An goge labarin.");
     await loadPosts();
-
   }catch(error){
-
     alert("Matsala: "+error.message);
-
   }
 }
 
-// AUTH SESSION
 db.auth.onAuthStateChange((event,session)=>{
-
-  if(event==="SIGNED_OUT"){
-    showLogin();
-  }
-
+  if(event==="SIGNED_OUT") showLogin();
 });
 
-// CHECK EXISTING SESSION
 (async function start(){
-
   const {data,error} = await db.auth.getSession();
-
   if(error){
     showLogin();
     return;
   }
-
-  if(data.session){
-    await checkAdmin();
-  }
-
+  if(data.session) await checkAdmin();
 })();
-
 </script>
 
 </body>
