@@ -29,9 +29,10 @@ header p{margin:5px;color:#d4dbea;font-size:13px}
 h3{margin-top:0;color:#17253a}
 input,textarea,select{
   width:100%;padding:13px;margin:7px 0 13px;
-  border:1px solid #ccd3df;border-radius:8px;font-size:15px
+  border:1px solid #ccd3df;border-radius:8px;font-size:15px;
+  background:white;color:#182333
 }
-textarea{min-height:130px;resize:vertical}
+textarea{min-height:110px;resize:vertical}
 label{font-weight:bold;font-size:14px}
 button{
   padding:12px 17px;border:0;border-radius:8px;
@@ -75,6 +76,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
   padding:12px;border-radius:7px;margin:12px 0;
   font-size:13px;line-height:1.6
 }
+.opportunity-fields{
+  border:1px solid #d9e2f0;
+  background:#f8faff;
+  padding:15px;border-radius:10px;
+  margin:15px 0
+}
+.opportunity-fields h3{margin-bottom:8px}
+hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 </style>
 </head>
 
@@ -131,12 +140,52 @@ onerror="this.style.display='none'">
 <option value="Damar Rayuwa">DAMAR RAYUWA</option>
 </select>
 
-<div id="opportunityGuide" class="opportunity-note">
+<div id="opportunityGuide" class="opportunity-note hidden">
 <strong>DAMAR RAYUWA</strong><br>
-Zaɓi wannan Category domin wallafa guraben aiki,
-scholarship, horo, tallafin matasa da sanarwar jarrabawa.
-Ka tabbatar bayanin damar ya fito daga sahihin tushe.
+Zaɓi nau'in damar da kake wallafawa. Ka cika bayanan neman damar domin masu karatu su san yadda za su nema.
+Ka tabbatar bayanin ya fito daga sahihin tushe.
 </div>
+
+<!-- OPPORTUNITY DETAILS -->
+<div id="opportunityFields" class="opportunity-fields hidden">
+
+<h3>Opportunity Information</h3>
+<p class="help">Waɗannan bayanai za su bayyana a shafin cikakken damar rayuwa.</p>
+
+<label>Opportunity Type / Nau'in Dama</label>
+<select id="opportunityType">
+<option value="">Zaɓi nau'in dama</option>
+<option value="Jobs">Jobs / Guraben Aiki</option>
+<option value="Scholarship">Scholarships / Tallafin Karatu</option>
+<option value="Training">Training / Horaswa</option>
+<option value="Business Grant">Business Grants / Tallafin Kasuwanci</option>
+<option value="Exams">JAMB / WAEC / NECO</option>
+<option value="Other">Other / Sauran Dama</option>
+</select>
+
+<label>Eligibility / Waɗanda Za Su Iya Nema</label>
+<textarea id="eligibility" placeholder="Misali: Matasa masu shekaru 18 zuwa 35, mazauna Yobe State..."></textarea>
+
+<label>Application Deadline / Ranar Rufe Nema</label>
+<input id="applicationDeadline" type="date">
+
+<label>How to Apply / Yadda Ake Nema</label>
+<textarea id="howToApply" placeholder="Bayyana matakan da mutum zai bi domin neman wannan dama..."></textarea>
+
+<label>Official Application Link</label>
+<input id="applicationUrl" type="url" placeholder="https://official-website.com/apply">
+
+<label>Contact Information / Hanyar Tuntuɓa</label>
+<textarea id="contactInfo" placeholder="Email, Phone, WhatsApp ko adireshin hukumar..."></textarea>
+
+<div class="opportunity-note">
+<strong>MUHIMMI:</strong><br>
+Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hanyar da ba ka tabbatar da ita ba.
+</div>
+
+</div>
+
+<hr>
 
 <label>Hoton Labari</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
@@ -177,16 +226,6 @@ Matsakaicin girman bidiyo 50MB ne.
 
 <label>Full News Story</label>
 <textarea id="content" placeholder="Rubuta cikakken bayani anan..."></textarea>
-
-<div class="opportunity-note">
-<strong>Shawara ga Admin:</strong><br>
-Idan kana wallafa damar rayuwa, ka rubuta:
-<br>• Sunan kamfani ko ƙungiyar da ta fitar da damar.
-<br>• Waɗanda za su iya nema.
-<br>• Yadda za a nemi damar ko official application link.
-<br>• Ranar rufe neman damar.
-<br>• Lambar tuntuɓa idan akwai.
-</div>
 
 <label>Publication Status</label>
 <select id="status">
@@ -358,18 +397,21 @@ async function logout(){
   );
 }
 
-// CATEGORY GUIDE
-document.getElementById("category").addEventListener("change",function(){
+// SHOW OR HIDE OPPORTUNITY FIELDS
+function updateOpportunityFields(){
 
-  const guide = document.getElementById("opportunityGuide");
+  const isOpportunity =
+    document.getElementById("category").value === "Damar Rayuwa";
 
-  if(this.value === "Damar Rayuwa"){
-    guide.style.display = "block";
-  }else{
-    guide.style.display = "none";
-  }
+  document.getElementById("opportunityGuide")
+    .classList.toggle("hidden",!isOpportunity);
 
-});
+  document.getElementById("opportunityFields")
+    .classList.toggle("hidden",!isOpportunity);
+}
+
+document.getElementById("category")
+.addEventListener("change",updateOpportunityFields);
 
 // IMAGE PREVIEW
 function previewSelectedImage(){
@@ -580,6 +622,32 @@ async function savePost(){
   const content = document.getElementById("content").value.trim();
   const status = document.getElementById("status").value;
 
+  const isOpportunity = category === "Damar Rayuwa";
+
+  const opportunity_type = isOpportunity
+    ? document.getElementById("opportunityType").value
+    : null;
+
+  const eligibility = isOpportunity
+    ? document.getElementById("eligibility").value.trim()
+    : null;
+
+  const application_deadline = isOpportunity
+    ? document.getElementById("applicationDeadline").value || null
+    : null;
+
+  const how_to_apply = isOpportunity
+    ? document.getElementById("howToApply").value.trim()
+    : null;
+
+  const application_url = isOpportunity
+    ? document.getElementById("applicationUrl").value.trim()
+    : null;
+
+  const contact_info = isOpportunity
+    ? document.getElementById("contactInfo").value.trim()
+    : null;
+
   if(!title || !content){
     showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
     return;
@@ -592,6 +660,16 @@ async function savePost(){
 
   if(video_url && !isValidHttpURL(video_url)){
     showMessage("formMessage","Video URL ba daidai ba ne.","error");
+    return;
+  }
+
+  if(isOpportunity && !opportunity_type){
+    showMessage("formMessage","Da fatan zaɓi nau'in damar rayuwa.","error");
+    return;
+  }
+
+  if(application_url && !isValidHttpURL(application_url)){
+    showMessage("formMessage","Application Link ba daidai ba ne. Saka cikakken URL.","error");
     return;
   }
 
@@ -613,6 +691,12 @@ async function savePost(){
       excerpt:excerpt||null,
       content,
       status,
+      opportunity_type,
+      eligibility,
+      application_deadline,
+      how_to_apply,
+      application_url:application_url||null,
+      contact_info,
       updated_at:new Date().toISOString(),
       published_at:status==="published"
         ? new Date().toISOString()
@@ -640,8 +724,8 @@ async function savePost(){
 
     showMessage(
       "formMessage",
-      category === "Damar Rayuwa"
-        ? "An wallafa DAMAR RAYUWA cikin nasara!"
+      isOpportunity
+        ? "An adana DAMAR RAYUWA cikin nasara!"
         : "An adana labarin cikin nasara!",
       "success"
     );
@@ -670,6 +754,7 @@ function clearForm(){
   document.getElementById("imageUrl").value = "";
   document.getElementById("imageFile").value = "";
   document.getElementById("videoFile").value = "";
+
   document.getElementById("imagePreview").style.display = "none";
   document.getElementById("imagePreview").src = "";
 
@@ -682,10 +767,18 @@ function clearForm(){
   document.getElementById("videoUrl").value = "";
   document.getElementById("excerpt").value = "";
   document.getElementById("content").value = "";
+
   document.getElementById("category").value = "News";
   document.getElementById("status").value = "published";
 
-  document.getElementById("opportunityGuide").style.display = "none";
+  document.getElementById("opportunityType").value = "";
+  document.getElementById("eligibility").value = "";
+  document.getElementById("applicationDeadline").value = "";
+  document.getElementById("howToApply").value = "";
+  document.getElementById("applicationUrl").value = "";
+  document.getElementById("contactInfo").value = "";
+
+  updateOpportunityFields();
 
   if(imageObjectURL){
     URL.revokeObjectURL(imageObjectURL);
@@ -741,7 +834,14 @@ async function loadPosts(){
         <p>${escapeHTML(post.excerpt||"")}</p>
 
         ${post.category==="Damar Rayuwa"
-          ? '<p class="small">DAMAR RAYUWA</p>'
+          ? `<p class="small">
+              DAMAR RAYUWA |
+              ${escapeHTML(post.opportunity_type||"Ba a zaɓa ba")}
+            </p>`
+          : ''}
+
+        ${post.application_deadline
+          ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>`
           : ''}
 
         ${post.video_url
@@ -785,10 +885,27 @@ function editPost(id){
   editingId = post.id;
 
   document.getElementById("newsTitle").value = post.title||"";
-
   document.getElementById("category").value = post.category||"News";
 
-  document.getElementById("category").dispatchEvent(new Event("change"));
+  updateOpportunityFields();
+
+  document.getElementById("opportunityType").value =
+    post.opportunity_type||"";
+
+  document.getElementById("eligibility").value =
+    post.eligibility||"";
+
+  document.getElementById("applicationDeadline").value =
+    post.application_deadline||"";
+
+  document.getElementById("howToApply").value =
+    post.how_to_apply||"";
+
+  document.getElementById("applicationUrl").value =
+    post.application_url||"";
+
+  document.getElementById("contactInfo").value =
+    post.contact_info||"";
 
   document.getElementById("imageUrl").value = post.image_url||"";
   document.getElementById("videoUrl").value = post.video_url||"";
