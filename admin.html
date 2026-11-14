@@ -154,7 +154,16 @@ onerror="this.style.display='none'">
 <option value="Education">Education</option>
 </select>
 
-<label>Image URL</label>
+<label>Zaɓi Hoto daga Gallery</label>
+<input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
+
+<button type="button" onclick="uploadImage()">Upload Image</button>
+
+<div id="uploadMessage" class="message"></div>
+
+<img id="imagePreview" style="display:none;max-width:100%;max-height:250px;">
+
+<label>Image URL (ko saka URL kai tsaye)</label>
 <input id="imageUrl" type="url" placeholder="Image URL (optional)">
 
 <label>Video URL</label>
