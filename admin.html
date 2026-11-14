@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>UY TV Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f2f4f8;color:#182333;font-family:Arial,sans-serif}
+header{background:#101827;color:white;padding:20px;text-align:center}
+header img{width:75px;height:75px;object-fit:contain}
+header h2{margin:8px 0 4px}
+header p{margin:0;color:#d4dbea;font-size:13px}
+.container{max-width:850px;margin:22px auto;padding:15px}
+.card{background:white;padding:20px;border-radius:13px;margin-bottom:18px;box-shadow:0 3px 14px #0000000c}
+h3{margin-top:0;color:#17253a}
+input,textarea,select{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #ccd3df;border-radius:8px;font-size:15px}
+textarea{min-height:130px;resize:vertical}
+button{padding:12px 17px;border:0;border-radius:8px;background:#bd8b25;color:white;font-weight:bold;cursor:pointer;margin:4px}
+button.secondary{background:#26364d}
+button.danger{background:#c0392b}
+button:disabled{opacity:.5}
+.hidden{display:none}
+.message{padding:12px;border-radius:8px;margin:10px 0;display:none}
+.success{background:#e2f7e9;color:#176b32}
+.error{background:#ffe5e5;color:#a11}
+.post{border:1px solid #e1e5eb;padding:15px;border-radius:9px;margin:12px 0}
+.post h4{margin:5px 0}
+.small{font-size:12px;color:#697586}
+.actions{display:flex;flex-wrap:wrap;gap:5px}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="logo.png" alt="Usman Yobe Talk Show Logo"
+onerror="this.style.display='none'">
+<h2>USMAN YOBE TALK SHOW</h2>
+<p>...one voice, one community, one future</p>
+<p>ADMIN DASHBOARD</p>
+</header>
+
+<div class="container">
+
+<div id="loginSection" class="card">
+<h3>Admin Login</h3>
+<p class="small">Shiga da email da password ɗinka na Admin.</p>
+
+<input id="email" type="email" placeholder="Admin Email">
+<input id="password" type="password" placeholder="Password">
+
+<button id="loginBtn" onclick="login()">Login</button>
+<div id="loginMessage" class="message"></div>
+</div>
+
+<div id="dashboard" class="hidden">
+
+<div class="card">
+<div class="toprow">
+<h3>Dashboard</h3>
+<button class="secondary" onclick="logout()">Logout</button>
+</div>
+<p>Maraba da Admin na USMAN YOBE TALK SHOW.</p>
+</div>
+
+<div class="card">
+<h3 id="formTitle">Publish New Story</h3>
+
+<input id="newsTitle" placeholder="News Title">
+
+<select id="category">
+<option value="News">General News</option>
+<option value="Politics">Politics</option>
+<option value="Entertainment">Entertainment</option>
+<option value="Business">Business</option>
+<option value="Matasa">Matasa</option>
+<option value="Sports">Sports</option>
+<option value="Education">Education</option>
+</select>
+
+<input id="imageUrl" type="url" placeholder="Image URL (optional)">
+<input id="videoUrl" type="url" placeholder="Video URL (optional)">
+
+<textarea id="excerpt" placeholder="Short news summary"></textarea>
+<textarea id="content" placeholder="Write full news story here..."></textarea>
+
+<select id="status">
+<option value="published">Publish Now</option>
+<option value="draft">Save as Draft</option>
+</select>
+
+<button id="saveBtn" onclick="savePost()">Publish Story</button>
+<button class="secondary" onclick="clearForm()">Clear</button>
+
+<div id="formMessage" class="message"></div>
+</div>
+
+<div class="card">
+<h3>Manage News</h3>
+<button class="secondary" onclick="loadPosts()">Refresh News</button>
+<div id="posts">Loading news...</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
+const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let editingId = null;
+
+function showMessage(id, message, type) {
+  const box = document.getElementById(id);
+  box.textContent = message;
+  box.className = "message " + type;
+  box.style.display = "block";
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[char]);
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const btn = document.getElementById("loginBtn");
+
+  if (!email || !password) {
+    showMessage("loginMessage","Saka email da password.","error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Ana shiga...";
+
+  const { error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  btn.disabled = false;
+  btn.textContent = "Login";
+
+  if (error) {
+    showMessage("loginMessage",error.message,"error");
+    return;
+  }
+
+  await checkAdmin();
+}
+
+async function checkAdmin() {
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) {
+    showLogin();
+    return;
+  }
+
+  const { data, error } = await db
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id",user.id)
+    .maybeSingle();
+
+  if (error || !data) {
+    await db.auth.signOut();
+    showLogin();
+    showMessage("loginMessage",
+      "Ba a ba wannan account ikon Admin ba.",
+      "error"
+    );
+    return;
+  }
+
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+
+  loadPosts();
+}
+
+function showLogin() {
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+}
+
+async function logout() {
+  await db.auth.signOut();
+  showLogin();
+}
+
+async function savePost() {
+  const title = document.getElementById("newsTitle").value.trim();
+  const category = document.getElementById("category").value;
+  const image_url = document.getElementById("imageUrl").value.trim();
+  const video_url = document.getElementById("videoUrl").value.trim();
+  const excerpt = document.getElementById("excerpt").value.trim();
+  const content = document.getElementById("content").value.trim();
+  const status = document.getElementById("status").value;
+
+  if (!title || !content) {
+    showMessage("formMessage",
+      "Saka taken labari da cikakken labari.",
+      "error"
+    );
+    return;
+  }
+
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Ana adanawa...";
+
+  const post = {
+    title,
+    category,
+    image_url: image_url || null,
+    video_url: video_url || null,
+    excerpt: excerpt || null,
+    content,
+    status,
+    updated_at: new Date().toISOString(),
+    published_at: status === "published"
+      ? new Date().toISOString()
+      : null
+  };
+
+  let result;
+
+  if (editingId !== null) {
+    result = await db
+      .from("news_posts")
+      .update(post)
+      .eq("id",editingId);
+  } else {
+    result = await db
+      .from("news_posts")
+      .insert(post);
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Publish Story";
+
+  if (result.error) {
+    showMessage("formMessage",result.error.message,"error");
+    return;
+  }
+
+  showMessage("formMessage","An adana labarin cikin nasara!","success");
+  clearForm();
+  loadPosts();
+}
+
+function clearForm() {
+  editingId = null;
+  document.getElementById("newsTitle").value = "";
+  document.getElementById("imageUrl").value = "";
+  document.getElementById("videoUrl").value = "";
+  document.getElementById("excerpt").value = "";
+  document.getElementById("content").value = "";
+  document.getElementById("category").value = "News";
+  document.getElementById("status").value = "published";
+  document.getElementById("formTitle").textContent = "Publish New Story";
+  document.getElementById("saveBtn").textContent = "Publish Story";
+}
+
+async function loadPosts() {
+  const area = document.getElementById("posts");
+  area.textContent = "Loading...";
+
+  const { data, error } = await db
+    .from("news_posts")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if (error) {
+    area.textContent = "Error: " + error.message;
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    area.textContent = "Babu labari tukuna.";
+    return;
+  }
+
+  area.innerHTML = data.map(post => `
+    <div class="post">
+      <h4>${escapeHTML(post.title)}</h4>
+      <p class="small">
+        ${escapeHTML(post.category)} |
+        ${escapeHTML(post.status)}
+      </p>
+      <p>${escapeHTML(post.excerpt || "")}</p>
+      <div class="actions">
+        <button class="secondary"
+          onclick="editPost(${Number(post.id)})">Edit</button>
+        <button class="danger"
+          onclick="deletePost(${Number(post.id)})">Delete</button>
+      </div>
+    </div>
+  `).join("");
+
+  window.currentPosts = data;
+}
+
+function editPost(id) {
+  const post = (window.currentPosts || []).find(
+    item => String(item.id) === String(id)
+  );
+
+  if (!post) return;
+
+  editingId = post.id;
+  document.getElementById("newsTitle").value = post.title || "";
+  document.getElementById("category").value = post.category || "News";
+  document.getElementById("imageUrl").value = post.image_url || "";
+  document.getElementById("videoUrl").value = post.video_url || "";
+  document.getElementById("excerpt").value = post.excerpt || "";
+  document.getElementById("content").value = post.content || "";
+  document.getElementById("status").value = post.status || "draft";
+
+  document.getElementById("formTitle").textContent = "Edit News";
+  document.getElementById("saveBtn").textContent = "Save Changes";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deletePost(id) {
+  if (!confirm("Da gaske kana son goge wannan labari?")) return;
+
+  const { error } = await db
+    .from("news_posts")
+    .delete()
+    .eq("id",id);
+
+  if (error) {
+    alert("An samu matsala: " + error.message);
+    return;
+  }
+
+  alert("An goge labarin.");
+  loadPosts();
+}
+
+db.auth.onAuthStateChange((event, session) => {
+  if (event === "SIGNED_OUT") showLogin();
+});
+
+(async function start() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) await checkAdmin();
+})();
+</script>
+
+</body>
+</html>
