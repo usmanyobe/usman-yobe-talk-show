@@ -12,614 +12,102 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-
-:root{
- --navy:#071b49;
- --blue:#0755d9;
- --red:#df2028;
- --gold:#f6c900;
- --light:#f1f4f9;
- --text:#172033;
- --muted:#68758a;
- --green:#087b48;
-}
-
-body{
- font-family:Arial,sans-serif;
- background:var(--light);
- color:var(--text);
- padding-bottom:85px;
-}
-
+:root{--navy:#071b49;--blue:#0755d9;--red:#df2028;--gold:#f6c900;--light:#f1f4f9;--text:#172033;--muted:#68758a;--green:#087b48}
+body{font-family:Arial,sans-serif;background:var(--light);color:var(--text);padding-bottom:85px}
 button,input{font-family:inherit}
-
-header{
- background:var(--navy);
- color:white;
- padding:13px 15px;
- position:sticky;
- top:0;
- z-index:50;
- box-shadow:0 2px 12px #0002;
-}
-
-.brand{
- display:flex;
- align-items:center;
- gap:11px;
-}
-
-.logo{
- width:105px;
- height:auto;
- max-height:68px;
- object-fit:contain;
- flex-shrink:0;
-}
-
+header{background:var(--navy);color:white;padding:13px 15px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px #0002}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:105px;height:auto;max-height:68px;object-fit:contain;flex-shrink:0}
 .brand h2{font-size:17px;line-height:1.25}
 .brand small{color:var(--gold);font-size:10px}
-
-.header-actions{
- display:flex;
- gap:12px;
- margin-left:auto;
-}
-
-.header-actions button{
- background:none;
- border:0;
- color:white;
- font-size:25px;
- cursor:pointer;
-}
-
+.header-actions{display:flex;gap:12px;margin-left:auto}
+.header-actions button{background:none;border:0;color:white;font-size:25px;cursor:pointer}
 .search{margin-top:12px}
-
-.search input{
- width:100%;
- padding:12px 14px;
- border:0;
- border-radius:9px;
- font-size:15px;
- outline:none;
-}
-
-.categories{
- display:flex;
- gap:8px;
- overflow-x:auto;
- padding:12px;
- background:white;
- scrollbar-width:none;
- border-bottom:1px solid #e4e9f1;
-}
-
-.categories button{
- white-space:nowrap;
- border:1px solid #dce3ee;
- background:#f4f6fa;
- padding:9px 14px;
- border-radius:22px;
- font-weight:bold;
- color:#172b50;
- cursor:pointer;
-}
-
-.categories button.active{
- background:var(--blue);
- color:white;
- border-color:var(--blue);
-}
-
-.container{
- max-width:950px;
- margin:auto;
- padding:12px;
-}
-
-.section-title{
- font-size:19px;
- margin:22px 0 12px;
- color:var(--navy);
-}
-
-.breaking{
- background:var(--navy);
- color:white;
- border-radius:12px;
- overflow:hidden;
- margin:12px 0 20px;
-}
-
-.breaking-top{
- background:var(--red);
- padding:9px 13px;
- font-weight:bold;
- font-size:13px;
- letter-spacing:.5px;
-}
-
+.search input{width:100%;padding:12px 14px;border:0;border-radius:9px;font-size:15px;outline:none}
+.categories{display:flex;gap:8px;overflow-x:auto;padding:12px;background:white;scrollbar-width:none;border-bottom:1px solid #e4e9f1}
+.categories button{white-space:nowrap;border:1px solid #dce3ee;background:#f4f6fa;padding:9px 14px;border-radius:22px;font-weight:bold;color:#172b50;cursor:pointer}
+.categories button.active{background:var(--blue);color:white;border-color:var(--blue)}
+.container{max-width:950px;margin:auto;padding:12px}
+.section-title{font-size:19px;margin:22px 0 12px;color:var(--navy)}
+.breaking{background:var(--navy);color:white;border-radius:12px;overflow:hidden;margin:12px 0 20px}
+.breaking-top{background:var(--red);padding:9px 13px;font-weight:bold;font-size:13px;letter-spacing:.5px}
 .breaking-content{padding:19px}
-
-.breaking-content h1{
- font-size:24px;
- line-height:1.35;
- margin:10px 0;
-}
-
-.breaking-content p{
- color:#dce5fa;
- line-height:1.7;
- font-size:14px;
-}
-
-.breaking-image{
- width:100%;
- max-height:300px;
- object-fit:cover;
- display:block;
-}
-
-.tag{
- display:inline-block;
- background:var(--red);
- color:white;
- padding:5px 9px;
- border-radius:4px;
- font-size:11px;
- font-weight:bold;
-}
-
-.hero-button{
- display:inline-block;
- border:0;
- border-radius:7px;
- padding:10px 15px;
- margin-top:13px;
- background:var(--gold);
- color:var(--navy);
- font-weight:bold;
- cursor:pointer;
-}
-
-.news-grid{
- display:grid;
- grid-template-columns:1fr;
- gap:13px;
-}
-
-.post{
- background:white;
- border-radius:11px;
- overflow:hidden;
- box-shadow:0 2px 9px #0000000b;
-}
-
-.post-image{
- width:100%;
- height:185px;
- object-fit:cover;
- display:block;
-}
-
-.post-placeholder{
- height:160px;
- display:grid;
- place-items:center;
- background:linear-gradient(135deg,#09245b,#1468cb);
- color:white;
- font-size:45px;
-}
-
+.breaking-content h1{font-size:24px;line-height:1.35;margin:10px 0}
+.breaking-content p{color:#dce5fa;line-height:1.7;font-size:14px}
+.breaking-image{width:100%;max-height:300px;object-fit:cover;display:block}
+.tag{display:inline-block;background:var(--red);color:white;padding:5px 9px;border-radius:4px;font-size:11px;font-weight:bold}
+.hero-button{display:inline-block;border:0;border-radius:7px;padding:10px 15px;margin-top:13px;background:var(--gold);color:var(--navy);font-weight:bold;cursor:pointer}
+.news-grid{display:grid;grid-template-columns:1fr;gap:13px}
+.post{background:white;border-radius:11px;overflow:hidden;box-shadow:0 2px 9px #0000000b}
+.post-image{width:100%;height:185px;object-fit:cover;display:block}
+.post-placeholder{height:160px;display:grid;place-items:center;background:linear-gradient(135deg,#09245b,#1468cb);color:white;font-size:45px}
 .post-content{padding:14px}
-
-.post-content h3{
- font-size:17px;
- line-height:1.4;
- margin:9px 0;
-}
-
-.post-content p{
- font-size:13px;
- color:var(--muted);
- line-height:1.7;
-}
-
-.post-meta{
- font-size:11px;
- color:#7a879b;
- margin-top:11px;
- display:flex;
- justify-content:space-between;
- gap:8px;
-}
-
-.post-actions{
- display:flex;
- gap:16px;
- margin-top:13px;
-}
-
-.post-actions button{
- border:0;
- background:none;
- color:var(--blue);
- font-weight:bold;
- cursor:pointer;
-}
-
-.empty{
- padding:28px 15px;
- text-align:center;
- color:#667085;
- background:white;
- border-radius:10px;
- line-height:1.6;
-}
-
-.video-box{
- background:var(--navy);
- color:white;
- padding:22px;
- border-radius:12px;
- text-align:center;
- margin:14px 0;
-}
-
-.video-box button{
- background:var(--red);
- color:white;
- border:0;
- padding:12px 20px;
- border-radius:8px;
- margin-top:12px;
- cursor:pointer;
- font-weight:bold;
-}
-
-.video-card{
- background:white;
- border-radius:12px;
- overflow:hidden;
- margin-bottom:17px;
- box-shadow:0 2px 9px #0000000b;
-}
-
-.video-card video{
- display:block;
- width:100%;
- max-height:280px;
- background:#000;
-}
-
+.post-content h3{font-size:17px;line-height:1.4;margin:9px 0}
+.post-content p{font-size:13px;color:var(--muted);line-height:1.7}
+.post-meta{font-size:11px;color:#7a879b;margin-top:11px;display:flex;justify-content:space-between;gap:8px}
+.post-actions{display:flex;gap:16px;margin-top:13px;flex-wrap:wrap}
+.post-actions button{border:0;background:none;color:var(--blue);font-weight:bold;cursor:pointer}
+.empty{padding:28px 15px;text-align:center;color:#667085;background:white;border-radius:10px;line-height:1.6}
+.video-box{background:var(--navy);color:white;padding:22px;border-radius:12px;text-align:center;margin:14px 0}
+.video-box button{background:var(--red);color:white;border:0;padding:12px 20px;border-radius:8px;margin-top:12px;cursor:pointer;font-weight:bold}
+.video-card{background:white;border-radius:12px;overflow:hidden;margin-bottom:17px;box-shadow:0 2px 9px #0000000b}
+.video-card video{display:block;width:100%;max-height:280px;background:#000}
 .video-card-content{padding:14px}
-
-.video-card-content h3{
- font-size:17px;
- line-height:1.4;
- margin:7px 0;
-}
-
-.video-card-content p{
- color:var(--muted);
- font-size:13px;
- line-height:1.6;
-}
-
-.video-label{
- color:var(--red);
- font-size:11px;
- font-weight:bold;
-}
+.video-card-content h3{font-size:17px;line-height:1.4;margin:7px 0}
+.video-card-content p{color:var(--muted);font-size:13px;line-height:1.6}
+.video-label{color:var(--red);font-size:11px;font-weight:bold}
 
 /* DAMAR RAYUWA */
-.opportunity-hero{
- background:linear-gradient(135deg,#071b49,#0755d9);
- color:white;
- padding:23px 18px;
- border-radius:13px;
- margin:12px 0 18px;
-}
-
-.opportunity-hero h1{
- font-size:25px;
- margin:10px 0;
- line-height:1.35;
-}
-
-.opportunity-hero p{
- color:#e1eaff;
- line-height:1.7;
- font-size:14px;
-}
-
-.opportunity-categories{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:10px;
- margin:15px 0 22px;
-}
-
-.opportunity-type{
- background:white;
- border:1px solid #e0e6ef;
- border-radius:10px;
- padding:14px 8px;
- text-align:center;
- cursor:pointer;
- min-height:100px;
-}
-
-.opportunity-type.active{
- border:2px solid var(--blue);
- background:#edf4ff;
-}
-
-.opportunity-type .emoji{
- display:block;
- font-size:27px;
- margin-bottom:7px;
-}
-
-.opportunity-type strong{
- display:block;
- font-size:13px;
- line-height:1.4;
- color:var(--navy);
-}
-
-.opportunity-type small{
- display:block;
- color:var(--muted);
- font-size:11px;
- margin-top:4px;
-}
-
-.opportunity-card{
- background:white;
- border-radius:12px;
- overflow:hidden;
- margin-bottom:14px;
- box-shadow:0 2px 10px #0000000c;
-}
-
-.opportunity-card img{
- width:100%;
- max-height:220px;
- object-fit:cover;
- display:block;
-}
-
+.opportunity-hero{background:linear-gradient(135deg,#071b49,#0755d9);color:white;padding:23px 18px;border-radius:13px;margin:12px 0 18px}
+.opportunity-hero h1{font-size:25px;margin:10px 0;line-height:1.35}
+.opportunity-hero p{color:#e1eaff;line-height:1.7;font-size:14px}
+.opportunity-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0 22px}
+.opportunity-type{background:white;border:1px solid #e0e6ef;border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;min-height:100px}
+.opportunity-type.active{border:2px solid var(--blue);background:#edf4ff}
+.opportunity-type .emoji{display:block;font-size:27px;margin-bottom:7px}
+.opportunity-type strong{display:block;font-size:13px;line-height:1.4;color:var(--navy)}
+.opportunity-type small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.opportunity-card{background:white;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 10px #0000000c}
+.opportunity-card img{width:100%;max-height:220px;object-fit:cover;display:block}
 .opportunity-content{padding:15px}
-
-.opportunity-label{
- display:inline-block;
- background:#e4f5eb;
- color:#087b48;
- padding:6px 9px;
- border-radius:5px;
- font-size:11px;
- font-weight:bold;
- margin-bottom:8px;
-}
-
-.opportunity-content h3{
- color:var(--navy);
- font-size:18px;
- line-height:1.4;
- margin:7px 0;
-}
-
-.opportunity-content p{
- color:var(--muted);
- font-size:13px;
- line-height:1.7;
-}
-
-.opportunity-date{
- font-size:11px;
- color:#758196;
- margin-top:10px;
-}
-
-.opportunity-button{
- background:var(--green);
- color:white;
- border:0;
- border-radius:7px;
- padding:11px 15px;
- font-weight:bold;
- margin-top:13px;
- cursor:pointer;
-}
-
-.opportunity-search{
- width:100%;
- padding:12px;
- border:1px solid #d8dfeb;
- border-radius:9px;
- margin:0 0 15px;
- font-size:14px;
-}
-
-.opportunity-notice{
- background:#fff7df;
- border-left:4px solid var(--gold);
- padding:12px;
- border-radius:7px;
- font-size:12px;
- line-height:1.7;
- margin:15px 0;
-}
-
-footer{
- background:var(--navy);
- color:white;
- text-align:center;
- padding:25px 12px;
- margin-top:25px;
-}
-
-footer p{
- font-size:12px;
- color:#ccd7ec;
- margin-top:8px;
-}
-
-.social{
- display:flex;
- justify-content:center;
- gap:20px;
- margin-top:15px;
- flex-wrap:wrap;
-}
-
-.social a{
- color:var(--gold);
- text-decoration:none;
- font-weight:bold;
-}
-
-.bottom-nav{
- position:fixed;
- bottom:0;
- left:0;
- width:100%;
- background:var(--navy);
- display:flex;
- justify-content:space-around;
- padding:9px 2px calc(9px + env(safe-area-inset-bottom));
- z-index:60;
-}
-
-.bottom-nav button{
- background:none;
- border:0;
- color:#cbd6ec;
- font-size:10px;
- display:flex;
- flex-direction:column;
- align-items:center;
- gap:4px;
- cursor:pointer;
- min-width:0;
-}
-
+.opportunity-label{display:inline-block;background:#e4f5eb;color:#087b48;padding:6px 9px;border-radius:5px;font-size:11px;font-weight:bold;margin-bottom:8px}
+.opportunity-content h3{color:var(--navy);font-size:18px;line-height:1.4;margin:7px 0}
+.opportunity-content p{color:var(--muted);font-size:13px;line-height:1.7}
+.opportunity-date{font-size:11px;color:#758196;margin-top:10px}
+.deadline{font-size:12px;color:#b42318;font-weight:bold;margin-top:9px}
+.opportunity-button{background:var(--green);color:white;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;margin-top:13px;cursor:pointer}
+.opportunity-search{width:100%;padding:12px;border:1px solid #d8dfeb;border-radius:9px;margin:0 0 15px;font-size:14px}
+.opportunity-notice{background:#fff7df;border-left:4px solid var(--gold);padding:12px;border-radius:7px;font-size:12px;line-height:1.7;margin:15px 0}
+.opportunity-detail-box{background:#f5f7fb;border:1px solid #e1e7f0;border-radius:9px;padding:13px;margin:13px 0}
+.opportunity-detail-box h3{color:var(--navy);font-size:15px;margin-bottom:7px}
+.opportunity-detail-box p{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.apply-now{display:block;text-align:center;background:var(--green);color:white;text-decoration:none;font-weight:bold;padding:14px;border-radius:8px;margin:16px 0}
+.apply-now:hover{background:#05633a}
+footer{background:var(--navy);color:white;text-align:center;padding:25px 12px;margin-top:25px}
+footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
+.social{display:flex;justify-content:center;gap:20px;margin-top:15px;flex-wrap:wrap}
+.social a{color:var(--gold);text-decoration:none;font-weight:bold}
+.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:var(--navy);display:flex;justify-content:space-around;padding:9px 2px calc(9px + env(safe-area-inset-bottom));z-index:60}
+.bottom-nav button{background:none;border:0;color:#cbd6ec;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-width:0}
 .bottom-nav button span:first-child{font-size:20px}
 .bottom-nav button.active{color:var(--gold)}
-
-.article-modal{
- display:none;
- position:fixed;
- inset:0;
- background:#000b;
- z-index:100;
- padding:12px;
- overflow-y:auto;
-}
-
-.modal-content{
- background:white;
- border-radius:13px;
- padding:18px;
- max-width:650px;
- margin:20px auto;
-}
-
+.article-modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;padding:12px;overflow-y:auto}
+.modal-content{background:white;border-radius:13px;padding:18px;max-width:650px;margin:20px auto}
 .modal-content h2{margin:12px 0;line-height:1.4}
-
-.close{
- float:right;
- border:0;
- background:#eee;
- border-radius:7px;
- padding:8px 12px;
- cursor:pointer;
-}
-
-.article-image{
- width:100%;
- max-height:320px;
- object-fit:cover;
- border-radius:9px;
- margin:12px 0;
-}
-
-.article-video{
- width:100%;
- max-height:350px;
- background:#000;
- border-radius:9px;
- margin:14px 0;
-}
-
-.menu-panel{
- display:none;
- position:fixed;
- top:85px;
- right:12px;
- width:260px;
- max-width:calc(100vw - 24px);
- background:white;
- color:var(--text);
- border-radius:12px;
- padding:15px;
- box-shadow:0 5px 20px #0003;
- z-index:90;
- max-height:75vh;
- overflow-y:auto;
-}
-
+.close{float:right;border:0;background:#eee;border-radius:7px;padding:8px 12px;cursor:pointer}
+.article-image{width:100%;max-height:320px;object-fit:cover;border-radius:9px;margin:12px 0}
+.article-video{width:100%;max-height:350px;background:#000;border-radius:9px;margin:14px 0}
+.menu-panel{display:none;position:fixed;top:85px;right:12px;width:260px;max-width:calc(100vw - 24px);background:white;color:var(--text);border-radius:12px;padding:15px;box-shadow:0 5px 20px #0003;z-index:90;max-height:75vh;overflow-y:auto}
 .menu-panel.show{display:block}
-
-.menu-panel h3{
- margin:5px 0 12px;
- color:var(--navy);
- font-size:17px;
-}
-
-.menu-panel button{
- width:100%;
- padding:12px;
- border:0;
- background:#f1f4f9;
- border-radius:8px;
- margin:4px 0;
- text-align:start;
- font-weight:bold;
- cursor:pointer;
- color:var(--text);
-}
-
-.menu-panel .language-title{
- margin-top:15px;
- padding-top:12px;
- border-top:1px solid #ddd;
-}
-
-.menu-panel button.selected-language{
- background:var(--blue);
- color:white;
-}
-
-.menu-overlay{
- display:none;
- position:fixed;
- inset:0;
- z-index:80;
-}
-
+.menu-panel h3{margin:5px 0 12px;color:var(--navy);font-size:17px}
+.menu-panel button{width:100%;padding:12px;border:0;background:#f1f4f9;border-radius:8px;margin:4px 0;text-align:start;font-weight:bold;cursor:pointer;color:var(--text)}
+.menu-panel .language-title{margin-top:15px;padding-top:12px;border-top:1px solid #ddd}
+.menu-panel button.selected-language{background:var(--blue);color:white}
+.menu-overlay{display:none;position:fixed;inset:0;z-index:80}
 .menu-overlay.show{display:block}
-
 [dir="rtl"] .menu-panel{right:auto;left:12px}
 [dir="rtl"] .header-actions{margin-left:0;margin-right:auto}
-[dir="rtl"] .breaking-content,
-[dir="rtl"] .post-content,
-[dir="rtl"] .modal-content,
-[dir="rtl"] .video-card-content,
-[dir="rtl"] .opportunity-content{text-align:right}
-
+[dir="rtl"] .breaking-content,[dir="rtl"] .post-content,[dir="rtl"] .modal-content,[dir="rtl"] .video-card-content,[dir="rtl"] .opportunity-content{text-align:right}
 @media(min-width:650px){
  .container{padding:20px}
  .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -627,10 +115,7 @@ footer p{
  .breaking-content h1{font-size:30px}
  .opportunity-categories{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-
-@media(min-width:850px){
- .news-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
+@media(min-width:850px){.news-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 
@@ -638,40 +123,30 @@ footer p{
 
 <header>
  <div class="brand">
-  <img class="logo" src="74556.png"
-   alt="USMAN YOBE TALK SHOW official logo">
-
+  <img class="logo" src="74556.png" alt="USMAN YOBE TALK SHOW official logo">
   <div>
    <h2>USMAN YOBE</h2>
    <h2 style="color:#f6c900">TALK SHOW</h2>
    <small>...ONE VOICE, ONE COMMUNITY, ONE FUTURE</small>
   </div>
-
   <div class="header-actions">
-   <button aria-label="Search"
-    onclick="document.getElementById('search').focus()">⌕</button>
+   <button aria-label="Search" onclick="document.getElementById('search').focus()">⌕</button>
    <button aria-label="Menu" onclick="toggleMenu()">☰</button>
   </div>
  </div>
-
  <div class="search">
-  <input id="search" type="search"
-   placeholder="Nemo labarai..."
-   oninput="renderPosts();renderVideos();renderOpportunities()">
+  <input id="search" type="search" placeholder="Nemo labarai..." oninput="renderPosts();renderVideos();renderOpportunities()">
  </div>
 </header>
 
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
-
 <div class="menu-panel" id="menuPanel">
  <h3 id="menuTitle">☰ Menu</h3>
-
  <button onclick="menuNavigate('home')">⌂ <span data-i18n="home">Gida</span></button>
  <button onclick="menuNavigate('opportunities')">💼 <span data-i18n="opportunities">Damar Rayuwa</span></button>
  <button onclick="menuNavigate('videos')">▶ <span data-i18n="videos">Bidiyoyi</span></button>
  <button onclick="menuNavigate('live')">📡 <span data-i18n="live">Live TV</span></button>
  <button onclick="menuNavigate('more')">▦ <span data-i18n="more">Game da Mu</span></button>
-
  <h3 class="language-title" id="languageTitle">🌐 Harshe</h3>
  <button id="lang-en" onclick="setLanguage('en')">🇬🇧 English</button>
  <button id="lang-ha" onclick="setLanguage('ha')">🇳🇬 Hausa</button>
@@ -692,152 +167,101 @@ footer p{
 
 <main class="container">
 
- <section id="home">
-
-  <div class="breaking">
-   <div class="breaking-top" data-i18n="breaking">🔴 LABARI DA DUMI-DUMI</div>
-   <div id="topStory" class="breaking-content">
-    <span class="tag">USMAN YOBE TALK SHOW</span>
-    <h1 data-i18n="welcome">Labaran Yobe da Arewa</h1>
-    <p data-i18n="welcomeText">Ku kasance tare da mu domin samun sahihan labarai.</p>
-   </div>
+<section id="home">
+ <div class="breaking">
+  <div class="breaking-top" data-i18n="breaking">🔴 LABARI DA DUMI-DUMI</div>
+  <div id="topStory" class="breaking-content">
+   <span class="tag">USMAN YOBE TALK SHOW</span>
+   <h1 data-i18n="welcome">Labaran Yobe da Arewa</h1>
+   <p data-i18n="welcomeText">Ku kasance tare da mu domin samun sahihan labarai.</p>
   </div>
+ </div>
 
-  <div class="opportunity-hero">
-   <div style="font-size:35px">💼</div>
-   <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
-   <p data-i18n="opportunityHeroText">
-    Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.
-   </p>
-   <button class="hero-button" onclick="showSection('opportunities',document.getElementById('opNav'))"
-    data-i18n="exploreOpportunities">Duba Damar Rayuwa</button>
+ <div class="opportunity-hero">
+  <div style="font-size:35px">💼</div>
+  <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
+  <p data-i18n="opportunityHeroText">Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.</p>
+  <button class="hero-button" onclick="showSection('opportunities',document.getElementById('opNav'))" data-i18n="exploreOpportunities">Duba Damar Rayuwa</button>
+ </div>
+
+ <h2 class="section-title" data-i18n="latest">📰 Sabbin Labarai</h2>
+ <div id="posts"><div class="empty">Ana loda sabbin labarai...</div></div>
+</section>
+
+<section id="opportunities" style="display:none">
+ <div class="opportunity-hero">
+  <div style="font-size:38px">💼</div>
+  <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
+  <p data-i18n="opportunityHeroText">Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.</p>
+ </div>
+
+ <div class="opportunity-notice" data-i18n="opportunityNotice">
+  Muhimmin bayani: Ka tabbatar da sahihancin kowace dama kafin ka tura bayananka ko ka biya kuɗi.
+ </div>
+
+ <h2 class="section-title" data-i18n="browseOpportunities">Nau'o'in Damar Rayuwa</h2>
+
+ <div class="opportunity-categories">
+  <button class="opportunity-type active" onclick="filterOpportunityType('All',this)">
+   <span class="emoji">🌍</span><strong data-i18n="allOpportunities">Duk Damar Rayuwa</strong><small data-i18n="allTypes">Dukkan nau'o'i</small>
+  </button>
+  <button class="opportunity-type" onclick="filterOpportunityType('Jobs',this)">
+   <span class="emoji">💼</span><strong data-i18n="jobs">Ayyukan Yi</strong><small data-i18n="jobsSmall">Guraben aiki</small>
+  </button>
+  <button class="opportunity-type" onclick="filterOpportunityType('Scholarship',this)">
+   <span class="emoji">🎓</span><strong data-i18n="scholarship">Scholarship</strong><small data-i18n="scholarshipSmall">Tallafin karatu</small>
+  </button>
+  <button class="opportunity-type" onclick="filterOpportunityType('Training',this)">
+   <span class="emoji">🛠️</span><strong data-i18n="training">Horaswa</strong><small data-i18n="trainingSmall">Koyon sana'o'i</small>
+  </button>
+  <button class="opportunity-type" onclick="filterOpportunityType('Business Grant',this)">
+   <span class="emoji">💰</span><strong data-i18n="grants">Tallafi</strong><small data-i18n="grantsSmall">Matasa da kasuwanci</small>
+  </button>
+  <button class="opportunity-type" onclick="filterOpportunityType('Exams',this)">
+   <span class="emoji">📚</span><strong data-i18n="exams">JAMB / WAEC / NECO</strong><small data-i18n="examsSmall">Sanarwar jarrabawa</small>
+  </button>
+ </div>
+
+ <h2 class="section-title" data-i18n="availableOpportunities">Sabbin Damammaki</h2>
+ <input id="opportunitySearch" class="opportunity-search" type="search" placeholder="Nemo guraben aiki, scholarship..." oninput="renderOpportunities()">
+ <div id="opportunityPosts"><div class="empty">Ana loda damar rayuwa...</div></div>
+</section>
+
+<section id="videos" style="display:none">
+ <h2 class="section-title" data-i18n="videosTitle">▶ Bidiyoyi da Shirye-shirye</h2>
+ <div class="video-box">
+  <div style="font-size:42px">📺</div>
+  <h2>USMAN YOBE TALK SHOW</h2>
+  <p data-i18n="videoDescription">Hirarraki, rahotanni da shirye-shiryen musamman.</p>
+  <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')" data-i18n="watchYouTube">Kalli YouTube</button>
+ </div>
+ <h2 class="section-title" data-i18n="latestVideos">Sabbin Bidiyoyi</h2>
+ <div id="videoPosts"><div class="empty">Ana loda bidiyoyi...</div></div>
+</section>
+
+<section id="live" style="display:none">
+ <h2 class="section-title" data-i18n="liveTitle">🔴 Live TV</h2>
+ <div class="video-box">
+  <div style="font-size:45px">📡</div>
+  <h2>ASAWWARA TV</h2>
+  <p data-i18n="liveDescription">Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.</p>
+  <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')" data-i18n="watchYouTube">Kalli YouTube</button>
+ </div>
+</section>
+
+<section id="more" style="display:none">
+ <h2 class="section-title" data-i18n="more">Game da Mu</h2>
+ <div class="post-content" style="background:white;border-radius:12px">
+  <h2>USMAN YOBE TALK SHOW</h2>
+  <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
+  <p style="margin-top:12px" data-i18n="aboutText">Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.</p>
+  <div class="social">
+   <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">TikTok</a>
+   <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank" rel="noopener">Facebook</a>
+   <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">YouTube</a>
   </div>
-
-  <h2 class="section-title" data-i18n="latest">📰 Sabbin Labarai</h2>
-  <div id="posts">
-   <div class="empty">Ana loda sabbin labarai...</div>
-  </div>
-
- </section>
-
- <!-- DAMAR RAYUWA -->
- <section id="opportunities" style="display:none">
-
-  <div class="opportunity-hero">
-   <div style="font-size:38px">💼</div>
-   <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
-   <p data-i18n="opportunityHeroText">
-    Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.
-   </p>
-  </div>
-
-  <div class="opportunity-notice" data-i18n="opportunityNotice">
-   Muhimmin bayani: Ka tabbatar da sahihancin kowace dama kafin ka tura bayananka ko ka biya kuɗi.
-  </div>
-
-  <h2 class="section-title" data-i18n="browseOpportunities">Nau'o'in Damar Rayuwa</h2>
-
-  <div class="opportunity-categories">
-   <button class="opportunity-type active" onclick="filterOpportunityType('All',this)">
-    <span class="emoji">🌍</span>
-    <strong data-i18n="allOpportunities">Duk Damar Rayuwa</strong>
-    <small data-i18n="allTypes">Dukkan nau'o'i</small>
-   </button>
-
-   <button class="opportunity-type" onclick="filterOpportunityType('Jobs',this)">
-    <span class="emoji">💼</span>
-    <strong data-i18n="jobs">Ayyukan Yi</strong>
-    <small data-i18n="jobsSmall">Guraben aiki</small>
-   </button>
-
-   <button class="opportunity-type" onclick="filterOpportunityType('Scholarship',this)">
-    <span class="emoji">🎓</span>
-    <strong data-i18n="scholarship">Scholarship</strong>
-    <small data-i18n="scholarshipSmall">Tallafin karatu</small>
-   </button>
-
-   <button class="opportunity-type" onclick="filterOpportunityType('Training',this)">
-    <span class="emoji">🛠️</span>
-    <strong data-i18n="training">Horaswa</strong>
-    <small data-i18n="trainingSmall">Koyon sana'o'i</small>
-   </button>
-
-   <button class="opportunity-type" onclick="filterOpportunityType('Business Grant',this)">
-    <span class="emoji">💰</span>
-    <strong data-i18n="grants">Tallafi</strong>
-    <small data-i18n="grantsSmall">Matasa da kasuwanci</small>
-   </button>
-
-   <button class="opportunity-type" onclick="filterOpportunityType('Exams',this)">
-    <span class="emoji">📚</span>
-    <strong data-i18n="exams">JAMB / WAEC / NECO</strong>
-    <small data-i18n="examsSmall">Sanarwar jarrabawa</small>
-   </button>
-  </div>
-
-  <h2 class="section-title" data-i18n="availableOpportunities">Sabbin Damammaki</h2>
-
-  <input
-   id="opportunitySearch"
-   class="opportunity-search"
-   type="search"
-   placeholder="Nemo guraben aiki, scholarship..."
-   oninput="renderOpportunities()">
-
-  <div id="opportunityPosts">
-   <div class="empty">Ana loda damar rayuwa...</div>
-  </div>
-
- </section>
-
- <section id="videos" style="display:none">
-  <h2 class="section-title" data-i18n="videosTitle">▶ Bidiyoyi da Shirye-shirye</h2>
-
-  <div class="video-box">
-   <div style="font-size:42px">📺</div>
-   <h2>USMAN YOBE TALK SHOW</h2>
-   <p data-i18n="videoDescription">Hirarraki, rahotanni da shirye-shiryen musamman.</p>
-   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')"
-    data-i18n="watchYouTube">Kalli YouTube</button>
-  </div>
-
-  <h2 class="section-title" data-i18n="latestVideos">Sabbin Bidiyoyi</h2>
-  <div id="videoPosts">
-   <div class="empty">Ana loda bidiyoyi...</div>
-  </div>
- </section>
-
- <section id="live" style="display:none">
-  <h2 class="section-title" data-i18n="liveTitle">🔴 Live TV</h2>
-  <div class="video-box">
-   <div style="font-size:45px">📡</div>
-   <h2>ASAWWARA TV</h2>
-   <p data-i18n="liveDescription">
-    Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.
-   </p>
-   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')"
-    data-i18n="watchYouTube">Kalli YouTube</button>
-  </div>
- </section>
-
- <section id="more" style="display:none">
-  <h2 class="section-title" data-i18n="more">Game da Mu</h2>
-
-  <div class="post-content" style="background:white;border-radius:12px">
-   <h2>USMAN YOBE TALK SHOW</h2>
-   <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
-   <p style="margin-top:12px" data-i18n="aboutText">
-    Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.
-   </p>
-
-   <div class="social">
-    <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">TikTok</a>
-    <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank" rel="noopener">Facebook</a>
-    <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">YouTube</a>
-   </div>
-  </div>
- </section>
-
+ </div>
+</section>
 </main>
 
 <footer>
@@ -847,25 +271,11 @@ footer p{
 </footer>
 
 <nav class="bottom-nav">
- <button class="active" onclick="showSection('home',this)">
-  <span>⌂</span><span data-i18n="home">Gida</span>
- </button>
-
- <button id="opNav" onclick="showSection('opportunities',this)">
-  <span>💼</span><span data-i18n="opportunities">Dama</span>
- </button>
-
- <button onclick="showSection('videos',this)">
-  <span>▶</span><span data-i18n="videos">Bidiyoyi</span>
- </button>
-
- <button onclick="showSection('live',this)">
-  <span>📡</span><span data-i18n="live">Live TV</span>
- </button>
-
- <button onclick="showSection('more',this)">
-  <span>▦</span><span data-i18n="more">Game da Mu</span>
- </button>
+ <button class="active" onclick="showSection('home',this)"><span>⌂</span><span data-i18n="home">Gida</span></button>
+ <button id="opNav" onclick="showSection('opportunities',this)"><span>💼</span><span data-i18n="opportunities">Dama</span></button>
+ <button onclick="showSection('videos',this)"><span>▶</span><span data-i18n="videos">Bidiyoyi</span></button>
+ <button onclick="showSection('live',this)"><span>📡</span><span data-i18n="live">Live TV</span></button>
+ <button onclick="showSection('more',this)"><span>▦</span><span data-i18n="more">Game da Mu</span></button>
 </nav>
 
 <div class="article-modal" id="articleModal">
@@ -880,7 +290,6 @@ footer p{
 <script>
 const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-
 const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let posts = [];
@@ -892,40 +301,40 @@ const translations = {
   home:"Home",news:"News",politics:"Politics",entertainment:"Entertainment",
   business:"Business",youth:"Youth",sports:"Sports",education:"Education",
   videos:"Videos",live:"Live TV",more:"About Us",menu:"Menu",
-  language:"🌐 Language",search:"Search news...",
-  breaking:"🔴 BREAKING NEWS",welcome:"News from Yobe and Northern Nigeria",
+  language:"🌐 Language",search:"Search news...",breaking:"🔴 BREAKING NEWS",
+  welcome:"News from Yobe and Northern Nigeria",
   welcomeText:"Stay with us for reliable news, reports, politics, business and entertainment.",
   latest:"📰 Latest News",videosTitle:"▶ Videos and Programs",
-  videoDescription:"Interviews, reports and special programs.",
-  latestVideos:"Latest Videos",liveTitle:"🔴 Live TV",
-  liveDescription:"Watch our television station live here when live streaming is connected.",
+  videoDescription:"Interviews, reports and special programs.",latestVideos:"Latest Videos",
+  liveTitle:"🔴 Live TV",liveDescription:"Watch our television station live here when live streaming is connected.",
   aboutText:"We bring you news, discussions, community awareness and entertainment.",
   watchYouTube:"Watch YouTube",read:"Read Story →",share:"Share ↗",
-  loading:"Loading latest news...",noNews:"No news available yet.",
-  noVideos:"No videos available yet.",error:"Unable to load news. Please try again.",
-  close:"Close",dateLocale:"en-GB",sharePrompt:"Copy this text to share:",
-  opportunities:"Opportunities",opportunityHeroTitle:"LIFE OPPORTUNITIES",
+  loading:"Loading latest news...",noNews:"No news available yet.",noVideos:"No videos available yet.",
+  error:"Unable to load news. Please try again.",close:"Close",dateLocale:"en-GB",
+  sharePrompt:"Copy this text to share:",opportunities:"Opportunities",
+  opportunityHeroTitle:"LIFE OPPORTUNITIES",
   opportunityHeroText:"Find jobs, scholarships, training and other opportunities for growth.",
   exploreOpportunities:"Explore Opportunities",
   opportunityNotice:"Important: Verify every opportunity from its official source before sending personal information or paying money.",
-  browseOpportunities:"Browse Opportunity Categories",
-  allOpportunities:"All Opportunities",allTypes:"All categories",
-  jobs:"Jobs",jobsSmall:"Employment opportunities",
-  scholarship:"Scholarships",scholarshipSmall:"Education support",
-  training:"Training",trainingSmall:"Skills and vocational training",
-  grants:"Business Grants",grantsSmall:"Youth and business support",
-  exams:"JAMB / WAEC / NECO",examsSmall:"Examination updates",
-  availableOpportunities:"Latest Opportunities",
+  browseOpportunities:"Browse Opportunity Categories",allOpportunities:"All Opportunities",
+  allTypes:"All categories",jobs:"Jobs",jobsSmall:"Employment opportunities",
+  scholarship:"Scholarships",scholarshipSmall:"Education support",training:"Training",
+  trainingSmall:"Skills and vocational training",grants:"Business Grants",
+  grantsSmall:"Youth and business support",exams:"JAMB / WAEC / NECO",
+  examsSmall:"Examination updates",availableOpportunities:"Latest Opportunities",
   noOpportunities:"No opportunities have been published yet. Please check again later.",
   opportunityRead:"View Details →",opportunitySearch:"Search jobs, scholarships, training...",
-  opportunityDate:"Published",noMatchingOpportunities:"No matching opportunities found."
+  opportunityDate:"Published",noMatchingOpportunities:"No matching opportunities found.",
+  eligibility:"Eligibility",deadline:"Application Deadline",howToApply:"How to Apply",
+  contact:"Contact Information",applyNow:"APPLY NOW",noApplyLink:"Application link has not been provided.",
+  published:"Published",sourceWarning:"Please verify this opportunity with the official organization before applying."
  },
  ha:{
   home:"Gida",news:"Labarai",politics:"Siyasa",entertainment:"Nishadi",
   business:"Kasuwanci",youth:"Matasa",sports:"Wasanni",education:"Ilimi",
   videos:"Bidiyoyi",live:"Live TV",more:"Game da Mu",menu:"Menu",
-  language:"🌐 Harshe",search:"Nemo labarai...",
-  breaking:"🔴 LABARI DA DUMI-DUMI",welcome:"Labaran Yobe da Arewa",
+  language:"🌐 Harshe",search:"Nemo labarai...",breaking:"🔴 LABARI DA DUMI-DUMI",
+  welcome:"Labaran Yobe da Arewa",
   welcomeText:"Ku kasance tare da mu domin samun sahihan labarai, rahotanni, siyasa, kasuwanci da nishadi.",
   latest:"📰 Sabbin Labarai",videosTitle:"▶ Bidiyoyi da Shirye-shirye",
   videoDescription:"Hirarraki, rahotanni da shirye-shiryen musamman.",
@@ -942,26 +351,30 @@ const translations = {
   opportunityNotice:"Muhimmin bayani: Ka tabbatar da sahihancin kowace dama daga asalin mai bayarwa kafin ka tura bayananka ko ka biya kuɗi.",
   browseOpportunities:"Zaɓi Nau'in Damar Rayuwa",
   allOpportunities:"Duk Damar Rayuwa",allTypes:"Dukkan nau'o'i",
-  jobs:"Ayyukan Yi",jobsSmall:"Guraben aiki",
-  scholarship:"Scholarship",scholarshipSmall:"Tallafin karatu",
-  training:"Horaswa",trainingSmall:"Koyon sana'o'i",
+  jobs:"Ayyukan Yi",jobsSmall:"Guraben aiki",scholarship:"Scholarship",
+  scholarshipSmall:"Tallafin karatu",training:"Horaswa",trainingSmall:"Koyon sana'o'i",
   grants:"Tallafi",grantsSmall:"Matasa da kasuwanci",
   exams:"JAMB / WAEC / NECO",examsSmall:"Sanarwar jarrabawa",
   availableOpportunities:"Sabbin Damammaki",
   noOpportunities:"Babu damar rayuwa da aka wallafa tukuna. Ka sake dubawa daga baya.",
-  opportunityRead:"Duba Cikakken Bayani →",opportunitySearch:"Nemo aiki, scholarship, horo...",
-  opportunityDate:"An wallafa",noMatchingOpportunities:"Ba a samu damar da ta dace da bincikenka ba."
+  opportunityRead:"Duba Cikakken Bayani →",
+  opportunitySearch:"Nemo aiki, scholarship, horo...",
+  opportunityDate:"An wallafa",noMatchingOpportunities:"Ba a samu damar da ta dace da bincikenka ba.",
+  eligibility:"Wa ya cancanci nema?",deadline:"Ranar ƙarshe ta neman dama",
+  howToApply:"Yadda ake nema",contact:"Hanyar tuntuɓa",
+  applyNow:"NEMI DAMAR YANZU",noApplyLink:"Ba a saka hanyar neman wannan damar ba tukuna.",
+  published:"An wallafa",sourceWarning:"Ka tabbatar da sahihancin wannan dama daga ƙungiyar da ta bayar kafin ka nema."
  },
  ar:{
   home:"الرئيسية",news:"الأخبار",politics:"السياسة",entertainment:"الترفيه",
   business:"الأعمال",youth:"الشباب",sports:"الرياضة",education:"التعليم",
   videos:"الفيديو",live:"البث المباشر",more:"من نحن",menu:"القائمة",
-  language:"🌐 اللغة",search:"ابحث عن الأخبار...",
-  breaking:"🔴 أخبار عاجلة",welcome:"أخبار ولاية يوبي وشمال نيجيريا",
+  language:"🌐 اللغة",search:"ابحث عن الأخبار...",breaking:"🔴 أخبار عاجلة",
+  welcome:"أخبار ولاية يوبي وشمال نيجيريا",
   welcomeText:"تابعونا للحصول على الأخبار الموثوقة والتقارير والسياسة والأعمال والترفيه.",
   latest:"📰 آخر الأخبار",videosTitle:"▶ الفيديو والبرامج",
-  videoDescription:"مقابلات وتقارير وبرامج خاصة.",
-  latestVideos:"أحدث الفيديوهات",liveTitle:"🔴 البث المباشر",
+  videoDescription:"مقابلات وتقارير وبرامج خاصة.",latestVideos:"أحدث الفيديوهات",
+  liveTitle:"🔴 البث المباشر",
   liveDescription:"ستتمكنون من مشاهدة قناتنا مباشرة هنا عند ربط البث المباشر.",
   aboutText:"نقدم الأخبار والمناقشات والتوعية المجتمعية والترفيه.",
   watchYouTube:"شاهد على يوتيوب",read:"اقرأ الخبر ←",share:"مشاركة ↗",
@@ -972,17 +385,19 @@ const translations = {
   opportunityHeroText:"ابحث عن الوظائف والمنح الدراسية والتدريب وفرص التطور.",
   exploreOpportunities:"استكشف الفرص",
   opportunityNotice:"مهم: تحقق من مصدر كل فرصة قبل إرسال بياناتك الشخصية أو دفع أي أموال.",
-  browseOpportunities:"تصفح أنواع الفرص",
-  allOpportunities:"جميع الفرص",allTypes:"كل الفئات",
-  jobs:"الوظائف",jobsSmall:"فرص العمل",
+  browseOpportunities:"تصفح أنواع الفرص",allOpportunities:"جميع الفرص",
+  allTypes:"كل الفئات",jobs:"الوظائف",jobsSmall:"فرص العمل",
   scholarship:"المنح الدراسية",scholarshipSmall:"دعم التعليم",
-  training:"التدريب",trainingSmall:"التدريب المهني",
-  grants:"دعم الأعمال",grantsSmall:"دعم الشباب والأعمال",
-  exams:"JAMB / WAEC / NECO",examsSmall:"تحديثات الامتحانات",
-  availableOpportunities:"أحدث الفرص",
+  training:"التدريب",trainingSmall:"التدريب المهني",grants:"دعم الأعمال",
+  grantsSmall:"دعم الشباب والأعمال",exams:"JAMB / WAEC / NECO",
+  examsSmall:"تحديثات الامتحانات",availableOpportunities:"أحدث الفرص",
   noOpportunities:"لم يتم نشر أي فرص حتى الآن. يرجى التحقق لاحقاً.",
   opportunityRead:"عرض التفاصيل ←",opportunitySearch:"ابحث عن وظائف ومنح وتدريب...",
-  opportunityDate:"تاريخ النشر",noMatchingOpportunities:"لم يتم العثور على فرص مطابقة."
+  opportunityDate:"تاريخ النشر",noMatchingOpportunities:"لم يتم العثور على فرص مطابقة.",
+  eligibility:"شروط الأهلية",deadline:"آخر موعد للتقديم",
+  howToApply:"طريقة التقديم",contact:"معلومات الاتصال",
+  applyNow:"قدّم الآن",noApplyLink:"لم يتم توفير رابط التقديم.",
+  published:"تاريخ النشر",sourceWarning:"يرجى التحقق من الفرصة لدى الجهة الرسمية قبل التقديم."
  }
 };
 
@@ -991,12 +406,9 @@ let currentLanguage = "ha";
 try{
  const saved = localStorage.getItem("usman_yobe_language");
  const device = (navigator.language || "ha").toLowerCase();
-
- currentLanguage = saved && translations[saved]
-  ? saved
-  : device.startsWith("ar") ? "ar"
-  : device.startsWith("en") ? "en"
-  : "ha";
+ currentLanguage = saved && translations[saved] ? saved :
+  device.startsWith("ar") ? "ar" :
+  device.startsWith("en") ? "en" : "ha";
 }catch(e){}
 
 function escapeHTML(value){
@@ -1013,10 +425,16 @@ function safeURL(value){
  }catch(e){return "";}
 }
 
+function formatDate(value){
+ if(!value) return "";
+ const date = new Date(value);
+ if(Number.isNaN(date.getTime())) return escapeHTML(value);
+ return escapeHTML(date.toLocaleDateString(translations[currentLanguage].dateLocale));
+}
+
 function displayCategory(category){
  const t = translations[currentLanguage];
  const value = String(category || "");
-
  if(value === "General News" || value === "News") return t.news;
  if(value === "Matasa" || value === "Youth") return t.youth;
  if(value === "Politics") return t.politics;
@@ -1025,20 +443,15 @@ function displayCategory(category){
  if(value === "Sports") return t.sports;
  if(value === "Education") return t.education;
  if(value === "Damar Rayuwa") return t.opportunities;
-
  return value || t.news;
 }
 
 function setLanguage(lang){
  if(!translations[lang]) return;
-
  currentLanguage = lang;
-
  try{localStorage.setItem("usman_yobe_language",lang)}catch(e){}
-
  const t = translations[lang];
  const arabic = lang === "ar";
-
  document.documentElement.lang = lang;
  document.documentElement.dir = arabic ? "rtl" : "ltr";
  document.body.dir = arabic ? "rtl" : "ltr";
@@ -1054,8 +467,7 @@ function setLanguage(lang){
  document.getElementById("languageTitle").textContent = t.language;
 
  ["en","ha","ar"].forEach(code=>{
-  document.getElementById("lang-"+code)
-   .classList.toggle("selected-language",code === lang);
+  document.getElementById("lang-"+code).classList.toggle("selected-language",code === lang);
  });
 
  closeMenu();
@@ -1081,42 +493,29 @@ function menuNavigate(id){
  showSection(id,document.querySelectorAll(".bottom-nav button")[indexes[id]]);
 }
 
-// LOAD PUBLISHED POSTS
+// LOAD PUBLISHED POSTS AND OPPORTUNITY FIELDS
 async function loadNews(){
  const t = translations[currentLanguage];
 
- document.getElementById("posts").innerHTML =
-  '<div class="empty">'+t.loading+'</div>';
-
- document.getElementById("videoPosts").innerHTML =
-  '<div class="empty">'+t.loading+'</div>';
-
- document.getElementById("opportunityPosts").innerHTML =
-  '<div class="empty">'+t.loading+'</div>';
+ document.getElementById("posts").innerHTML = '<div class="empty">'+t.loading+'</div>';
+ document.getElementById("videoPosts").innerHTML = '<div class="empty">'+t.loading+'</div>';
+ document.getElementById("opportunityPosts").innerHTML = '<div class="empty">'+t.loading+'</div>';
 
  const {data,error} = await db
   .from("news_posts")
-  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at")
+  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
   .eq("status","published")
   .order("published_at",{ascending:false});
 
  if(error){
   console.error("News loading error:",error);
-
-  document.getElementById("posts").innerHTML =
-   '<div class="empty">'+t.error+'</div>';
-
-  document.getElementById("videoPosts").innerHTML =
-   '<div class="empty">'+t.error+'</div>';
-
-  document.getElementById("opportunityPosts").innerHTML =
-   '<div class="empty">'+t.error+'</div>';
-
+  document.getElementById("posts").innerHTML = '<div class="empty">'+t.error+'</div>';
+  document.getElementById("videoPosts").innerHTML = '<div class="empty">'+t.error+'</div>';
+  document.getElementById("opportunityPosts").innerHTML = '<div class="empty">'+t.error+'</div>';
   return;
  }
 
  posts = data || [];
-
  renderTopStory();
  renderPosts();
  renderVideos();
@@ -1130,11 +529,7 @@ function renderTopStory(){
  const container = document.getElementById("topStory");
 
  if(!first){
-  container.innerHTML = `
-   <span class="tag">USMAN YOBE TALK SHOW</span>
-   <h1>${escapeHTML(t.welcome)}</h1>
-   <p>${escapeHTML(t.welcomeText)}</p>
-  `;
+  container.innerHTML = `<span class="tag">USMAN YOBE TALK SHOW</span><h1>${escapeHTML(t.welcome)}</h1><p>${escapeHTML(t.welcomeText)}</p>`;
   return;
  }
 
@@ -1148,24 +543,15 @@ function renderTopStory(){
    <h1>${escapeHTML(first.title)}</h1>
    <p>${escapeHTML(first.excerpt || first.content || "")}</p>
    <button class="hero-button" onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
-  </div>
- `;
+  </div>`;
 }
 
 // CATEGORY FILTER
 function matchesCategory(post){
  if(currentCategory === "All") return true;
-
  const category = String(post.category || "");
-
- if(currentCategory === "News"){
-  return category === "News" || category === "General News";
- }
-
- if(currentCategory === "Youth"){
-  return category === "Youth" || category === "Matasa";
- }
-
+ if(currentCategory === "News") return category === "News" || category === "General News";
+ if(currentCategory === "Youth") return category === "Youth" || category === "Matasa";
  return category.toLowerCase() === currentCategory.toLowerCase();
 }
 
@@ -1176,87 +562,64 @@ function renderPosts(){
 
  const filtered = posts.filter(p=>{
   const text = [p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
-  return p.category !== "Damar Rayuwa" &&
-   matchesCategory(p) && text.includes(query);
+  return p.category !== "Damar Rayuwa" && matchesCategory(p) && text.includes(query);
  });
 
  const container = document.getElementById("posts");
-
  if(!filtered.length){
   container.innerHTML = '<div class="empty">'+t.noNews+'</div>';
   return;
  }
 
- container.innerHTML = `
-  <div class="news-grid">
-   ${filtered.map(p=>{
-    const image = safeURL(p.image_url);
-    const index = posts.findIndex(item=>item.id === p.id);
-    const date = p.published_at
-     ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-     : "";
+ container.innerHTML = `<div class="news-grid">${filtered.map(p=>{
+  const image = safeURL(p.image_url);
+  const index = posts.findIndex(item=>item.id === p.id);
+  const date = p.published_at ? formatDate(p.published_at) : "";
 
-    return `
-     <article class="post">
-      ${
-       image
-       ? `<img class="post-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">`
-       : `<div class="post-placeholder">📰</div>`
-      }
-      <div class="post-content">
-       <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
-       <h3>${escapeHTML(p.title)}</h3>
-       <p>${escapeHTML(p.excerpt || p.content || "")}</p>
-       <div class="post-meta">
-        <span>${escapeHTML(date)}</span>
-        <span>Usman Yobe</span>
-       </div>
-       <div class="post-actions">
-        <button onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
-        <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
-       </div>
-      </div>
-     </article>
-    `;
-   }).join("")}
-  </div>
- `;
+  return `<article class="post">
+   ${image ? `<img class="post-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : `<div class="post-placeholder">📰</div>`}
+   <div class="post-content">
+    <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
+    <h3>${escapeHTML(p.title)}</h3>
+    <p>${escapeHTML(p.excerpt || p.content || "")}</p>
+    <div class="post-meta"><span>${date}</span><span>Usman Yobe</span></div>
+    <div class="post-actions">
+     <button onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
+     <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
+    </div>
+   </div>
+  </article>`;
+ }).join("")}</div>`;
 }
 
-// DETECT OPPORTUNITY TYPE FROM TITLE AND CONTENT
+// NORMALIZE OPPORTUNITY TYPE
 function detectOpportunityType(post){
- const text = [
-  post.title || "",
-  post.excerpt || "",
-  post.content || ""
- ].join(" ").toLowerCase();
+ const savedType = String(post.opportunity_type || "").trim();
 
- if(/scholarship|scholarships|bursary|grant for study|tallafin karatu|karatu|bursary/i.test(text)){
-  return "Scholarship";
+ if(savedType){
+  const normalized = savedType.toLowerCase();
+  if(normalized === "job" || normalized === "jobs") return "Jobs";
+  if(normalized === "scholarship" || normalized === "scholarships") return "Scholarship";
+  if(normalized === "training") return "Training";
+  if(normalized === "business grant" || normalized === "business grants" || normalized === "grant") return "Business Grant";
+  if(normalized === "exam" || normalized === "exams" || normalized === "jamb / waec / neco") return "Exams";
+  return "Other";
  }
 
- if(/jamb|waec|neco|nabteb|jarrabawa|examination/i.test(text)){
-  return "Exams";
- }
+ // Fallback for older opportunities that do not have a saved type
+ const text = [post.title || "",post.excerpt || "",post.content || ""].join(" ").toLowerCase();
 
- if(/training|vocational|skill acquisition|horaswa|koyon sana|koyon fasaha/i.test(text)){
-  return "Training";
- }
-
- if(/business grant|business support|entrepreneur|small business|tallafin kasuwanci|tallafin sana|tallafin matasa/i.test(text)){
-  return "Business Grant";
- }
-
- if(/job|jobs|employment|vacancy|vacancies|recruitment|aikin yi|gurbin aiki|daukar ma'aikata|daukar aiki/i.test(text)){
-  return "Jobs";
- }
+ if(/scholarship|scholarships|bursary|grant for study|tallafin karatu|karatu/i.test(text)) return "Scholarship";
+ if(/jamb|waec|neco|nabteb|jarrabawa|examination/i.test(text)) return "Exams";
+ if(/training|vocational|skill acquisition|horaswa|koyon sana|koyon fasaha/i.test(text)) return "Training";
+ if(/business grant|business support|entrepreneur|small business|tallafin kasuwanci|tallafin sana|tallafin matasa/i.test(text)) return "Business Grant";
+ if(/job|jobs|employment|vacancy|vacancies|recruitment|aikin yi|gurbin aiki|daukar ma'aikata|daukar aiki/i.test(text)) return "Jobs";
 
  return "Other";
 }
 
 function opportunityTypeName(type){
  const t = translations[currentLanguage];
-
  const names = {
   Jobs:t.jobs,
   Scholarship:t.scholarship,
@@ -1265,17 +628,12 @@ function opportunityTypeName(type){
   Exams:t.exams,
   Other:t.opportunities
  };
-
  return names[type] || t.opportunities;
 }
 
 function filterOpportunityType(type,button){
  currentOpportunityType = type;
-
- document.querySelectorAll(".opportunity-type").forEach(b=>{
-  b.classList.remove("active");
- });
-
+ document.querySelectorAll(".opportunity-type").forEach(b=>b.classList.remove("active"));
  button.classList.add("active");
  renderOpportunities();
 }
@@ -1283,24 +641,18 @@ function filterOpportunityType(type,button){
 // RENDER OPPORTUNITIES
 function renderOpportunities(){
  const t = translations[currentLanguage];
-
  const globalSearch = document.getElementById("search").value.toLowerCase().trim();
  const localSearch = document.getElementById("opportunitySearch").value.toLowerCase().trim();
-
  const query = (globalSearch + " " + localSearch).trim();
 
- const opportunities = posts.filter(p=>{
-  return String(p.category || "").toLowerCase() === "damar rayuwa";
- });
+ const opportunities = posts.filter(p=>
+  String(p.category || "").trim().toLowerCase() === "damar rayuwa"
+ );
 
  const filtered = opportunities.filter(p=>{
-  const text = [p.title,p.excerpt,p.content].join(" ").toLowerCase();
+  const text = [p.title,p.excerpt,p.content,p.opportunity_type,p.eligibility,p.how_to_apply,p.contact_info].join(" ").toLowerCase();
   const type = detectOpportunityType(p);
-
-  const matchesType =
-   currentOpportunityType === "All" ||
-   type === currentOpportunityType;
-
+  const matchesType = currentOpportunityType === "All" || type === currentOpportunityType;
   return matchesType && text.includes(query);
  });
 
@@ -1319,26 +671,21 @@ function renderOpportunities(){
  container.innerHTML = filtered.map(p=>{
   const image = safeURL(p.image_url);
   const index = posts.findIndex(item=>item.id === p.id);
-  const date = p.published_at
-   ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-   : "";
-
+  const date = p.published_at ? formatDate(p.published_at) : "";
   const type = detectOpportunityType(p);
+  const deadline = p.application_deadline ? formatDate(p.application_deadline) : "";
 
-  return `
-   <article class="opportunity-card">
-    ${image ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : ""}
-    <div class="opportunity-content">
-     <span class="opportunity-label">💼 ${escapeHTML(opportunityTypeName(type))}</span>
-     <h3>${escapeHTML(p.title)}</h3>
-     <p>${escapeHTML(p.excerpt || p.content || "")}</p>
-     <div class="opportunity-date">${escapeHTML(t.opportunityDate)}: ${escapeHTML(date)}</div>
-     <button class="opportunity-button" onclick="openArticle(${index})">
-      ${escapeHTML(t.opportunityRead)}
-     </button>
-    </div>
-   </article>
-  `;
+  return `<article class="opportunity-card">
+   ${image ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : ""}
+   <div class="opportunity-content">
+    <span class="opportunity-label">💼 ${escapeHTML(opportunityTypeName(type))}</span>
+    <h3>${escapeHTML(p.title)}</h3>
+    <p>${escapeHTML(p.excerpt || p.content || "")}</p>
+    ${deadline ? `<div class="deadline">⏰ ${escapeHTML(t.deadline)}: ${deadline}</div>` : ""}
+    <div class="opportunity-date">${escapeHTML(t.opportunityDate)}: ${date}</div>
+    <button class="opportunity-button" onclick="openArticle(${index})">${escapeHTML(t.opportunityRead)}</button>
+   </div>
+  </article>`;
  }).join("");
 }
 
@@ -1354,7 +701,6 @@ function renderVideos(){
  });
 
  const container = document.getElementById("videoPosts");
-
  if(!videoPosts.length){
   container.innerHTML = '<div class="empty">'+t.noVideos+'</div>';
   return;
@@ -1363,67 +709,44 @@ function renderVideos(){
  container.innerHTML = videoPosts.map(p=>{
   const video = safeURL(p.video_url);
   const image = safeURL(p.image_url);
-  const date = p.published_at
-   ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-   : "";
+  const date = p.published_at ? formatDate(p.published_at) : "";
+  const index = posts.findIndex(item=>item.id === p.id);
 
-  return `
-   <article class="video-card">
-    <video controls playsinline preload="metadata"
-     ${image ? `poster="${escapeHTML(image)}"` : ""}
-     controlslist="nodownload">
-     <source src="${escapeHTML(video)}">
-     Your browser does not support HTML video.
-    </video>
-    <div class="video-card-content">
-     <span class="video-label">▶ USMAN YOBE VIDEO</span>
-     <h3>${escapeHTML(p.title)}</h3>
-     <p>${escapeHTML(p.excerpt || "")}</p>
-     <div class="post-meta">
-      <span>${escapeHTML(date)}</span>
-      <span>ASAWWARA TV</span>
-     </div>
-     <div class="post-actions">
-      <button onclick="sharePost(${posts.findIndex(item=>item.id === p.id)})">${escapeHTML(t.share)}</button>
-     </div>
-    </div>
-   </article>
-  `;
+  return `<article class="video-card">
+   <video controls playsinline preload="metadata" ${image ? `poster="${escapeHTML(image)}"` : ""} controlslist="nodownload">
+    <source src="${escapeHTML(video)}">
+    Your browser does not support HTML video.
+   </video>
+   <div class="video-card-content">
+    <span class="video-label">▶ USMAN YOBE VIDEO</span>
+    <h3>${escapeHTML(p.title)}</h3>
+    <p>${escapeHTML(p.excerpt || "")}</p>
+    <div class="post-meta"><span>${date}</span><span>ASAWWARA TV</span></div>
+    <div class="post-actions"><button onclick="sharePost(${index})">${escapeHTML(t.share)}</button></div>
+   </div>
+  </article>`;
  }).join("");
 }
 
 function filterCategory(category,button){
  currentCategory = category;
-
- document.querySelectorAll(".categories button")
-  .forEach(b=>b.classList.remove("active"));
-
+ document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
  button.classList.add("active");
-
  showSection("home",document.querySelector(".bottom-nav button"));
  renderPosts();
 }
 
 function showSection(id,button){
- document.querySelectorAll("main section").forEach(s=>{
-  s.style.display = "none";
- });
-
- document.getElementById(id).style.display = "block";
-
- document.querySelectorAll(".bottom-nav button").forEach(b=>{
-  b.classList.remove("active");
- });
-
+ document.querySelectorAll("main section").forEach(s=>s.style.display="none");
+ document.getElementById(id).style.display="block";
+ document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.remove("active"));
  if(button) button.classList.add("active");
-
  window.scrollTo({top:0,behavior:"smooth"});
-
  if(id === "videos") renderVideos();
  if(id === "opportunities") renderOpportunities();
 }
 
-// OPEN ARTICLE DETAILS
+// ARTICLE DETAILS INCLUDING OPPORTUNITY INFORMATION
 function openArticle(index){
  const p = posts[index];
  if(!p) return;
@@ -1431,22 +754,62 @@ function openArticle(index){
  const t = translations[currentLanguage];
  const image = safeURL(p.image_url);
  const video = safeURL(p.video_url);
- const date = p.published_at
-  ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-  : "";
-
- const isOpportunity =
-  String(p.category || "").toLowerCase() === "damar rayuwa";
-
+ const date = p.published_at ? formatDate(p.published_at) : "";
+ const isOpportunity = String(p.category || "").trim().toLowerCase() === "damar rayuwa";
  const details = document.getElementById("articleDetails");
+ const applyURL = safeURL(p.application_url);
+ const deadline = p.application_deadline ? formatDate(p.application_deadline) : "";
+ const type = detectOpportunityType(p);
+
+ let opportunityDetails = "";
+
+ if(isOpportunity){
+  opportunityDetails = `
+   <div class="opportunity-notice">⚠️ ${escapeHTML(t.sourceWarning)}</div>
+
+   <div class="opportunity-detail-box">
+    <h3>💼 ${escapeHTML(opportunityTypeName(type))}</h3>
+    <p>${escapeHTML(p.opportunity_type || opportunityTypeName(type))}</p>
+   </div>
+
+   ${p.eligibility ? `
+    <div class="opportunity-detail-box">
+     <h3>👥 ${escapeHTML(t.eligibility)}</h3>
+     <p>${escapeHTML(p.eligibility)}</p>
+    </div>` : ""}
+
+   ${deadline ? `
+    <div class="opportunity-detail-box">
+     <h3>⏰ ${escapeHTML(t.deadline)}</h3>
+     <p>${deadline}</p>
+    </div>` : ""}
+
+   ${p.how_to_apply ? `
+    <div class="opportunity-detail-box">
+     <h3>📝 ${escapeHTML(t.howToApply)}</h3>
+     <p>${escapeHTML(p.how_to_apply)}</p>
+    </div>` : ""}
+
+   ${p.contact_info ? `
+    <div class="opportunity-detail-box">
+     <h3>📞 ${escapeHTML(t.contact)}</h3>
+     <p>${escapeHTML(p.contact_info)}</p>
+    </div>` : ""}
+
+   ${applyURL ? `
+    <a class="apply-now" href="${escapeHTML(applyURL)}" target="_blank" rel="noopener noreferrer">
+     🌐 ${escapeHTML(t.applyNow)}
+    </a>` : `
+    <div class="opportunity-notice">${escapeHTML(t.noApplyLink)}</div>`}
+  `;
+ }
+
  details.dir = currentLanguage === "ar" ? "rtl" : "ltr";
 
  details.innerHTML = `
   <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
   <h2>${escapeHTML(p.title)}</h2>
-  <p style="color:#64748b;margin:10px 0">
-   ${escapeHTML(date)} | USMAN YOBE TALK SHOW
-  </p>
+  <p style="color:#64748b;margin:10px 0">${date} | USMAN YOBE TALK SHOW</p>
 
   ${image ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}">` : ""}
 
@@ -1454,18 +817,11 @@ function openArticle(index){
    <video class="article-video" controls playsinline preload="metadata">
     <source src="${escapeHTML(video)}">
     Your browser does not support HTML video.
-   </video>
-  ` : ""}
+   </video>` : ""}
 
-  <div style="line-height:1.9;white-space:pre-wrap;margin-top:12px">
-   ${escapeHTML(p.content || p.excerpt || "")}
-  </div>
+  <div style="line-height:1.9;white-space:pre-wrap;margin-top:12px">${escapeHTML(p.content || p.excerpt || "")}</div>
 
-  ${isOpportunity ? `
-   <div class="opportunity-notice">
-    ${escapeHTML(t.opportunityNotice)}
-   </div>
-  ` : ""}
+  ${isOpportunity ? opportunityDetails : ""}
 
   <div class="post-actions">
    <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
@@ -1489,11 +845,7 @@ function sharePost(index){
  const t = translations[currentLanguage];
 
  if(navigator.share){
-  navigator.share({
-   title:p.title,
-   text:text,
-   url:location.href
-  }).catch(()=>{});
+  navigator.share({title:p.title,text:text,url:location.href}).catch(()=>{});
  }else{
   window.prompt(t.sharePrompt,text);
  }
