@@ -396,7 +396,91 @@ async function logout(){
   );
 
 }
+// PREVIEW IMAGE
+function previewSelectedImage(){
+  const file = document.getElementById("imageFile").files[0];
+  const preview = document.getElementById("imagePreview");
 
+  if(!file) return;
+
+  if(!file.type.startsWith("image/")){
+    alert("Zaɓi hoto kawai.");
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+}
+
+// UPLOAD IMAGE
+async function uploadImage(){
+
+  const file = document.getElementById("imageFile").files[0];
+  const btn = document.querySelector('button[onclick="uploadImage()"]');
+
+  if(!file){
+    alert("Da farko zaɓi hoto daga Gallery.");
+    return;
+  }
+
+  if(file.size > 5 * 1024 * 1024){
+    alert("Hoton bai kamata ya wuce 5MB ba.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Ana ɗora hoto...";
+
+  try{
+
+    const {data:userData} = await db.auth.getUser();
+
+    if(!userData.user){
+      throw new Error("Ka fara shiga Admin.");
+    }
+
+    const {data:isAdmin} = await db.rpc("is_admin");
+
+    if(isAdmin !== true){
+      throw new Error("Ba ka da izinin Admin.");
+    }
+
+    const fileName = Date.now() + "-" +
+      file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+
+    const {error} = await db.storage
+      .from("news-images")
+      .upload("news/" + fileName,file,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(error) throw error;
+
+    const {data} = db.storage
+      .from("news-images")
+      .getPublicUrl("news/" + fileName);
+
+    document.getElementById("imageUrl").value =
+      data.publicUrl;
+
+    document.getElementById("imagePreview").src =
+      data.publicUrl;
+
+    alert("An ɗora hoton cikin nasara!");
+
+  }catch(error){
+
+    alert("Matsala: " + error.message);
+
+  }finally{
+
+    btn.disabled = false;
+    btn.textContent = "Upload Image";
+
+  }
+}
 // SAVE NEWS
 async function savePost(){
 
