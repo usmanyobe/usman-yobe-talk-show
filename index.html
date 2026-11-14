@@ -848,6 +848,13 @@ loadNews();
 setInterval(loadNews, 60000);
 
 </script>
-
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then(() => console.log("App is ready"))
+      .catch(error => console.log("Service Worker Error:", error));
+  });
+}
 </body>
 </html>
