@@ -7,57 +7,65 @@
 <meta name="theme-color" content="#071b49">
 
 <title>USMAN YOBE TALK SHOW</title>
-<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. News, politics, business and entertainment.">
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, bidiyo, ilimi, kasuwanci da shirye-shirye.">
 <link rel="manifest" href="manifest.json">
 
 <style>
-* {
- box-sizing:border-box;
- margin:0;
- padding:0;
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+ --navy:#071b49;
+ --blue:#0755d9;
+ --red:#df2028;
+ --gold:#f6c900;
+ --light:#f1f4f9;
+ --text:#172033;
+ --muted:#68758a;
 }
 
-body {
+body{
  font-family:Arial,sans-serif;
- background:#f1f4f9;
- color:#172033;
- padding-bottom:75px;
+ background:var(--light);
+ color:var(--text);
+ padding-bottom:78px;
 }
 
-header {
- background:#071b49;
+button,input{font-family:inherit}
+
+header{
+ background:var(--navy);
  color:white;
- padding:18px 15px;
+ padding:13px 15px;
  position:sticky;
  top:0;
  z-index:50;
+ box-shadow:0 2px 12px #0002;
 }
 
-.brand {
+.brand{
  display:flex;
  align-items:center;
- gap:12px;
+ gap:11px;
 }
 
-.logo {
- width:150px;
+.logo{
+ width:105px;
  height:auto;
- max-height:78px;
+ max-height:68px;
  object-fit:contain;
- display:block;
- flex:0 0 auto;
+ flex-shrink:0;
 }
 
-.brand h2 {font-size:19px}
-.brand small {color:#f6c900;font-size:11px}
+.brand h2{font-size:17px;line-height:1.25}
+.brand small{color:var(--gold);font-size:10px}
 
-.header-actions {
+.header-actions{
  display:flex;
- gap:15px;
+ gap:12px;
  margin-left:auto;
 }
 
-.header-actions button {
+.header-actions button{
  background:none;
  border:0;
  color:white;
@@ -65,215 +73,286 @@ header {
  cursor:pointer;
 }
 
-.search {margin-top:15px}
+.search{margin-top:12px}
 
-.search input {
+.search input{
  width:100%;
- padding:12px;
+ padding:12px 14px;
  border:0;
- border-radius:10px;
+ border-radius:9px;
  font-size:15px;
  outline:none;
 }
 
-.categories {
+.categories{
  display:flex;
- gap:9px;
+ gap:8px;
  overflow-x:auto;
- padding:14px;
+ padding:12px;
  background:white;
  scrollbar-width:none;
+ border-bottom:1px solid #e4e9f1;
 }
 
-.categories button {
+.categories button{
  white-space:nowrap;
  border:1px solid #dce3ee;
  background:#f4f6fa;
- padding:10px 15px;
- border-radius:25px;
+ padding:9px 14px;
+ border-radius:22px;
  font-weight:bold;
  color:#172b50;
  cursor:pointer;
 }
 
-.categories button.active {
- background:#0755d9;
+.categories button.active{
+ background:var(--blue);
  color:white;
- border-color:#0755d9;
+ border-color:var(--blue);
 }
 
-.container {
- max-width:850px;
+.container{
+ max-width:950px;
  margin:auto;
  padding:12px;
 }
 
-.section-title {
+.section-title{
  font-size:19px;
- margin:17px 0 12px;
- color:#09245b;
+ margin:22px 0 12px;
+ color:var(--navy);
 }
 
-.breaking {
- background:#071b49;
+.breaking{
+ background:var(--navy);
  color:white;
- border-radius:14px;
+ border-radius:12px;
  overflow:hidden;
- margin-bottom:18px;
+ margin:12px 0 20px;
 }
 
-.breaking-top {
- background:#e52222;
- padding:9px 14px;
+.breaking-top{
+ background:var(--red);
+ padding:9px 13px;
  font-weight:bold;
- letter-spacing:1px;
+ font-size:13px;
+ letter-spacing:.5px;
 }
 
-.breaking-content {padding:20px}
+.breaking-content{padding:19px}
 
-.breaking-content h1 {
- font-size:25px;
- line-height:1.3;
- margin:8px 0;
+.breaking-content h1{
+ font-size:24px;
+ line-height:1.35;
+ margin:10px 0;
 }
 
-.breaking-content p {
+.breaking-content p{
  color:#dce5fa;
- line-height:1.6;
+ line-height:1.7;
  font-size:14px;
 }
 
-.tag {
+.breaking-image{
+ width:100%;
+ max-height:300px;
+ object-fit:cover;
+ display:block;
+}
+
+.tag{
  display:inline-block;
- background:#e52222;
+ background:var(--red);
  color:white;
  padding:5px 9px;
- border-radius:5px;
+ border-radius:4px;
  font-size:11px;
  font-weight:bold;
 }
 
-.post {
- background:white;
- border-radius:13px;
- overflow:hidden;
- margin-bottom:13px;
- box-shadow:0 2px 9px #0000000b;
-}
-
-.post-image {
- height:155px;
- background:linear-gradient(135deg,#09245b,#1468cb);
- display:grid;
- place-items:center;
- color:white;
- font-size:48px;
-}
-
-.post-content {padding:14px}
-
-.post-content h3 {
- font-size:17px;
- line-height:1.4;
- margin:8px 0;
-}
-
-.post-content p {
- font-size:13px;
- color:#68758a;
- line-height:1.6;
-}
-
-.post-meta {
- font-size:11px;
- color:#7a879b;
- margin-top:10px;
- display:flex;
- justify-content:space-between;
- gap:10px;
-}
-
-.post-actions {
- display:flex;
- gap:15px;
- margin-top:12px;
-}
-
-.post-actions button {
+.hero-button{
+ display:inline-block;
  border:0;
- background:none;
- color:#0755d9;
+ border-radius:7px;
+ padding:10px 15px;
+ margin-top:13px;
+ background:var(--gold);
+ color:var(--navy);
  font-weight:bold;
  cursor:pointer;
 }
 
-.empty {
- padding:30px;
+.news-grid{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:13px;
+}
+
+.post{
+ background:white;
+ border-radius:11px;
+ overflow:hidden;
+ box-shadow:0 2px 9px #0000000b;
+}
+
+.post-image{
+ width:100%;
+ height:185px;
+ object-fit:cover;
+ display:block;
+}
+
+.post-placeholder{
+ height:160px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,#09245b,#1468cb);
+ color:white;
+ font-size:45px;
+}
+
+.post-content{padding:14px}
+
+.post-content h3{
+ font-size:17px;
+ line-height:1.4;
+ margin:9px 0;
+}
+
+.post-content p{
+ font-size:13px;
+ color:var(--muted);
+ line-height:1.7;
+}
+
+.post-meta{
+ font-size:11px;
+ color:#7a879b;
+ margin-top:11px;
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+}
+
+.post-actions{
+ display:flex;
+ gap:16px;
+ margin-top:13px;
+}
+
+.post-actions button{
+ border:0;
+ background:none;
+ color:var(--blue);
+ font-weight:bold;
+ cursor:pointer;
+}
+
+.empty{
+ padding:28px 15px;
  text-align:center;
  color:#667085;
  background:white;
- border-radius:12px;
+ border-radius:10px;
+ line-height:1.6;
 }
 
-.video-box {
- background:#071b49;
+.video-box{
+ background:var(--navy);
  color:white;
  padding:22px;
  border-radius:12px;
  text-align:center;
- margin:15px 0;
+ margin:14px 0;
 }
 
-.video-box button {
- background:#e52222;
+.video-box button{
+ background:var(--red);
  color:white;
  border:0;
  padding:12px 20px;
  border-radius:8px;
  margin-top:12px;
  cursor:pointer;
+ font-weight:bold;
 }
 
-footer {
- background:#071b49;
+.video-card{
+ background:white;
+ border-radius:12px;
+ overflow:hidden;
+ margin-bottom:17px;
+ box-shadow:0 2px 9px #0000000b;
+}
+
+.video-card video{
+ display:block;
+ width:100%;
+ max-height:280px;
+ background:#000;
+}
+
+.video-card-content{padding:14px}
+
+.video-card-content h3{
+ font-size:17px;
+ line-height:1.4;
+ margin:7px 0;
+}
+
+.video-card-content p{
+ color:var(--muted);
+ font-size:13px;
+ line-height:1.6;
+}
+
+.video-label{
+ color:var(--red);
+ font-size:11px;
+ font-weight:bold;
+}
+
+footer{
+ background:var(--navy);
  color:white;
  text-align:center;
  padding:25px 12px;
  margin-top:25px;
 }
 
-footer p {
+footer p{
  font-size:12px;
  color:#ccd7ec;
  margin-top:8px;
 }
 
-.social {
+.social{
  display:flex;
  justify-content:center;
  gap:20px;
  margin-top:15px;
+ flex-wrap:wrap;
 }
 
-.social a {
- color:#f6c900;
+.social a{
+ color:var(--gold);
  text-decoration:none;
  font-weight:bold;
 }
 
-.bottom-nav {
+.bottom-nav{
  position:fixed;
  bottom:0;
  left:0;
  width:100%;
- background:#071b49;
+ background:var(--navy);
  display:flex;
  justify-content:space-around;
- padding:10px 3px calc(10px + env(safe-area-inset-bottom));
- z-index:20;
+ padding:9px 3px calc(9px + env(safe-area-inset-bottom));
+ z-index:60;
 }
 
-.bottom-nav button {
+.bottom-nav button{
  background:none;
  border:0;
  color:#cbd6ec;
@@ -285,31 +364,30 @@ footer p {
  cursor:pointer;
 }
 
-.bottom-nav button span {font-size:21px}
+.bottom-nav button span:first-child{font-size:21px}
+.bottom-nav button.active{color:var(--gold)}
 
-.bottom-nav button.active {color:#f6c900}
-
-.article-modal {
+.article-modal{
  display:none;
  position:fixed;
  inset:0;
- background:#0009;
+ background:#000b;
  z-index:100;
- padding:15px;
+ padding:12px;
  overflow-y:auto;
 }
 
-.modal-content {
+.modal-content{
  background:white;
- border-radius:14px;
- padding:20px;
- max-width:600px;
- margin:30px auto;
+ border-radius:13px;
+ padding:18px;
+ max-width:650px;
+ margin:20px auto;
 }
 
-.modal-content h2 {margin:12px 0}
+.modal-content h2{margin:12px 0;line-height:1.4}
 
-.close {
+.close{
  float:right;
  border:0;
  background:#eee;
@@ -318,16 +396,23 @@ footer p {
  cursor:pointer;
 }
 
-.article-image {
+.article-image{
  width:100%;
- max-height:300px;
+ max-height:320px;
  object-fit:cover;
- border-radius:10px;
+ border-radius:9px;
  margin:12px 0;
 }
 
-/* MENU */
-.menu-panel {
+.article-video{
+ width:100%;
+ max-height:350px;
+ background:#000;
+ border-radius:9px;
+ margin:14px 0;
+}
+
+.menu-panel{
  display:none;
  position:fixed;
  top:85px;
@@ -335,7 +420,7 @@ footer p {
  width:250px;
  max-width:calc(100vw - 24px);
  background:white;
- color:#172033;
+ color:var(--text);
  border-radius:12px;
  padding:15px;
  box-shadow:0 5px 20px #0003;
@@ -344,15 +429,15 @@ footer p {
  overflow-y:auto;
 }
 
-.menu-panel.show {display:block}
+.menu-panel.show{display:block}
 
-.menu-panel h3 {
+.menu-panel h3{
  margin:5px 0 12px;
- color:#071b49;
+ color:var(--navy);
  font-size:17px;
 }
 
-.menu-panel button {
+.menu-panel button{
  width:100%;
  padding:12px;
  border:0;
@@ -362,64 +447,45 @@ footer p {
  text-align:start;
  font-weight:bold;
  cursor:pointer;
- color:#172033;
+ color:var(--text);
 }
 
-.menu-panel button:active {
- background:#dce8ff;
-}
-
-.menu-panel .language-title {
+.menu-panel .language-title{
  margin-top:15px;
  padding-top:12px;
  border-top:1px solid #ddd;
 }
 
-.menu-panel button.selected-language {
- background:#0755d9;
+.menu-panel button.selected-language{
+ background:var(--blue);
  color:white;
 }
 
-.menu-overlay {
+.menu-overlay{
  display:none;
  position:fixed;
  inset:0;
  z-index:80;
 }
 
-.menu-overlay.show {display:block}
+.menu-overlay.show{display:block}
 
-[dir="rtl"] .menu-panel {
- right:auto;
- left:12px;
-}
-
-[dir="rtl"] .brand {
- flex-direction:row;
-}
-
-[dir="rtl"] .header-actions {
- margin-left:0;
- margin-right:auto;
-}
-
-[dir="rtl"] .post-meta {
- flex-direction:row;
-}
-
-[dir="rtl"] .post-actions {
- flex-direction:row;
-}
-
+[dir="rtl"] .menu-panel{right:auto;left:12px}
+[dir="rtl"] .header-actions{margin-left:0;margin-right:auto}
 [dir="rtl"] .breaking-content,
 [dir="rtl"] .post-content,
-[dir="rtl"] .modal-content {
- text-align:right;
+[dir="rtl"] .modal-content,
+[dir="rtl"] .video-card-content{text-align:right}
+
+@media(min-width:650px){
+ .container{padding:20px}
+ .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .post-image{height:205px}
+ .breaking-content h1{font-size:30px}
 }
 
-@media(min-width:650px) {
- .post-image {height:210px}
- .container {padding:20px}
+@media(min-width:850px){
+ .news-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -428,102 +494,54 @@ footer p {
 
 <header>
  <div class="brand">
-
   <img class="logo" src="74556.png"
    alt="USMAN YOBE TALK SHOW official logo">
 
   <div>
    <h2>USMAN YOBE</h2>
    <h2 style="color:#f6c900">TALK SHOW</h2>
-   <small>TASHAR AL'UMMA</small>
+   <small>...ONE VOICE, ONE COMMUNITY, ONE FUTURE</small>
   </div>
 
   <div class="header-actions">
    <button aria-label="Search"
     onclick="document.getElementById('search').focus()">⌕</button>
-
-   <button aria-label="Menu"
-    onclick="toggleMenu()">☰</button>
+   <button aria-label="Menu" onclick="toggleMenu()">☰</button>
   </div>
-
  </div>
 
  <div class="search">
   <input id="search" type="search"
    placeholder="Nemo labarai..."
-   oninput="renderPosts()">
+   oninput="renderPosts();renderVideos()">
  </div>
 </header>
 
-<!-- MENU OVERLAY -->
-<div class="menu-overlay" id="menuOverlay"
- onclick="closeMenu()"></div>
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
-<!-- MENU PANEL -->
 <div class="menu-panel" id="menuPanel">
-
  <h3 id="menuTitle">☰ Menu</h3>
 
- <button onclick="menuNavigate('home')">
-  ⌂ <span data-i18n="home">Gida</span>
- </button>
+ <button onclick="menuNavigate('home')">⌂ <span data-i18n="home">Gida</span></button>
+ <button onclick="menuNavigate('videos')">▶ <span data-i18n="videos">Bidiyoyi</span></button>
+ <button onclick="menuNavigate('live')">📡 <span data-i18n="live">Live TV</span></button>
+ <button onclick="menuNavigate('more')">▦ <span data-i18n="more">Game da Mu</span></button>
 
- <button onclick="menuNavigate('videos')">
-  ▶ <span data-i18n="videos">Bidiyoyi</span>
- </button>
-
- <button onclick="menuNavigate('live')">
-  📡 <span data-i18n="live">Live TV</span>
- </button>
-
- <button onclick="menuNavigate('more')">
-  ▦ <span data-i18n="more">Game da Mu</span>
- </button>
-
- <h3 class="language-title" id="languageTitle">
-  🌐 Language / Harshe
- </h3>
-
- <button id="lang-en" onclick="setLanguage('en')">
-  🇬🇧 English
- </button>
-
- <button id="lang-ha" onclick="setLanguage('ha')">
-  🇳🇬 Hausa
- </button>
-
- <button id="lang-ar" onclick="setLanguage('ar')">
-  🇸🇦 العربية
- </button>
-
+ <h3 class="language-title" id="languageTitle">🌐 Harshe</h3>
+ <button id="lang-en" onclick="setLanguage('en')">🇬🇧 English</button>
+ <button id="lang-ha" onclick="setLanguage('ha')">🇳🇬 Hausa</button>
+ <button id="lang-ar" onclick="setLanguage('ar')">🇸🇦 العربية</button>
 </div>
 
 <nav class="categories" id="categories">
-
- <button class="active" onclick="filterCategory('All',this)"
-  data-i18n="home">Home</button>
-
- <button onclick="filterCategory('News',this)"
-  data-i18n="news">News</button>
-
- <button onclick="filterCategory('Politics',this)"
-  data-i18n="politics">Politics</button>
-
- <button onclick="filterCategory('Entertainment',this)"
-  data-i18n="entertainment">Entertainment</button>
-
- <button onclick="filterCategory('Business',this)"
-  data-i18n="business">Business</button>
-
- <button onclick="filterCategory('Youth',this)"
-  data-i18n="youth">Matasa</button>
-
- <button onclick="filterCategory('Sports',this)"
-  data-i18n="sports">Sports</button>
-
- <button onclick="filterCategory('Education',this)"
-  data-i18n="education">Education</button>
-
+ <button class="active" onclick="filterCategory('All',this)" data-i18n="home">Gida</button>
+ <button onclick="filterCategory('News',this)" data-i18n="news">Labarai</button>
+ <button onclick="filterCategory('Politics',this)" data-i18n="politics">Siyasa</button>
+ <button onclick="filterCategory('Entertainment',this)" data-i18n="entertainment">Nishadi</button>
+ <button onclick="filterCategory('Business',this)" data-i18n="business">Kasuwanci</button>
+ <button onclick="filterCategory('Youth',this)" data-i18n="youth">Matasa</button>
+ <button onclick="filterCategory('Sports',this)" data-i18n="sports">Wasanni</button>
+ <button onclick="filterCategory('Education',this)" data-i18n="education">Ilimi</button>
 </nav>
 
 <main class="container">
@@ -531,29 +549,15 @@ footer p {
  <section id="home">
 
   <div class="breaking">
-
-   <div class="breaking-top" data-i18n="breaking">
-    🔴 BREAKING NEWS
-   </div>
-
-   <div class="breaking-content">
-
+   <div class="breaking-top" data-i18n="breaking">🔴 LABARI DA DUMI-DUMI</div>
+   <div id="topStory" class="breaking-content">
     <span class="tag">USMAN YOBE TALK SHOW</span>
-
     <h1 data-i18n="welcome">Labaran Yobe da Arewa</h1>
-
-    <p data-i18n="welcomeText">
-     Ku kasance tare da mu domin samun sahihan labarai,
-     rahotanni, siyasa, kasuwanci da nishadi.
-    </p>
-
+    <p data-i18n="welcomeText">Ku kasance tare da mu domin samun sahihan labarai.</p>
    </div>
   </div>
 
-  <h2 class="section-title" data-i18n="latest">
-   📰 Sabbin Labarai
-  </h2>
-
+  <h2 class="section-title" data-i18n="latest">📰 Sabbin Labarai</h2>
   <div id="posts">
    <div class="empty">Ana loda sabbin labarai...</div>
   </div>
@@ -561,78 +565,49 @@ footer p {
  </section>
 
  <section id="videos" style="display:none">
-
-  <h2 class="section-title" data-i18n="videosTitle">
-   ▶ Bidiyoyi da Shirye-shirye
-  </h2>
+  <h2 class="section-title" data-i18n="videosTitle">▶ Bidiyoyi da Shirye-shirye</h2>
 
   <div class="video-box">
-
-   <div style="font-size:45px">📺</div>
-
+   <div style="font-size:42px">📺</div>
    <h2>USMAN YOBE TALK SHOW</h2>
+   <p data-i18n="videoDescription">Hirarraki, rahotanni da shirye-shiryen musamman.</p>
+   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')"
+    data-i18n="watchYouTube">Kalli YouTube</button>
+  </div>
 
-   <p data-i18n="videoDescription">
-    Hirarraki, rahotanni da shirye-shiryen musamman.
-   </p>
-
-   <button onclick="window.open(
-    'https://www.youtube.com/@ASAWWARATV','_blank')"
-    data-i18n="watch">
-    Kalli YouTube
-   </button>
-
+  <h2 class="section-title" data-i18n="latestVideos">Sabbin Bidiyoyi</h2>
+  <div id="videoPosts">
+   <div class="empty">Ana loda bidiyoyi...</div>
   </div>
  </section>
 
  <section id="live" style="display:none">
-
-  <h2 class="section-title" data-i18n="liveTitle">
-   🔴 Live TV
-  </h2>
-
+  <h2 class="section-title" data-i18n="liveTitle">🔴 Live TV</h2>
   <div class="video-box">
-
    <div style="font-size:45px">📡</div>
-
    <h2>ASAWWARA TV</h2>
-
    <p data-i18n="liveDescription">
-    Shirin kallon tasharmu kai tsaye zai kasance nan
-    idan an haɗa live stream.
+    Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.
    </p>
-
+   <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')"
+    data-i18n="watchYouTube">Kalli YouTube</button>
   </div>
  </section>
 
  <section id="more" style="display:none">
+  <h2 class="section-title" data-i18n="more">Game da Mu</h2>
 
-  <h2 class="section-title" data-i18n="more">
-   Game da Mu
-  </h2>
-
-  <div class="post-content"
-   style="background:white;border-radius:12px">
-
+  <div class="post-content" style="background:white;border-radius:12px">
    <h2>USMAN YOBE TALK SHOW</h2>
-
    <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
-
    <p style="margin-top:12px" data-i18n="aboutText">
     Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.
    </p>
 
    <div class="social">
-
-    <a href="https://www.tiktok.com/@usman1yobe"
-     target="_blank" rel="noopener">TikTok</a>
-
-    <a href="https://www.facebook.com/share/1C69g7FDMm/"
-     target="_blank" rel="noopener">Facebook</a>
-
-    <a href="https://www.youtube.com/@ASAWWARATV"
-     target="_blank" rel="noopener">YouTube</a>
-
+    <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">TikTok</a>
+    <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">YouTube</a>
    </div>
   </div>
  </section>
@@ -646,647 +621,476 @@ footer p {
 </footer>
 
 <nav class="bottom-nav">
-
  <button class="active" onclick="showSection('home',this)">
-  <span>⌂</span><span data-i18n="home">Home</span>
+  <span>⌂</span><span data-i18n="home">Gida</span>
  </button>
-
  <button onclick="showSection('videos',this)">
-  <span>▶</span><span data-i18n="videos">Videos</span>
+  <span>▶</span><span data-i18n="videos">Bidiyoyi</span>
  </button>
-
  <button onclick="showSection('live',this)">
   <span>📡</span><span data-i18n="live">Live TV</span>
  </button>
-
  <button onclick="showSection('more',this)">
-  <span>▦</span><span data-i18n="more">More</span>
+  <span>▦</span><span data-i18n="more">Game da Mu</span>
  </button>
-
 </nav>
 
 <div class="article-modal" id="articleModal">
-
  <div class="modal-content">
-
-  <button class="close" onclick="closeArticle()">
-   Close ✕
-  </button>
-
+  <button class="close" onclick="closeArticle()">✕ <span data-i18n="close">Rufe</span></button>
   <div id="articleDetails" style="padding-top:35px"></div>
-
  </div>
 </div>
 
-<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+// SUPABASE SETTINGS - KEEP YOUR EXISTING PROJECT
+const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
+const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
 
-// SUPABASE SETTINGS
-const SUPABASE_URL =
- "https://latxtetkscajmbqppnad.supabase.co";
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const SUPABASE_KEY =
- "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-
-const db = window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
-
-// NEWS DATA
 let posts = [];
 let currentCategory = "All";
 
-// LANGUAGE SYSTEM
 const translations = {
-
- en: {
-  menu:"Menu",
-  language:"🌐 Language",
-  home:"Home",
-  news:"News",
-  politics:"Politics",
-  entertainment:"Entertainment",
-  business:"Business",
-  youth:"Youth",
-  sports:"Sports",
-  education:"Education",
-  videos:"Videos",
-  live:"Live TV",
-  more:"About Us",
-  search:"Search news...",
-  breaking:"🔴 BREAKING NEWS",
-  welcome:"News from Yobe and Northern Nigeria",
+ en:{
+  home:"Home",news:"News",politics:"Politics",entertainment:"Entertainment",
+  business:"Business",youth:"Youth",sports:"Sports",education:"Education",
+  videos:"Videos",live:"Live TV",more:"About Us",menu:"Menu",
+  language:"🌐 Language",search:"Search news...",
+  breaking:"🔴 BREAKING NEWS",welcome:"News from Yobe and Northern Nigeria",
   welcomeText:"Stay with us for reliable news, reports, politics, business and entertainment.",
-  latest:"📰 Latest News",
-  videosTitle:"▶ Videos and Programs",
+  latest:"📰 Latest News",videosTitle:"▶ Videos and Programs",
   videoDescription:"Interviews, reports and special programs.",
-  liveTitle:"🔴 Live TV",
+  latestVideos:"Latest Videos",liveTitle:"🔴 Live TV",
   liveDescription:"Watch our television station live here when live streaming is connected.",
   aboutText:"We bring you news, discussions, community awareness and entertainment.",
-  watch:"Watch YouTube",
-  loading:"Loading latest news...",
-  noNews:"No news available yet.",
-  read:"Read Story →",
-  share:"Share ↗",
-  close:"Close",
-  error:"Unable to load news. Please try again.",
-  dateLocale:"en-GB",
-  sharePrompt:"Copy this text to share:"
+  watchYouTube:"Watch YouTube",read:"Read Story →",share:"Share ↗",
+  loading:"Loading latest news...",noNews:"No news available yet.",
+  noVideos:"No videos available yet.",error:"Unable to load news. Please try again.",
+  close:"Close",dateLocale:"en-GB",sharePrompt:"Copy this text to share:"
  },
-
- ha: {
-  menu:"Menu",
-  language:"🌐 Harshe",
-  home:"Gida",
-  news:"Labarai",
-  politics:"Siyasa",
-  entertainment:"Nishadi",
-  business:"Kasuwanci",
-  youth:"Matasa",
-  sports:"Wasanni",
-  education:"Ilimi",
-  videos:"Bidiyoyi",
-  live:"Live TV",
-  more:"Game da Mu",
-  search:"Nemo labarai...",
-  breaking:"🔴 LABARI DA DUMI-DUMI",
-  welcome:"Labaran Yobe da Arewa",
+ ha:{
+  home:"Gida",news:"Labarai",politics:"Siyasa",entertainment:"Nishadi",
+  business:"Kasuwanci",youth:"Matasa",sports:"Wasanni",education:"Ilimi",
+  videos:"Bidiyoyi",live:"Live TV",more:"Game da Mu",menu:"Menu",
+  language:"🌐 Harshe",search:"Nemo labarai...",
+  breaking:"🔴 LABARI DA DUMI-DUMI",welcome:"Labaran Yobe da Arewa",
   welcomeText:"Ku kasance tare da mu domin samun sahihan labarai, rahotanni, siyasa, kasuwanci da nishadi.",
-  latest:"📰 Sabbin Labarai",
-  videosTitle:"▶ Bidiyoyi da Shirye-shirye",
+  latest:"📰 Sabbin Labarai",videosTitle:"▶ Bidiyoyi da Shirye-shirye",
   videoDescription:"Hirarraki, rahotanni da shirye-shiryen musamman.",
-  liveTitle:"🔴 Live TV",
+  latestVideos:"Sabbin Bidiyoyi",liveTitle:"🔴 Live TV",
   liveDescription:"Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.",
   aboutText:"Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.",
-  watch:"Kalli YouTube",
-  loading:"Ana loda sabbin labarai...",
-  noNews:"Babu labari tukuna.",
-  read:"Karanta labari →",
-  share:"Raba ↗",
-  close:"Rufe",
-  error:"An samu matsala wajen ɗauko labarai. A sake gwadawa.",
-  dateLocale:"ha-NG",
-  sharePrompt:"Kwafi wannan rubutu domin rabawa:"
+  watchYouTube:"Kalli YouTube",read:"Karanta labari →",share:"Raba ↗",
+  loading:"Ana loda sabbin labarai...",noNews:"Babu labari tukuna.",
+  noVideos:"Babu bidiyo tukuna.",error:"An samu matsala wajen ɗauko labarai. A sake gwadawa.",
+  close:"Rufe",dateLocale:"ha-NG",sharePrompt:"Kwafi wannan rubutu domin rabawa:"
  },
-
- ar: {
-  menu:"القائمة",
-  language:"🌐 اللغة",
-  home:"الرئيسية",
-  news:"الأخبار",
-  politics:"السياسة",
-  entertainment:"الترفيه",
-  business:"الأعمال",
-  youth:"الشباب",
-  sports:"الرياضة",
-  education:"التعليم",
-  videos:"الفيديو",
-  live:"البث المباشر",
-  more:"من نحن",
-  search:"ابحث عن الأخبار...",
-  breaking:"🔴 أخبار عاجلة",
-  welcome:"أخبار ولاية يوبي وشمال نيجيريا",
+ ar:{
+  home:"الرئيسية",news:"الأخبار",politics:"السياسة",entertainment:"الترفيه",
+  business:"الأعمال",youth:"الشباب",sports:"الرياضة",education:"التعليم",
+  videos:"الفيديو",live:"البث المباشر",more:"من نحن",menu:"القائمة",
+  language:"🌐 اللغة",search:"ابحث عن الأخبار...",
+  breaking:"🔴 أخبار عاجلة",welcome:"أخبار ولاية يوبي وشمال نيجيريا",
   welcomeText:"تابعونا للحصول على الأخبار الموثوقة والتقارير والسياسة والأعمال والترفيه.",
-  latest:"📰 آخر الأخبار",
-  videosTitle:"▶ الفيديو والبرامج",
+  latest:"📰 آخر الأخبار",videosTitle:"▶ الفيديو والبرامج",
   videoDescription:"مقابلات وتقارير وبرامج خاصة.",
-  liveTitle:"🔴 البث المباشر",
+  latestVideos:"أحدث الفيديوهات",liveTitle:"🔴 البث المباشر",
   liveDescription:"ستتمكنون من مشاهدة قناتنا مباشرة هنا عند ربط البث المباشر.",
   aboutText:"نقدم الأخبار والمناقشات والتوعية المجتمعية والترفيه.",
-  watch:"شاهد على يوتيوب",
-  loading:"جارٍ تحميل آخر الأخبار...",
-  noNews:"لا توجد أخبار حتى الآن.",
-  read:"اقرأ الخبر ←",
-  share:"مشاركة ↗",
-  close:"إغلاق",
-  error:"تعذر تحميل الأخبار. يرجى المحاولة مرة أخرى.",
-  dateLocale:"ar",
-  sharePrompt:"انسخ هذا النص للمشاركة:"
+  watchYouTube:"شاهد على يوتيوب",read:"اقرأ الخبر ←",share:"مشاركة ↗",
+  loading:"جارٍ تحميل آخر الأخبار...",noNews:"لا توجد أخبار حتى الآن.",
+  noVideos:"لا توجد فيديوهات حتى الآن.",error:"تعذر تحميل الأخبار. يرجى المحاولة مرة أخرى.",
+  close:"إغلاق",dateLocale:"ar",sharePrompt:"انسخ هذا النص للمشاركة:"
  }
 };
 
-const savedLanguage = localStorage.getItem("usman_yobe_language");
+let currentLanguage = "ha";
 
-const deviceLanguage = (
-  navigator.language || navigator.userLanguage || "en"
-).toLowerCase();
+try{
+ const saved = localStorage.getItem("usman_yobe_language");
+ const device = (navigator.language || "ha").toLowerCase();
 
-let currentLanguage =
-  savedLanguage && ["ha", "en", "ar"].includes(savedLanguage)
-    ? savedLanguage
-    : deviceLanguage.startsWith("ha")
-    ? "ha"
-    : deviceLanguage.startsWith("ar")
-    ? "ar"
-    : "en";
+ currentLanguage = saved && translations[saved]
+  ? saved
+  : device.startsWith("ar") ? "ar"
+  : device.startsWith("en") ? "en"
+  : "ha";
+}catch(e){}
 
-// HTML SECURITY
-function escapeHTML(value) {
- return String(value || "").replace(/[&<>"']/g, c => ({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+function escapeHTML(value){
+ return String(value ?? "").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
 
-// SAFE URL
-function safeURL(value) {
- try {
+function safeURL(value){
+ try{
   const url = new URL(value);
-
-  if (
-   url.protocol === "https:" ||
-   url.protocol === "http:"
-  ) {
-   return url.href;
-  }
-
+  if(url.protocol === "https:" || url.protocol === "http:") return url.href;
   return "";
- } catch {
-  return "";
- }
+ }catch(e){return "";}
 }
 
-// TRANSLATE CATEGORY
-function displayCategory(category) {
-
+function displayCategory(category){
  const t = translations[currentLanguage];
+ const value = String(category || "");
 
- if (
-  category === "General News" ||
-  category === "News"
- ) return t.news;
+ if(value === "General News" || value === "News") return t.news;
+ if(value === "Matasa" || value === "Youth") return t.youth;
+ if(value === "Politics") return t.politics;
+ if(value === "Entertainment") return t.entertainment;
+ if(value === "Business") return t.business;
+ if(value === "Sports") return t.sports;
+ if(value === "Education") return t.education;
 
- if (
-  category === "Matasa" ||
-  category === "Youth"
- ) return t.youth;
-
- if (category === "Politics") return t.politics;
- if (category === "Entertainment") return t.entertainment;
- if (category === "Business") return t.business;
- if (category === "Sports") return t.sports;
- if (category === "Education") return t.education;
-
- return category || t.news;
+ return value || t.news;
 }
 
-// APPLY LANGUAGE
-function setLanguage(lang) {
-
- if (!translations[lang]) return;
+function setLanguage(lang){
+ if(!translations[lang]) return;
 
  currentLanguage = lang;
 
- try {
-  localStorage.setItem("usman_yobe_language", lang);
- } catch(e) {}
+ try{localStorage.setItem("usman_yobe_language",lang)}catch(e){}
 
  const t = translations[lang];
-
- const isArabic = lang === "ar";
+ const arabic = lang === "ar";
 
  document.documentElement.lang = lang;
- document.documentElement.dir = isArabic ? "rtl" : "ltr";
- document.body.dir = isArabic ? "rtl" : "ltr";
+ document.documentElement.dir = arabic ? "rtl" : "ltr";
+ document.body.dir = arabic ? "rtl" : "ltr";
 
- // Update all translated text
- document.querySelectorAll("[data-i18n]").forEach(element => {
-
+ document.querySelectorAll("[data-i18n]").forEach(element=>{
   const key = element.getAttribute("data-i18n");
-
-  if (t[key] !== undefined) {
-   element.textContent = t[key];
-  }
-
+  if(t[key] !== undefined) element.textContent = t[key];
  });
 
- // Search placeholder
  document.getElementById("search").placeholder = t.search;
-
- // Menu title
  document.getElementById("menuTitle").textContent = "☰ " + t.menu;
-
  document.getElementById("languageTitle").textContent = t.language;
 
- // Language selection highlight
- ["en","ha","ar"].forEach(code => {
-
-  const button = document.getElementById("lang-" + code);
-
-  button.classList.toggle(
-   "selected-language",
-   code === lang
-  );
-
+ ["en","ha","ar"].forEach(code=>{
+  document.getElementById("lang-"+code)
+   .classList.toggle("selected-language",code === lang);
  });
 
- // Close menu
  closeMenu();
-
- // Update news
+ renderTopStory();
  renderPosts();
+ renderVideos();
 }
 
-// MENU
-function toggleMenu() {
-
- const panel = document.getElementById("menuPanel");
- const overlay = document.getElementById("menuOverlay");
-
- panel.classList.toggle("show");
- overlay.classList.toggle("show");
-
+function toggleMenu(){
+ document.getElementById("menuPanel").classList.toggle("show");
+ document.getElementById("menuOverlay").classList.toggle("show");
 }
 
-function closeMenu() {
-
+function closeMenu(){
  document.getElementById("menuPanel").classList.remove("show");
  document.getElementById("menuOverlay").classList.remove("show");
-
 }
 
-function menuNavigate(id) {
-
+function menuNavigate(id){
  closeMenu();
-
- const buttons = document.querySelectorAll(".bottom-nav button");
-
- const indexes = {
-  home:0,
-  videos:1,
-  live:2,
-  more:3
- };
-
- showSection(id,buttons[indexes[id]]);
+ const indexes = {home:0,videos:1,live:2,more:3};
+ showSection(id,document.querySelectorAll(".bottom-nav button")[indexes[id]]);
 }
 
-// LOAD NEWS FROM SUPABASE
-async function loadNews() {
-
- const container = document.getElementById("posts");
+// LOAD PUBLISHED NEWS
+async function loadNews(){
  const t = translations[currentLanguage];
 
- container.innerHTML =
-  '<div class="empty">' + t.loading + '</div>';
+ document.getElementById("posts").innerHTML =
+  '<div class="empty">'+t.loading+'</div>';
 
- const { data, error } = await db
+ document.getElementById("videoPosts").innerHTML =
+  '<div class="empty">'+t.loading+'</div>';
+
+ const {data,error} = await db
   .from("news_posts")
   .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at")
   .eq("status","published")
   .order("published_at",{ascending:false});
 
- if (error) {
-
+ if(error){
   console.error("News loading error:",error);
-
-  container.innerHTML =
-   '<div class="empty">' + t.error + '</div>';
-
+  document.getElementById("posts").innerHTML =
+   '<div class="empty">'+t.error+'</div>';
+  document.getElementById("videoPosts").innerHTML =
+   '<div class="empty">'+t.error+'</div>';
   return;
  }
 
  posts = data || [];
 
+ renderTopStory();
  renderPosts();
+ renderVideos();
 }
 
-// DISPLAY NEWS
-function renderPosts() {
-
+// MAIN BREAKING NEWS
+function renderTopStory(){
  const t = translations[currentLanguage];
+ const first = posts.length ? posts[0] : null;
+ const container = document.getElementById("topStory");
 
- const query = document
-  .getElementById("search")
-  .value
-  .toLowerCase()
-  .trim();
+ if(!first){
+  container.innerHTML = `
+   <span class="tag">USMAN YOBE TALK SHOW</span>
+   <h1>${escapeHTML(t.welcome)}</h1>
+   <p>${escapeHTML(t.welcomeText)}</p>
+  `;
+  return;
+ }
 
- const filtered = posts.filter(p => {
+ const image = safeURL(first.image_url);
+ const index = posts.findIndex(p=>p.id === first.id);
 
-  const category = displayCategory(p.category);
+ container.innerHTML = `
+  ${image ? `<img class="breaking-image" src="${escapeHTML(image)}" alt="${escapeHTML(first.title)}">` : ""}
+  <div style="padding:18px">
+   <span class="tag">${escapeHTML(t.breaking)}</span>
+   <h1>${escapeHTML(first.title)}</h1>
+   <p>${escapeHTML(first.excerpt || first.content || "")}</p>
+   <button class="hero-button" onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
+  </div>
+ `;
+}
 
-  return (
+// CATEGORY FILTERING
+function matchesCategory(post){
+ if(currentCategory === "All") return true;
 
-   (
-    currentCategory === "All" ||
-    (
-     currentCategory === "News" &&
-     (p.category === "News" || p.category === "General News")
-    ) ||
-    category === t[currentCategory.toLowerCase()]
-   )
+ const category = String(post.category || "");
+ if(currentCategory === "News"){
+  return category === "News" || category === "General News";
+ }
 
-   &&
+ if(currentCategory === "Youth"){
+  return category === "Youth" || category === "Matasa";
+ }
 
-   (
-    (p.title || "").toLowerCase().includes(query) ||
-    (p.excerpt || "").toLowerCase().includes(query) ||
-    (p.content || "").toLowerCase().includes(query)
-   )
+ return category.toLowerCase() === currentCategory.toLowerCase();
+}
 
-  );
+function renderPosts(){
+ const t = translations[currentLanguage];
+ const query = document.getElementById("search").value.toLowerCase().trim();
 
+ const filtered = posts.filter(p=>{
+  const text = [p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
+  return matchesCategory(p) && text.includes(query);
  });
 
  const container = document.getElementById("posts");
 
- if (!filtered.length) {
-
-  container.innerHTML =
-   '<div class="empty">' + t.noNews + '</div>';
-
+ if(!filtered.length){
+  container.innerHTML = '<div class="empty">'+t.noNews+'</div>';
   return;
  }
 
- container.innerHTML = filtered.map(p => {
+ container.innerHTML = `
+  <div class="news-grid">
+   ${filtered.map(p=>{
+    const image = safeURL(p.image_url);
+    const index = posts.findIndex(item=>item.id === p.id);
+    const date = p.published_at
+     ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
+     : "";
 
-  const image = safeURL(p.image_url);
-  const video = safeURL(p.video_url);
-
-  const index = posts.findIndex(item => item.id === p.id);
-
-  return `
-
-   <article class="post">
-
-    ${
-     image
-     ? `<img class="article-image"
-        src="${escapeHTML(image)}"
-        alt="${escapeHTML(p.title)}"
-        style="margin:0;width:100%;border-radius:0;max-height:260px">`
-     : `<div class="post-image">📰</div>`
-    }
-
-    <div class="post-content">
-
-     <span class="tag">
-      ${escapeHTML(displayCategory(p.category))}
-     </span>
-
-     <h3>${escapeHTML(p.title)}</h3>
-
-     <p>${escapeHTML(p.excerpt || p.content)}</p>
-
-     <div class="post-meta">
-
-      <span>
-       ${
-        p.published_at
-        ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-        : ""
-       }
-      </span>
-
-      <span>Usman Yobe Talk Show</span>
-
-     </div>
-
-     <div class="post-actions">
-
-      <button onclick="openArticle(${index})">
-       ${t.read}
-      </button>
-
-      <button onclick="sharePost(${index})">
-       ${t.share}
-      </button>
-
-     </div>
-
-     ${
-      video
-      ? `<p style="margin-top:12px">
-          <a href="${escapeHTML(video)}"
-           target="_blank" rel="noopener">
-           ▶ ${t.watch}
-          </a>
-         </p>`
-      : ""
-     }
-
-    </div>
-
-   </article>
-
-  `;
-
- }).join("");
-
+    return `
+     <article class="post">
+      ${
+       image
+       ? `<img class="post-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">`
+       : `<div class="post-placeholder">📰</div>`
+      }
+      <div class="post-content">
+       <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
+       <h3>${escapeHTML(p.title)}</h3>
+       <p>${escapeHTML(p.excerpt || p.content || "")}</p>
+       <div class="post-meta">
+        <span>${escapeHTML(date)}</span>
+        <span>Usman Yobe</span>
+       </div>
+       <div class="post-actions">
+        <button onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
+        <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
+       </div>
+      </div>
+     </article>
+    `;
+   }).join("")}
+  </div>
+ `;
 }
 
-// CATEGORY FILTER
-function filterCategory(category,button) {
+// VIDEOS - PLAY DIRECTLY INSIDE THE APP
+function renderVideos(){
+ const t = translations[currentLanguage];
+ const query = document.getElementById("search").value.toLowerCase().trim();
 
+ const videoPosts = posts.filter(p=>{
+  const video = safeURL(p.video_url);
+  const text = [p.title,p.excerpt,p.content].join(" ").toLowerCase();
+  return video && text.includes(query);
+ });
+
+ const container = document.getElementById("videoPosts");
+
+ if(!videoPosts.length){
+  container.innerHTML = '<div class="empty">'+t.noVideos+'</div>';
+  return;
+ }
+
+ container.innerHTML = videoPosts.map(p=>{
+  const video = safeURL(p.video_url);
+  const image = safeURL(p.image_url);
+  const date = p.published_at
+   ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
+   : "";
+
+  return `
+   <article class="video-card">
+    <video controls playsinline preload="metadata"
+     ${image ? `poster="${escapeHTML(image)}"` : ""}
+     controlslist="nodownload">
+     <source src="${escapeHTML(video)}">
+     Your browser does not support HTML video.
+    </video>
+    <div class="video-card-content">
+     <span class="video-label">▶ USMAN YOBE VIDEO</span>
+     <h3>${escapeHTML(p.title)}</h3>
+     <p>${escapeHTML(p.excerpt || "")}</p>
+     <div class="post-meta">
+      <span>${escapeHTML(date)}</span>
+      <span>ASAWWARA TV</span>
+     </div>
+     <div class="post-actions">
+      <button onclick="sharePost(${posts.findIndex(item=>item.id === p.id)})">${escapeHTML(t.share)}</button>
+     </div>
+    </div>
+   </article>
+  `;
+ }).join("");
+}
+
+function filterCategory(category,button){
  currentCategory = category;
 
  document.querySelectorAll(".categories button")
-  .forEach(b => b.classList.remove("active"));
+  .forEach(b=>b.classList.remove("active"));
 
  button.classList.add("active");
 
- showSection(
-  "home",
-  document.querySelector(".bottom-nav button")
- );
-
+ showSection("home",document.querySelector(".bottom-nav button"));
  renderPosts();
 }
 
-// BOTTOM NAVIGATION
-function showSection(id,button) {
-
- document.querySelectorAll("main section")
-  .forEach(s => s.style.display = "none");
+function showSection(id,button){
+ document.querySelectorAll("main section").forEach(s=>{
+  s.style.display = "none";
+ });
 
  document.getElementById(id).style.display = "block";
 
- document.querySelectorAll(".bottom-nav button")
-  .forEach(b => b.classList.remove("active"));
+ document.querySelectorAll(".bottom-nav button").forEach(b=>{
+  b.classList.remove("active");
+ });
 
- if (button) button.classList.add("active");
+ if(button) button.classList.add("active");
 
- window.scrollTo(0,0);
+ window.scrollTo({top:0,behavior:"smooth"});
+
+ if(id === "videos") renderVideos();
 }
 
-// OPEN FULL NEWS
-function openArticle(index) {
-
+// OPEN FULL ARTICLE
+function openArticle(index){
  const p = posts[index];
-
- if (!p) return;
+ if(!p) return;
 
  const t = translations[currentLanguage];
-
  const image = safeURL(p.image_url);
  const video = safeURL(p.video_url);
+ const date = p.published_at
+  ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
+  : "";
 
  const details = document.getElementById("articleDetails");
-
  details.dir = currentLanguage === "ar" ? "rtl" : "ltr";
 
  details.innerHTML = `
-
-  <span class="tag">
-   ${escapeHTML(displayCategory(p.category))}
-  </span>
-
+  <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
   <h2>${escapeHTML(p.title)}</h2>
-
   <p style="color:#64748b;margin:10px 0">
-
-   ${
-    p.published_at
-    ? new Date(p.published_at).toLocaleDateString(t.dateLocale)
-    : ""
-   }
-
-   | Usman Yobe Talk Show
-
+   ${escapeHTML(date)} | USMAN YOBE TALK SHOW
   </p>
 
-  ${
-   image
-   ? `<img class="article-image"
-       src="${escapeHTML(image)}"
-       alt="${escapeHTML(p.title)}">`
-   : ""
-  }
+  ${image ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}">` : ""}
 
-  <div style="line-height:1.8;white-space:pre-wrap">
-   ${escapeHTML(p.content)}
+  ${video ? `
+   <video class="article-video" controls playsinline preload="metadata">
+    <source src="${escapeHTML(video)}">
+    Your browser does not support HTML video.
+   </video>
+  ` : ""}
+
+  <div style="line-height:1.9;white-space:pre-wrap;margin-top:12px">
+   ${escapeHTML(p.content || p.excerpt || "")}
   </div>
 
-  ${
-   video
-   ? `<p style="margin-top:15px">
-       <a href="${escapeHTML(video)}"
-        target="_blank" rel="noopener">
-        ▶ ${t.watch}
-       </a>
-      </p>`
-   : ""
-  }
-
+  <div class="post-actions">
+   <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
+  </div>
  `;
 
  document.getElementById("articleModal").style.display = "block";
 }
 
-// CLOSE ARTICLE
-function closeArticle() {
-
- document.getElementById("articleModal").style.display = "none";
-
+function closeArticle(){
+ const modal = document.getElementById("articleModal");
+ modal.querySelectorAll("video").forEach(v=>v.pause());
+ modal.style.display = "none";
 }
 
-// SHARE NEWS
-function sharePost(index) {
-
+function sharePost(index){
  const p = posts[index];
+ if(!p) return;
 
- if (!p) return;
-
+ const text = p.title + " - USMAN YOBE TALK SHOW";
  const t = translations[currentLanguage];
 
- const text = p.title + " - Usman Yobe Talk Show";
-
- if (navigator.share) {
-
+ if(navigator.share){
   navigator.share({
    title:p.title,
    text:text,
    url:location.href
-  }).catch(() => {});
-
- } else {
-
+  }).catch(()=>{});
+ }else{
   window.prompt(t.sharePrompt,text);
-
  }
-
 }
 
 // START APP
-try {
-
- const savedLanguage =
-  localStorage.getItem("usman_yobe_language");
-
- if (savedLanguage && translations[savedLanguage]) {
-  currentLanguage = savedLanguage;
- }
-
-} catch(e) {}
-
 setLanguage(currentLanguage);
-
 loadNews();
 
-// AUTOMATIC REFRESH EVERY 60 SECONDS
+// REFRESH NEWS EVERY 60 SECONDS
 setInterval(loadNews,60000);
-
 </script>
 
-<!-- SERVICE WORKER -->
 <script>
-if ("serviceWorker" in navigator) {
-
- window.addEventListener("load",() => {
-
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>{
   navigator.serviceWorker.register("./service-worker.js")
-   .then(() => console.log("App is ready"))
-   .catch(error => console.log("Service Worker Error:",error));
-
+   .then(()=>console.log("App is ready"))
+   .catch(error=>console.log("Service Worker Error:",error));
  });
-
 }
 </script>
 
