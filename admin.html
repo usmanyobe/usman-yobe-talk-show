@@ -501,6 +501,71 @@ async function savePost(){
 
     const now = new Date().toISOString();
 
+async function savePost(){
+  hideMessage("formMessage");
+
+  const title = document.getElementById("newsTitle").value.trim();
+  const category = document.getElementById("category").value;
+  const image_url = document.getElementById("imageUrl").value.trim();
+  const video_url = document.getElementById("videoUrl").value.trim();
+  const excerpt = document.getElementById("excerpt").value.trim();
+  const content = document.getElementById("content").value.trim();
+  const status = document.getElementById("status").value;
+  const isOpportunity = category === "Damar Rayuwa";
+
+  const opportunity_type = isOpportunity ? document.getElementById("opportunityType").value : null;
+  const eligibility = isOpportunity ? document.getElementById("eligibility").value.trim() : null;
+  const application_deadline = isOpportunity ? document.getElementById("applicationDeadline").value || null : null;
+  const how_to_apply = isOpportunity ? document.getElementById("howToApply").value.trim() : null;
+  const application_url = isOpportunity ? document.getElementById("applicationUrl").value.trim() : null;
+  const contact_info = isOpportunity ? document.getElementById("contactInfo").value.trim() : null;
+
+  if(!title || !content){
+    showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
+    return;
+  }
+
+  if(image_url && !isValidHttpURL(image_url)){
+    showMessage("formMessage","Image URL ba daidai ba ne.","error");
+    return;
+  }
+
+  if(video_url && !isValidHttpURL(video_url)){
+    showMessage("formMessage","Video URL ba daidai ba ne.","error");
+    return;
+  }
+
+  if(isOpportunity && !opportunity_type){
+    showMessage("formMessage","Da fatan zaɓi nau'in damar rayuwa.","error");
+    return;
+  }
+
+  if(application_url && !isValidHttpURL(application_url)){
+    showMessage("formMessage","Application Link ba daidai ba ne.","error");
+    return;
+  }
+
+  const btn = document.getElementById("saveBtn");
+  const isEditing = editingId !== null;
+
+  const existingPost = isEditing
+    ? currentPosts.find(item => String(item.id) === String(editingId))
+    : null;
+
+  const wasPublished = existingPost?.status === "published";
+
+  // Aika sanarwa ne kawai idan sabon labari ne,
+  // ko kuma an sauya Draft zuwa Published.
+  const shouldSendPush = status === "published" && !wasPublished;
+
+  btn.disabled = true;
+  btn.textContent = "Ana adanawa...";
+
+  try{
+    await verifyAdmin();
+
+    const now = new Date().toISOString();
+
     const post = {
       title,
       category,
@@ -552,6 +617,52 @@ async function savePost(){
               body: pushBody,
               url: window.location.pathname
             }
+          }
+        );
+
+        if(error){
+          let details = error.message;
+
+          if(error.context instanceof Response){
+            try{
+              details = await error.context.clone().text();
+            }catch(e){}
+          }
+
+          throw new Error(details);
+        }
+
+        if(!data || !data.success){
+          throw new Error(data?.error || "An kasa aika sanarwa.");
+        }
+
+        successMessage +=
+          " An aika sanarwa: " + data.sent +
+          " | An kasa: " + data.failed;
+
+      }catch(pushError){
+        console.error("Automatic Push Error:", pushError);
+
+        successMessage +=
+          " Amma sanarwar ba ta tafi ba: " + pushError.message;
+      }
+    }
+
+    showMessage("formMessage",successMessage,"success");
+
+    clearForm();
+    await loadPosts();
+
+  }catch(error){
+    showMessage("formMessage","Matsala: "+error.message,"error");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = editingId !== null
+      ? "Save Changes"
+      : "Publish Story";
+  }
+}
+
           }
         );
 
