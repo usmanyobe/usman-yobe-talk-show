@@ -932,14 +932,16 @@ async function enablePushNotifications() {
     const sub = subscription.toJSON();
 
     const { error } = await db
-      .from("push_subscriptions")
-      .upsert({
-        endpoint: sub.endpoint,
-        p256dh: sub.keys.p256dh,
-        auth: sub.keys.auth
-      }, { onConflict: "endpoint" });
+  .from("push_subscriptions")
+  .insert({
+    endpoint: sub.endpoint,
+    p256dh: sub.keys.p256dh,
+    auth: sub.keys.auth
+  });
 
-    if (error) throw error;
+if (error && error.code !== "23505") {
+  throw error;
+}
 
     status.textContent =
       "An kunna sanarwa cikin nasara!";
