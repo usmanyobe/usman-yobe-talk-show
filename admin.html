@@ -43,6 +43,33 @@ button:disabled{opacity:.5;cursor:not-allowed}
 hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 .push-panel{background:#071b49;color:white;padding:20px;margin-bottom:20px;border-radius:14px}
 .push-panel input,.push-panel textarea{color:#182333}
+.breaking-label{
+display:flex;
+align-items:center;
+gap:10px;
+background:#fff0f0;
+border:1px solid #ffbaba;
+padding:14px;
+border-radius:9px;
+margin:10px 0;
+color:#c0392b;
+}
+.breaking-label input{
+width:20px;
+height:20px;
+margin:0;
+accent-color:red;
+}
+.breaking-badge{
+display:inline-block;
+background:#c90000;
+color:white;
+font-size:11px;
+font-weight:bold;
+padding:5px 9px;
+border-radius:5px;
+margin:5px 0;
+}
 </style>
 </head>
 
@@ -81,21 +108,16 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 
 <h3 id="formTitle">Publish New Story</h3>
 
-
 <label>News Title</label>
 <input id="newsTitle" placeholder="Taken labari">
 
-<label style="display:flex;align-items:center;gap:10px;background:#fff0f0;border:1px solid #ffbaba;padding:14px;border-radius:9px;margin:10px 0;">
-  <input
-    type="checkbox"
-    id="isBreakingNews"
-    style="width:20px;height:20px;margin:0;accent-color:red;"
-  >
-  <span style="color:#c0392b;font-weight:bold;">
-    🚨 BREAKING NEWS – Labari mai zafi
-  </span>
+<label class="breaking-label">
+<input type="checkbox" id="isBreakingNews">
+<span>🚨 BREAKING NEWS – Labari mai zafi</span>
 </label>
-<p class="help">Ka yi alama idan wannan labari ne mai matuƙar muhimmanci da ya kamata masu karatu su sani cikin gaggawa.</p>
+<p class="help">
+Ka yi alama idan wannan labari ne mai muhimmanci da ya kamata masu karatu su sani cikin gaggawa.
+</p>
 
 <label>Category</label>
 <select id="category">
@@ -200,13 +222,11 @@ Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hany
 <div id="posts">Loading news...</div>
 </div>
 
-<!-- MANUAL PUSH NOTIFICATION -->
 <div class="push-panel">
 <h2>🔔 Aika Sanarwa</h2>
 <p>Aika sabon bayani ga masu amfani da USMAN YOBE TALK SHOW.</p>
 
 <input id="pushTitle" type="text" placeholder="Taken sanarwa">
-
 <textarea id="pushMessage" placeholder="Rubuta sakon sanarwa..."></textarea>
 
 <button id="sendPushBtn" onclick="sendPushNotification()"
@@ -534,12 +554,15 @@ async function uploadVideo(){
   }
 }
 
-/* AUTOMATIC PUSH + SAVE NEWS */
+/* SAVE NEWS + BREAKING NEWS ALERT */
 async function savePost(){
   hideMessage("formMessage");
 
   const title = document.getElementById("newsTitle").value.trim();
   const category = document.getElementById("category").value;
+  const is_breaking_news =
+    document.getElementById("isBreakingNews").checked;
+
   const image_url = document.getElementById("imageUrl").value.trim();
   const video_url = document.getElementById("videoUrl").value.trim();
   const excerpt = document.getElementById("excerpt").value.trim();
@@ -600,7 +623,11 @@ async function savePost(){
   const wasPublished = existingPost?.status === "published";
 
   const shouldSendPush =
-    status === "published" && !wasPublished;
+    status === "published" &&
+    (
+      !wasPublished ||
+      (is_breaking_news && existingPost?.is_breaking_news !== true)
+    );
 
   btn.disabled = true;
   btn.textContent = "Ana adanawa...";
@@ -613,6 +640,7 @@ async function savePost(){
     const post = {
       title,
       category,
+      is_breaking_news,
       image_url: image_url || null,
       video_url: video_url || null,
       excerpt: excerpt || null,
@@ -632,30 +660,38 @@ async function savePost(){
 
     let result;
 
-if(isEditing){
-  result = await db.from("news_posts")
-    .update(post)
-    .eq("id",editingId)
-    .select("id")
-    .single();
-}else{
-  result = await db.from("news_posts")
-    .insert(post)
-    .select("id")
-    .single();
-}
+    if(isEditing){
+      result = await db.from("news_posts")
+        .update(post)
+        .eq("id",editingId)
+        .select("id")
+        .single();
+    }else{
+      result = await db.from("news_posts")
+        .insert(post)
+        .select("id")
+        .single();
+    }
 
-if(result.error) throw result.error;
+    if(result.error) throw result.error;
 
-const savedPostId = result.data.id;
+    const savedPostId = result.data.id;
+
     let successMessage = isOpportunity
       ? "An adana DAMAR RAYUWA cikin nasara!"
       : "An adana labarin cikin nasara!";
 
+    if(is_breaking_news && status === "published"){
+      successMessage += " 🚨 BREAKING NEWS!";
+    }
+
     /* AUTOMATIC PUSH NOTIFICATION */
     if(shouldSendPush){
       try{
-        const pushTitle = "SABON LABARI: " + title;
+        const pushTitle = is_breaking_news
+          ? "🚨 BREAKING NEWS: " + title
+          : "SABON LABARI: " + title;
+
         const pushBody = excerpt || content.substring(0,180);
 
         const {data,error} = await db.functions.invoke(
@@ -723,6 +759,8 @@ function clearForm(){
     document.getElementById(id).value = "";
   });
 
+  document.getElementById("isBreakingNews").checked = false;
+
   document.getElementById("imageFile").value = "";
   document.getElementById("videoFile").value = "";
 
@@ -777,6 +815,11 @@ async function loadPosts(){
 
     area.innerHTML = currentPosts.map(post=>`
       <div class="post">
+
+        ${post.is_breaking_news === true
+          ? '<span class="breaking-badge">🚨 BREAKING NEWS</span>'
+          : ''}
+
         <h4>${escapeHTML(post.title)}</h4>
 
         <p class="small">
@@ -843,6 +886,9 @@ function editPost(id){
 
   document.getElementById("newsTitle").value = post.title || "";
   document.getElementById("category").value = post.category || "News";
+
+  document.getElementById("isBreakingNews").checked =
+    post.is_breaking_news === true;
 
   updateOpportunityFields();
 
