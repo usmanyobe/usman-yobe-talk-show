@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "usman-yobe-talk-show-v2";
+const CACHE_NAME = "usman-yobe-talk-show-v3";
 
 const FILES_TO_CACHE = [
   "./",
@@ -7,7 +7,7 @@ const FILES_TO_CACHE = [
   "./manifest.json"
 ];
 
-// Install
+// INSTALL
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -18,7 +18,7 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// Activate
+// ACTIVATE
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -33,7 +33,7 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// Fetch
+// FETCH - OFFLINE SUPPORT
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
@@ -63,12 +63,76 @@ self.addEventListener("fetch", event => {
           return caches.match("./index.html");
         }
 
-        return new Response("Offline - Please connect to the internet.", {
-          status: 503,
-          headers: {
-            "Content-Type": "text/plain"
+        return new Response(
+          "Offline - Please connect to the internet.",
+          {
+            status: 503,
+            headers: {
+              "Content-Type": "text/plain"
+            }
           }
-        });
+        );
       })
+  );
+});
+
+// PUSH NOTIFICATIONS
+self.addEventListener("push", event => {
+  let data = {};
+
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (error) {
+    data = {
+      title: "USMAN YOBE TALK SHOW",
+      body: event.data ? event.data.text() : "Akwai sabon bayani."
+    };
+  }
+
+  const title = data.title || "USMAN YOBE TALK SHOW";
+
+  const options = {
+    body: data.body || "Akwai sabon labari a tasharmu.",
+    icon: "./74556.png",
+    badge: "./74556.png",
+    tag: data.tag || "usman-yobe-news",
+    renotify: true,
+    data: {
+      url: data.url || "./"
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// WHEN USER CLICKS NOTIFICATION
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+
+  const target = new URL(
+    event.notification.data?.url || "./",
+    self.location.origin
+  );
+
+  if (target.origin !== self.location.origin) {
+    return;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    }).then(clients => {
+      for (const client of clients) {
+        if ("focus" in client) {
+          client.navigate(target.href);
+          return client.focus();
+        }
+      }
+
+      return self.clients.openWindow(target.href);
+    })
   );
 });
