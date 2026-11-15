@@ -5,1086 +5,529 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#071b49">
-
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, bidiyo, sauti da sauran abubuwan da suka shafi al'umma.">
 <title>USMAN YOBE TALK SHOW</title>
-<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. Labarai, bidiyo, ilimi, kasuwanci da damar rayuwa.">
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./74556.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#071b49;--blue:#0755d9;--red:#df2028;--gold:#f6c900;--light:#f1f4f9;--text:#172033;--muted:#68758a;--green:#087b48}
-body{font-family:Arial,sans-serif;background:var(--light);color:var(--text);padding-bottom:85px}
-button,input{font-family:inherit}
-header{background:var(--navy);color:white;padding:13px 15px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px #0002}
+:root{--navy:#071b49;--blue:#0759c7;--red:#d71920;--light:#f2f5fa;--white:#fff;--text:#182235}
+*{box-sizing:border-box}
+body{margin:0;background:var(--light);font-family:Arial,sans-serif;color:var(--text)}
+header{background:linear-gradient(120deg,#061638,#0b3985);color:white;padding:15px 14px;position:sticky;top:0;z-index:20;box-shadow:0 3px 12px #0003}
 .brand{display:flex;align-items:center;gap:11px}
-.logo{width:105px;height:auto;max-height:68px;object-fit:contain;flex-shrink:0}
-.brand h2{font-size:17px;line-height:1.25}
-.brand small{color:var(--gold);font-size:10px}
-.header-actions{display:flex;gap:12px;margin-left:auto}
-.header-actions button{background:none;border:0;color:white;font-size:25px;cursor:pointer}
-.search{margin-top:12px}
-.search input{width:100%;padding:12px 14px;border:0;border-radius:9px;font-size:15px;outline:none}
-.categories{display:flex;gap:8px;overflow-x:auto;padding:12px;background:white;scrollbar-width:none;border-bottom:1px solid #e4e9f1}
-.categories button{white-space:nowrap;border:1px solid #dce3ee;background:#f4f6fa;padding:9px 14px;border-radius:22px;font-weight:bold;color:#172b50;cursor:pointer}
-.categories button.active{background:var(--blue);color:white;border-color:var(--blue)}
-.container{max-width:950px;margin:auto;padding:12px}
-.section-title{font-size:19px;margin:22px 0 12px;color:var(--navy)}
-.breaking{background:var(--navy);color:white;border-radius:12px;overflow:hidden;margin:12px 0 20px}
-.breaking-top{background:var(--red);padding:9px 13px;font-weight:bold;font-size:13px;letter-spacing:.5px}
-.breaking-content{padding:19px}
-.breaking-content h1{font-size:24px;line-height:1.35;margin:10px 0}
-.breaking-content p{color:#dce5fa;line-height:1.7;font-size:14px}
- /* BREAKING NEWS ALERT BANNER */
-.breaking-alert{
- display:none;
- background:#c90016;
- color:white;
- border-radius:10px;
- margin:12px 0;
- overflow:hidden;
- box-shadow:0 3px 12px #0002;
- animation:breakingPulse 1.8s infinite;
-}
-
-.breaking-alert button{
- width:100%;
- border:0;
- background:transparent;
- color:white;
- padding:15px;
- text-align:left;
- cursor:pointer;
- font-weight:bold;
- font-size:15px;
- line-height:1.6;
-}
-
-.breaking-alert small{
- display:block;
- font-size:11px;
- letter-spacing:1px;
- margin-bottom:5px;
-}
-
-@keyframes breakingPulse{
- 0%,100%{opacity:1}
- 50%{opacity:.82}
-}
-
-@media(prefers-reduced-motion:reduce){
- .breaking-alert{animation:none}
-}
-.breaking-image{width:100%;max-height:300px;object-fit:cover;display:block}
-.tag{display:inline-block;background:var(--red);color:white;padding:5px 9px;border-radius:4px;font-size:11px;font-weight:bold}
-.hero-button{display:inline-block;border:0;border-radius:7px;padding:10px 15px;margin-top:13px;background:var(--gold);color:var(--navy);font-weight:bold;cursor:pointer}
-.news-grid{display:grid;grid-template-columns:1fr;gap:13px}
-.post{background:white;border-radius:11px;overflow:hidden;box-shadow:0 2px 9px #0000000b}
-.post-image{width:100%;height:185px;object-fit:cover;display:block}
-.post-placeholder{height:160px;display:grid;place-items:center;background:linear-gradient(135deg,#09245b,#1468cb);color:white;font-size:45px}
-.post-content{padding:14px}
-.post-content h3{font-size:17px;line-height:1.4;margin:9px 0}
-.post-content p{font-size:13px;color:var(--muted);line-height:1.7}
-.post-meta{font-size:11px;color:#7a879b;margin-top:11px;display:flex;justify-content:space-between;gap:8px}
-.post-actions{display:flex;gap:16px;margin-top:13px;flex-wrap:wrap}
-.post-actions button{border:0;background:none;color:var(--blue);font-weight:bold;cursor:pointer}
-.empty{padding:28px 15px;text-align:center;color:#667085;background:white;border-radius:10px;line-height:1.6}
-.video-box{background:var(--navy);color:white;padding:22px;border-radius:12px;text-align:center;margin:14px 0}
-.video-box button{background:var(--red);color:white;border:0;padding:12px 20px;border-radius:8px;margin-top:12px;cursor:pointer;font-weight:bold}
-.video-card{background:white;border-radius:12px;overflow:hidden;margin-bottom:17px;box-shadow:0 2px 9px #0000000b}
-.video-card video{display:block;width:100%;max-height:280px;background:#000}
-.video-card-content{padding:14px}
-.video-card-content h3{font-size:17px;line-height:1.4;margin:7px 0}
-.video-card-content p{color:var(--muted);font-size:13px;line-height:1.6}
-.video-label{color:var(--red);font-size:11px;font-weight:bold}
-
-/* DAMAR RAYUWA */
-.opportunity-hero{background:linear-gradient(135deg,#071b49,#0755d9);color:white;padding:23px 18px;border-radius:13px;margin:12px 0 18px}
-.opportunity-hero h1{font-size:25px;margin:10px 0;line-height:1.35}
-.opportunity-hero p{color:#e1eaff;line-height:1.7;font-size:14px}
-.opportunity-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0 22px}
-.opportunity-type{background:white;border:1px solid #e0e6ef;border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;min-height:100px}
-.opportunity-type.active{border:2px solid var(--blue);background:#edf4ff}
-.opportunity-type .emoji{display:block;font-size:27px;margin-bottom:7px}
-.opportunity-type strong{display:block;font-size:13px;line-height:1.4;color:var(--navy)}
-.opportunity-type small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
-.opportunity-card{background:white;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 10px #0000000c}
-.opportunity-card img{width:100%;max-height:220px;object-fit:cover;display:block}
-.opportunity-content{padding:15px}
-.opportunity-label{display:inline-block;background:#e4f5eb;color:#087b48;padding:6px 9px;border-radius:5px;font-size:11px;font-weight:bold;margin-bottom:8px}
-.opportunity-content h3{color:var(--navy);font-size:18px;line-height:1.4;margin:7px 0}
-.opportunity-content p{color:var(--muted);font-size:13px;line-height:1.7}
-.opportunity-date{font-size:11px;color:#758196;margin-top:10px}
-.deadline{font-size:12px;color:#b42318;font-weight:bold;margin-top:9px}
-.opportunity-button{background:var(--green);color:white;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;margin-top:13px;cursor:pointer}
-.opportunity-search{width:100%;padding:12px;border:1px solid #d8dfeb;border-radius:9px;margin:0 0 15px;font-size:14px}
-.opportunity-notice{background:#fff7df;border-left:4px solid var(--gold);padding:12px;border-radius:7px;font-size:12px;line-height:1.7;margin:15px 0}
-.opportunity-detail-box{background:#f5f7fb;border:1px solid #e1e7f0;border-radius:9px;padding:13px;margin:13px 0}
-.opportunity-detail-box h3{color:var(--navy);font-size:15px;margin-bottom:7px}
-.opportunity-detail-box p{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
-.apply-now{display:block;text-align:center;background:var(--green);color:white;text-decoration:none;font-weight:bold;padding:14px;border-radius:8px;margin:16px 0}
-.apply-now:hover{background:#05633a}
-footer{background:var(--navy);color:white;text-align:center;padding:25px 12px;margin-top:25px}
-footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
-.social{display:flex;justify-content:center;gap:20px;margin-top:15px;flex-wrap:wrap}
-.social a{color:var(--gold);text-decoration:none;font-weight:bold}
-.bottom-nav{position:fixed;bottom:0;left:0;width:100%;background:var(--navy);display:flex;justify-content:space-around;padding:9px 2px calc(9px + env(safe-area-inset-bottom));z-index:60}
-.bottom-nav button{background:none;border:0;color:#cbd6ec;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;min-width:0}
-.bottom-nav button span:first-child{font-size:20px}
-.bottom-nav button.active{color:var(--gold)}
-.article-modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;padding:12px;overflow-y:auto}
-.modal-content{background:white;border-radius:13px;padding:18px;max-width:650px;margin:20px auto}
-.modal-content h2{margin:12px 0;line-height:1.4}
-.close{float:right;border:0;background:#eee;border-radius:7px;padding:8px 12px;cursor:pointer}
-.article-image{width:100%;max-height:320px;object-fit:cover;border-radius:9px;margin:12px 0}
-.article-video{width:100%;max-height:350px;background:#000;border-radius:9px;margin:14px 0}
-.menu-panel{display:none;position:fixed;top:85px;right:12px;width:260px;max-width:calc(100vw - 24px);background:white;color:var(--text);border-radius:12px;padding:15px;box-shadow:0 5px 20px #0003;z-index:90;max-height:75vh;overflow-y:auto}
-.menu-panel.show{display:block}
-.menu-panel h3{margin:5px 0 12px;color:var(--navy);font-size:17px}
-.menu-panel button{width:100%;padding:12px;border:0;background:#f1f4f9;border-radius:8px;margin:4px 0;text-align:start;font-weight:bold;cursor:pointer;color:var(--text)}
-.menu-panel .language-title{margin-top:15px;padding-top:12px;border-top:1px solid #ddd}
-.menu-panel button.selected-language{background:var(--blue);color:white}
-.menu-overlay{display:none;position:fixed;inset:0;z-index:80}
-.menu-overlay.show{display:block}
-[dir="rtl"] .menu-panel{right:auto;left:12px}
-[dir="rtl"] .header-actions{margin-left:0;margin-right:auto}
-[dir="rtl"] .breaking-content,[dir="rtl"] .post-content,[dir="rtl"] .modal-content,[dir="rtl"] .video-card-content,[dir="rtl"] .opportunity-content{text-align:right}
-@media(min-width:650px){
- .container{padding:20px}
- .news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .post-image{height:205px}
- .breaking-content h1{font-size:30px}
- .opportunity-categories{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@media(min-width:850px){.news-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.logo{width:54px;height:54px;object-fit:contain;border-radius:50%;background:white}
+.brand h1{font-size:18px;margin:0;font-weight:800}
+.brand p{font-size:11px;margin:4px 0 0;color:#d9e8ff}
+.header-tools{display:flex;gap:8px;margin-top:13px}
+.header-tools input{flex:1;min-width:0;padding:11px;border:0;border-radius:8px;font-size:14px}
+button,select{cursor:pointer}
+.header-tools button,.menu-btn{border:0;border-radius:8px;padding:10px 13px;background:#fff;color:var(--navy);font-weight:bold}
+nav{display:flex;gap:7px;overflow-x:auto;padding:10px;background:white;position:sticky;top:132px;z-index:15;box-shadow:0 2px 5px #0001}
+nav button{white-space:nowrap;border:0;background:#eaf0fa;color:var(--navy);padding:9px 13px;border-radius:20px;font-weight:bold}
+nav button.active{background:var(--blue);color:white}
+main{max-width:1050px;margin:auto;padding:14px 12px 90px}
+.section-title{font-size:20px;color:var(--navy);margin:20px 0 12px}
+.breaking{display:none;background:#fff0f0;border-left:5px solid var(--red);padding:12px;border-radius:8px;margin-bottom:14px}
+.breaking strong{color:var(--red);display:block;margin-bottom:5px}
+.breaking button{border:0;background:none;text-align:left;color:#222;font-weight:bold;padding:0}
+.hero{background:linear-gradient(120deg,#071b49,#0759c7);color:white;border-radius:12px;padding:20px;margin-bottom:16px}
+.hero h2{margin:0 0 8px;font-size:22px}
+.hero p{margin:0;line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.post{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 9px #00000010}
+.post-image{width:100%;height:180px;object-fit:cover;background:#e4eaf3}
+.post-placeholder{height:120px;display:grid;place-items:center;background:#e4eaf3;font-size:45px}
+.post-content{padding:13px}
+.tag{display:inline-block;background:#e7efff;color:#0750a9;padding:5px 9px;border-radius:15px;font-size:11px;font-weight:bold}
+.post h3{font-size:18px;line-height:1.4;color:var(--navy);margin:10px 0}
+.post p{font-size:14px;line-height:1.6;margin:7px 0}
+.post-meta{display:flex;justify-content:space-between;gap:8px;color:#788397;font-size:11px;margin-top:12px}
+.post-actions{display:flex;gap:8px;margin-top:12px}
+.post-actions button,.primary{border:0;background:var(--blue);color:white;padding:10px 13px;border-radius:7px;font-weight:bold}
+.post-actions button:last-child{background:#eaf0fa;color:var(--navy)}
+.audio-box{background:#edf4ff;padding:12px;border-radius:9px;margin-top:12px}
+.audio-box strong{display:block;color:var(--navy);margin-bottom:8px;font-size:13px}
+audio{width:100%;max-width:100%}
+.video-box video{width:100%;max-height:230px;background:#000;border-radius:8px}
+.empty{background:white;border-radius:10px;padding:25px;text-align:center;color:#667}
+.page{display:none}
+.page.active{display:block}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:100;overflow-y:auto;padding:18px}
+.modal-card{max-width:760px;background:white;margin:20px auto;border-radius:12px;padding:18px;position:relative}
+.close{float:right;border:0;background:#eee;border-radius:50%;width:36px;height:36px;font-size:20px}
+.article-image{width:100%;max-height:350px;object-fit:contain;border-radius:9px;margin-top:10px}
+.article-video{width:100%;max-height:380px;background:#000;margin-top:12px;border-radius:9px}
+.article-body{line-height:1.9;white-space:pre-wrap;margin-top:12px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;box-shadow:0 -2px 10px #0002;display:flex;justify-content:space-around;padding:8px 2px calc(8px + env(safe-area-inset-bottom));z-index:30}
+.bottom-nav button{border:0;background:none;color:#526078;font-size:11px;font-weight:bold;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bottom-nav button span{font-size:19px}
+.bottom-nav button.active{color:var(--blue)}
+footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px}
+.language{border:0;border-radius:7px;padding:8px;background:white;color:var(--navy)}
+@media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}}
 </style>
 </head>
 
 <body>
-
 <header>
  <div class="brand">
-  <img class="logo" src="74556.png" alt="USMAN YOBE TALK SHOW official logo">
+  <img class="logo" src="./74556.png" alt="USMAN YOBE logo" onerror="this.style.display='none'">
   <div>
-   <h2>USMAN YOBE</h2>
-   <h2 style="color:#f6c900">TALK SHOW</h2>
-   <small>...ONE VOICE, ONE COMMUNITY, ONE FUTURE</small>
-  </div>
-  <div class="header-actions">
-   <button aria-label="Search" onclick="document.getElementById('search').focus()">⌕</button>
-   <button aria-label="Menu" onclick="toggleMenu()">☰</button>
+   <h1>USMAN YOBE TALK SHOW</h1>
+   <p>TASHAR AL'UMMA • ...one voice, one community, one future</p>
   </div>
  </div>
- <div class="search">
-  <input id="search" type="search" placeholder="Nemo labarai..." oninput="renderPosts();renderVideos();renderOpportunities()">
+ <div class="header-tools">
+  <input id="searchInput" type="search" placeholder="Nemi labarai...">
+  <select class="language" id="languageSelect" aria-label="Language">
+   <option value="ha">Hausa</option>
+   <option value="en">English</option>
+   <option value="ar">العربية</option>
+  </select>
  </div>
 </header>
 
-<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
-<div class="menu-panel" id="menuPanel">
- <h3 id="menuTitle">☰ Menu</h3>
- <button onclick="menuNavigate('home')">⌂ <span data-i18n="home">Gida</span></button>
- <button onclick="menuNavigate('opportunities')">💼 <span data-i18n="opportunities">Damar Rayuwa</span></button>
- <button onclick="menuNavigate('videos')">▶ <span data-i18n="videos">Bidiyoyi</span></button>
- <button onclick="menuNavigate('live')">📡 <span data-i18n="live">Live TV</span></button>
- <button onclick="menuNavigate('more')">▦ <span data-i18n="more">Game da Mu</span></button>
- <h3 class="language-title" id="languageTitle">🌐 Harshe</h3>
- <button id="lang-en" onclick="setLanguage('en')">🇬🇧 English</button>
- <button id="lang-ha" onclick="setLanguage('ha')">🇳🇬 Hausa</button>
- <button id="lang-ar" onclick="setLanguage('ar')">🇸🇦 العربية</button>
-</div>
-
-<nav class="categories" id="categories">
- <button class="active" onclick="filterCategory('All',this)" data-i18n="home">Gida</button>
- <button onclick="filterCategory('News',this)" data-i18n="news">Labarai</button>
- <button onclick="filterCategory('Politics',this)" data-i18n="politics">Siyasa</button>
- <button onclick="filterCategory('Entertainment',this)" data-i18n="entertainment">Nishadi</button>
- <button onclick="filterCategory('Business',this)" data-i18n="business">Kasuwanci</button>
- <button onclick="filterCategory('Youth',this)" data-i18n="youth">Matasa</button>
- <button onclick="filterCategory('Sports',this)" data-i18n="sports">Wasanni</button>
- <button onclick="filterCategory('Education',this)" data-i18n="education">Ilimi</button>
- <button onclick="menuNavigate('opportunities')" data-i18n="opportunities">Damar Rayuwa</button>
+<nav id="categoryNav">
+ <button class="active" data-category="all">Duka</button>
+ <button data-category="News">Labarai</button>
+ <button data-category="Politics">Siyasa</button>
+ <button data-category="Entertainment">Nishaɗi</button>
+ <button data-category="Business">Kasuwanci</button>
+ <button data-category="Youth">Matasa</button>
+ <button data-category="Sports">Wasanni</button>
+ <button data-category="Education">Ilimi</button>
 </nav>
 
-<main class="container">
- <div style="background:#071b49;color:white;padding:18px;border-radius:12px;margin:15px 0;text-align:center">
-  <h3>🔔 Sanarwar USMAN YOBE TALK SHOW</h3>
-  <p>Ka kunna sanarwa domin samun labarai da muhimman bayanai kai tsaye.</p>
-  <button onclick="enablePushNotifications()" 
-    style="background:#f5b400;color:#071b49;border:0;padding:13px 22px;border-radius:8px;font-weight:bold;font-size:15px">
-    🔔 KUNNA SANARWA
-  </button>
-  <p id="pushStatus" style="font-size:13px;margin-top:10px"></p>
-</div>
+<main>
+ <div id="breakingBox" class="breaking">
+  <strong>🔴 BREAKING NEWS</strong>
+  <div id="breakingItems"></div>
+ </div>
 
-<section id="home">
-
- <div id="breakingAlert" class="breaking-alert" aria-live="polite"></div>
-
- <div class="breaking">
-  <div class="breaking-top" data-i18n="breaking">🔴 LABARI DA DUMI-DUMI</div>
-  <div id="topStory" class="breaking-content">
-   <span class="tag">USMAN YOBE TALK SHOW</span>
-   <h1 data-i18n="welcome">Labaran Yobe da Arewa</h1>
-   <p data-i18n="welcomeText">Ku kasance tare da mu domin samun sahihan labarai.</p>
+ <section id="homePage" class="page active">
+  <div class="hero">
+   <h2 id="welcomeTitle">Barka da zuwa USMAN YOBE TALK SHOW</h2>
+   <p id="welcomeText">Samu sahihan labarai, bidiyo, sauti da muhimman bayanai daga Yobe da sauran duniya.</p>
   </div>
- </div>
+  <h2 class="section-title" id="latestHeading">Sabbin Labarai</h2>
+  <div id="newsGrid" class="grid"></div>
+ </section>
 
- <div class="opportunity-hero">
-  <div style="font-size:35px">💼</div>
-  <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
-  <p data-i18n="opportunityHeroText">Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.</p>
-  <button class="hero-button" onclick="showSection('opportunities',document.getElementById('opNav'))" data-i18n="exploreOpportunities">Duba Damar Rayuwa</button>
- </div>
+ <section id="opportunitiesPage" class="page">
+  <h2 class="section-title">🎓 Damarar Samun Ci Gaba</h2>
+  <div id="opportunitiesGrid" class="grid"></div>
+ </section>
 
- <h2 class="section-title" data-i18n="latest">📰 Sabbin Labarai</h2>
- <div id="posts"><div class="empty">Ana loda sabbin labarai...</div></div>
-</section>
+ <section id="videosPage" class="page">
+  <h2 class="section-title">📹 Bidiyo</h2>
+  <div id="videosGrid" class="grid"></div>
+  <p style="text-align:center;margin-top:20px">
+   <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">Kalli sauran bidiyoyin ASAWWARA TV a YouTube</a>
+  </p>
+ </section>
 
-<section id="opportunities" style="display:none">
- <div class="opportunity-hero">
-  <div style="font-size:38px">💼</div>
-  <h1 data-i18n="opportunityHeroTitle">DAMAR RAYUWA</h1>
-  <p data-i18n="opportunityHeroText">Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.</p>
- </div>
+ <section id="audioPage" class="page">
+  <h2 class="section-title">🎧 Audio News — Saurari Labarai</h2>
+  <p>Saurari cikakkun labarai ta wayarka.</p>
+  <div id="audioGrid" class="grid"></div>
+ </section>
 
- <div class="opportunity-notice" data-i18n="opportunityNotice">
-  Muhimmin bayani: Ka tabbatar da sahihancin kowace dama kafin ka tura bayananka ko ka biya kuɗi.
- </div>
-
- <h2 class="section-title" data-i18n="browseOpportunities">Nau'o'in Damar Rayuwa</h2>
-
- <div class="opportunity-categories">
-  <button class="opportunity-type active" onclick="filterOpportunityType('All',this)">
-   <span class="emoji">🌍</span><strong data-i18n="allOpportunities">Duk Damar Rayuwa</strong><small data-i18n="allTypes">Dukkan nau'o'i</small>
-  </button>
-  <button class="opportunity-type" onclick="filterOpportunityType('Jobs',this)">
-   <span class="emoji">💼</span><strong data-i18n="jobs">Ayyukan Yi</strong><small data-i18n="jobsSmall">Guraben aiki</small>
-  </button>
-  <button class="opportunity-type" onclick="filterOpportunityType('Scholarship',this)">
-   <span class="emoji">🎓</span><strong data-i18n="scholarship">Scholarship</strong><small data-i18n="scholarshipSmall">Tallafin karatu</small>
-  </button>
-  <button class="opportunity-type" onclick="filterOpportunityType('Training',this)">
-   <span class="emoji">🛠️</span><strong data-i18n="training">Horaswa</strong><small data-i18n="trainingSmall">Koyon sana'o'i</small>
-  </button>
-  <button class="opportunity-type" onclick="filterOpportunityType('Business Grant',this)">
-   <span class="emoji">💰</span><strong data-i18n="grants">Tallafi</strong><small data-i18n="grantsSmall">Matasa da kasuwanci</small>
-  </button>
-  <button class="opportunity-type" onclick="filterOpportunityType('Exams',this)">
-   <span class="emoji">📚</span><strong data-i18n="exams">JAMB / WAEC / NECO</strong><small data-i18n="examsSmall">Sanarwar jarrabawa</small>
-  </button>
- </div>
-
- <h2 class="section-title" data-i18n="availableOpportunities">Sabbin Damammaki</h2>
- <input id="opportunitySearch" class="opportunity-search" type="search" placeholder="Nemo guraben aiki, scholarship..." oninput="renderOpportunities()">
- <div id="opportunityPosts"><div class="empty">Ana loda damar rayuwa...</div></div>
-</section>
-
-<section id="videos" style="display:none">
- <h2 class="section-title" data-i18n="videosTitle">▶ Bidiyoyi da Shirye-shirye</h2>
- <div class="video-box">
-  <div style="font-size:42px">📺</div>
-  <h2>USMAN YOBE TALK SHOW</h2>
-  <p data-i18n="videoDescription">Hirarraki, rahotanni da shirye-shiryen musamman.</p>
-  <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')" data-i18n="watchYouTube">Kalli YouTube</button>
- </div>
- <h2 class="section-title" data-i18n="latestVideos">Sabbin Bidiyoyi</h2>
- <div id="videoPosts"><div class="empty">Ana loda bidiyoyi...</div></div>
-</section>
-
-<section id="live" style="display:none">
- <h2 class="section-title" data-i18n="liveTitle">🔴 Live TV</h2>
- <div class="video-box">
-  <div style="font-size:45px">📡</div>
-  <h2>ASAWWARA TV</h2>
-  <p data-i18n="liveDescription">Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.</p>
-  <button onclick="window.open('https://www.youtube.com/@ASAWWARATV','_blank','noopener')" data-i18n="watchYouTube">Kalli YouTube</button>
- </div>
-</section>
-
-<section id="more" style="display:none">
- <h2 class="section-title" data-i18n="more">Game da Mu</h2>
- <div class="post-content" style="background:white;border-radius:12px">
-  <h2>USMAN YOBE TALK SHOW</h2>
-  <p>ASAWWARA TV – TASHAR AL'UMMA.</p>
-  <p style="margin-top:12px" data-i18n="aboutText">Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.</p>
-  <div class="social">
-   <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">TikTok</a>
-   <a href="https://www.facebook.com/share/1C69g7FDMm/" target="_blank" rel="noopener">Facebook</a>
-   <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">YouTube</a>
+ <section id="livePage" class="page">
+  <div class="hero">
+   <h2>📺 ASAWWARA TV — LIVE</h2>
+   <p>Kallon tasharmu kai tsaye.</p>
+   <p style="margin-top:15px">
+    <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" style="color:white;font-weight:bold">Buɗe ASAWWARA TV a YouTube</a>
+   </p>
   </div>
- </div>
-</section>
+ </section>
+
+ <section id="morePage" class="page">
+  <h2 class="section-title">Game da Mu</h2>
+  <div class="post" style="padding:16px;line-height:1.8">
+   <h3>USMAN YOBE TALK SHOW</h3>
+   <p>TASHAR AL'UMMA — ...one voice, one community, one future.</p>
+   <p>Manufarmu ita ce isar da labarai, ilimi da bayanai ga al'umma.</p>
+   <p><b>YouTube:</b> <a href="https://www.youtube.com/@ASAWWARATV" target="_blank">ASAWWARA TV</a></p>
+   <p><b>TikTok:</b> <a href="https://www.tiktok.com/@usman1yobe" target="_blank">@usman1yobe</a></p>
+   <p><b>Facebook:</b> <a href="https://www.facebook.com/" target="_blank">Facebook</a></p>
+  </div>
+ </section>
+
+ <footer>© <span id="year"></span> USMAN YOBE TALK SHOW — TASHAR AL'UMMA</footer>
 </main>
 
-<footer>
- <h3>USMAN YOBE TALK SHOW</h3>
- <p>TASHAR AL'UMMA</p>
- <p>© 2026 Usman Yobe Talk Show. All Rights Reserved.</p>
-</footer>
-
-<nav class="bottom-nav">
- <button class="active" onclick="showSection('home',this)"><span>⌂</span><span data-i18n="home">Gida</span></button>
- <button id="opNav" onclick="showSection('opportunities',this)"><span>💼</span><span data-i18n="opportunities">Dama</span></button>
- <button onclick="showSection('videos',this)"><span>▶</span><span data-i18n="videos">Bidiyoyi</span></button>
- <button onclick="showSection('live',this)"><span>📡</span><span data-i18n="live">Live TV</span></button>
- <button onclick="showSection('more',this)"><span>▦</span><span data-i18n="more">Game da Mu</span></button>
-</nav>
-
-<div class="article-modal" id="articleModal">
- <div class="modal-content">
-  <button class="close" onclick="closeArticle()">✕ <span data-i18n="close">Rufe</span></button>
-  <div id="articleDetails" style="padding-top:35px"></div>
- </div>
+<div class="bottom-nav">
+ <button class="active" data-page="home"><span>🏠</span>Home</button>
+ <button data-page="videos"><span>📹</span>Videos</button>
+ <button data-page="live"><span>📺</span>Live TV</button>
+ <button data-page="audio"><span>🎧</span>Audio</button>
+ <button data-page="more"><span>☰</span>More</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<div class="modal" id="articleModal">
+ <div class="modal-card">
+  <button class="close" onclick="closeArticle()" aria-label="Close">×</button>
+  <div id="articleDetails"></div>
+ </div>
+</div>
 
 <script>
 const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let posts = [];
-let currentCategory = "All";
-let currentOpportunityType = "All";
+let currentCategory = "all";
+let currentLanguage = "ha";
 let deepLinkHandled = false;
 
 const translations = {
- en:{
-  home:"Home",news:"News",politics:"Politics",entertainment:"Entertainment",
-  business:"Business",youth:"Youth",sports:"Sports",education:"Education",
-  videos:"Videos",live:"Live TV",more:"About Us",menu:"Menu",
-  language:"🌐 Language",search:"Search news...",breaking:"🔴 BREAKING NEWS",
-  welcome:"News from Yobe and Northern Nigeria",
-  welcomeText:"Stay with us for reliable news, reports, politics, business and entertainment.",
-  latest:"📰 Latest News",videosTitle:"▶ Videos and Programs",
-  videoDescription:"Interviews, reports and special programs.",latestVideos:"Latest Videos",
-  liveTitle:"🔴 Live TV",liveDescription:"Watch our television station live here when live streaming is connected.",
-  aboutText:"We bring you news, discussions, community awareness and entertainment.",
-  watchYouTube:"Watch YouTube",read:"Read Story →",share:"Share ↗",
-  loading:"Loading latest news...",noNews:"No news available yet.",noVideos:"No videos available yet.",
-  error:"Unable to load news. Please try again.",close:"Close",dateLocale:"en-GB",
-  sharePrompt:"Copy this text to share:",opportunities:"Opportunities",
-  opportunityHeroTitle:"LIFE OPPORTUNITIES",
-  opportunityHeroText:"Find jobs, scholarships, training and other opportunities for growth.",
-  exploreOpportunities:"Explore Opportunities",
-  opportunityNotice:"Important: Verify every opportunity from its official source before sending personal information or paying money.",
-  browseOpportunities:"Browse Opportunity Categories",allOpportunities:"All Opportunities",
-  allTypes:"All categories",jobs:"Jobs",jobsSmall:"Employment opportunities",
-  scholarship:"Scholarships",scholarshipSmall:"Education support",training:"Training",
-  trainingSmall:"Skills and vocational training",grants:"Business Grants",
-  grantsSmall:"Youth and business support",exams:"JAMB / WAEC / NECO",
-  examsSmall:"Examination updates",availableOpportunities:"Latest Opportunities",
-  noOpportunities:"No opportunities have been published yet. Please check again later.",
-  opportunityRead:"View Details →",opportunitySearch:"Search jobs, scholarships, training...",
-  opportunityDate:"Published",noMatchingOpportunities:"No matching opportunities found.",
-  eligibility:"Eligibility",deadline:"Application Deadline",howToApply:"How to Apply",
-  contact:"Contact Information",applyNow:"APPLY NOW",noApplyLink:"Application link has not been provided.",
-  published:"Published",sourceWarning:"Please verify this opportunity with the official organization before applying."
- },
  ha:{
-  home:"Gida",news:"Labarai",politics:"Siyasa",entertainment:"Nishadi",
+  all:"Duka",news:"Labarai",politics:"Siyasa",entertainment:"Nishaɗi",
   business:"Kasuwanci",youth:"Matasa",sports:"Wasanni",education:"Ilimi",
-  videos:"Bidiyoyi",live:"Live TV",more:"Game da Mu",menu:"Menu",
-  language:"🌐 Harshe",search:"Nemo labarai...",breaking:"🔴 LABARI DA DUMI-DUMI",
-  welcome:"Labaran Yobe da Arewa",
-  welcomeText:"Ku kasance tare da mu domin samun sahihan labarai, rahotanni, siyasa, kasuwanci da nishadi.",
-  latest:"📰 Sabbin Labarai",videosTitle:"▶ Bidiyoyi da Shirye-shirye",
-  videoDescription:"Hirarraki, rahotanni da shirye-shiryen musamman.",
-  latestVideos:"Sabbin Bidiyoyi",liveTitle:"🔴 Live TV",
-  liveDescription:"Shirin kallon tasharmu kai tsaye zai kasance nan idan an haɗa live stream.",
-  aboutText:"Muna kawo labarai, tattaunawa, wayar da kan al'umma da nishadi.",
-  watchYouTube:"Kalli YouTube",read:"Karanta labari →",share:"Raba ↗",
-  loading:"Ana loda sabbin labarai...",noNews:"Babu labari tukuna.",
-  noVideos:"Babu bidiyo tukuna.",error:"An samu matsala wajen ɗauko labarai. A sake gwadawa.",
-  close:"Rufe",dateLocale:"ha-NG",sharePrompt:"Kwafi wannan rubutu domin rabawa:",
-  opportunities:"Damar Rayuwa",opportunityHeroTitle:"DAMAR RAYUWA",
-  opportunityHeroText:"Nemo guraben aiki, tallafin karatu, horo da sauran damar ci gaba.",
-  exploreOpportunities:"Duba Damar Rayuwa",
-  opportunityNotice:"Muhimmin bayani: Ka tabbatar da sahihancin kowace dama daga asalin mai bayarwa kafin ka tura bayananka ko ka biya kuɗi.",
-  browseOpportunities:"Zaɓi Nau'in Damar Rayuwa",
-  allOpportunities:"Duk Damar Rayuwa",allTypes:"Dukkan nau'o'i",
-  jobs:"Ayyukan Yi",jobsSmall:"Guraben aiki",scholarship:"Scholarship",
-  scholarshipSmall:"Tallafin karatu",training:"Horaswa",trainingSmall:"Koyon sana'o'i",
-  grants:"Tallafi",grantsSmall:"Matasa da kasuwanci",
-  exams:"JAMB / WAEC / NECO",examsSmall:"Sanarwar jarrabawa",
-  availableOpportunities:"Sabbin Damammaki",
-  noOpportunities:"Babu damar rayuwa da aka wallafa tukuna. Ka sake dubawa daga baya.",
-  opportunityRead:"Duba Cikakken Bayani →",
-  opportunitySearch:"Nemo aiki, scholarship, horo...",
-  opportunityDate:"An wallafa",noMatchingOpportunities:"Ba a samu damar da ta dace da bincikenka ba.",
-  eligibility:"Wa ya cancanci nema?",deadline:"Ranar ƙarshe ta neman dama",
-  howToApply:"Yadda ake nema",contact:"Hanyar tuntuɓa",
-  applyNow:"NEMI DAMAR YANZU",noApplyLink:"Ba a saka hanyar neman wannan damar ba tukuna.",
-  published:"An wallafa",sourceWarning:"Ka tabbatar da sahihancin wannan dama daga ƙungiyar da ta bayar kafin ka nema."
+  read:"Karanta Labari",share:"Raba",latest:"Sabbin Labarai",
+  search:"Nemi labarai...",welcome:"Barka da zuwa USMAN YOBE TALK SHOW",
+  intro:"Samu sahihan labarai, bidiyo, sauti da muhimman bayanai daga Yobe da sauran duniya.",
+  audio:"🎧 AUDIO NEWS - Saurari Labari",fullAudio:"🎧 AUDIO NEWS - Saurari Cikakken Labari",
+  empty:"Babu labari a nan yanzu."
+ },
+ en:{
+  all:"All",news:"News",politics:"Politics",entertainment:"Entertainment",
+  business:"Business",youth:"Youth",sports:"Sports",education:"Education",
+  read:"Read Story",share:"Share",latest:"Latest News",
+  search:"Search news...",welcome:"Welcome to USMAN YOBE TALK SHOW",
+  intro:"Get news, videos, audio and important updates from Yobe and around the world.",
+  audio:"🎧 AUDIO NEWS - Listen to Story",fullAudio:"🎧 AUDIO NEWS - Listen to Full Story",
+  empty:"No stories available right now."
  },
  ar:{
-  home:"الرئيسية",news:"الأخبار",politics:"السياسة",entertainment:"الترفيه",
+  all:"الكل",news:"الأخبار",politics:"السياسة",entertainment:"الترفيه",
   business:"الأعمال",youth:"الشباب",sports:"الرياضة",education:"التعليم",
-  videos:"الفيديو",live:"البث المباشر",more:"من نحن",menu:"القائمة",
-  language:"🌐 اللغة",search:"ابحث عن الأخبار...",breaking:"🔴 أخبار عاجلة",
-  welcome:"أخبار ولاية يوبي وشمال نيجيريا",
-  welcomeText:"تابعونا للحصول على الأخبار الموثوقة والتقارير والسياسة والأعمال والترفيه.",
-  latest:"📰 آخر الأخبار",videosTitle:"▶ الفيديو والبرامج",
-  videoDescription:"مقابلات وتقارير وبرامج خاصة.",latestVideos:"أحدث الفيديوهات",
-  liveTitle:"🔴 البث المباشر",
-  liveDescription:"ستتمكنون من مشاهدة قناتنا مباشرة هنا عند ربط البث المباشر.",
-  aboutText:"نقدم الأخبار والمناقشات والتوعية المجتمعية والترفيه.",
-  watchYouTube:"شاهد على يوتيوب",read:"اقرأ الخبر ←",share:"مشاركة ↗",
-  loading:"جارٍ تحميل آخر الأخبار...",noNews:"لا توجد أخبار حتى الآن.",
-  noVideos:"لا توجد فيديوهات حتى الآن.",error:"تعذر تحميل الأخبار. يرجى المحاولة مرة أخرى.",
-  close:"إغلاق",dateLocale:"ar",sharePrompt:"انسخ هذا النص للمشاركة:",
-  opportunities:"الفرص",opportunityHeroTitle:"فرص الحياة",
-  opportunityHeroText:"ابحث عن الوظائف والمنح الدراسية والتدريب وفرص التطور.",
-  exploreOpportunities:"استكشف الفرص",
-  opportunityNotice:"مهم: تحقق من مصدر كل فرصة قبل إرسال بياناتك الشخصية أو دفع أي أموال.",
-  browseOpportunities:"تصفح أنواع الفرص",allOpportunities:"جميع الفرص",
-  allTypes:"كل الفئات",jobs:"الوظائف",jobsSmall:"فرص العمل",
-  scholarship:"المنح الدراسية",scholarshipSmall:"دعم التعليم",
-  training:"التدريب",trainingSmall:"التدريب المهني",grants:"دعم الأعمال",
-  grantsSmall:"دعم الشباب والأعمال",exams:"JAMB / WAEC / NECO",
-  examsSmall:"تحديثات الامتحانات",availableOpportunities:"أحدث الفرص",
-  noOpportunities:"لم يتم نشر أي فرص حتى الآن. يرجى التحقق لاحقاً.",
-  opportunityRead:"عرض التفاصيل ←",opportunitySearch:"ابحث عن وظائف ومنح وتدريب...",
-  opportunityDate:"تاريخ النشر",noMatchingOpportunities:"لم يتم العثور على فرص مطابقة.",
-  eligibility:"شروط الأهلية",deadline:"آخر موعد للتقديم",
-  howToApply:"طريقة التقديم",contact:"معلومات الاتصال",
-  applyNow:"قدّم الآن",noApplyLink:"لم يتم توفير رابط التقديم.",
-  published:"تاريخ النشر",sourceWarning:"يرجى التحقق من الفرصة لدى الجهة الرسمية قبل التقديم."
+  read:"اقرأ الخبر",share:"مشاركة",latest:"آخر الأخبار",
+  search:"ابحث عن الأخبار...",welcome:"مرحباً بكم في USMAN YOBE TALK SHOW",
+  intro:"تابع الأخبار والفيديو والصوت من ولاية يوبي وحول العالم.",
+  audio:"🎧 استمع إلى الخبر",fullAudio:"🎧 استمع إلى الخبر كاملاً",
+  empty:"لا توجد أخبار حالياً."
  }
 };
 
-let currentLanguage = "ha";
-
-try{
- const saved = localStorage.getItem("usman_yobe_language");
- const device = (navigator.language || "ha").toLowerCase();
- currentLanguage = saved && translations[saved] ? saved :
-  device.startsWith("ar") ? "ar" :
-  device.startsWith("en") ? "en" : "ha";
-}catch(e){}
-
-function escapeHTML(value){
- return String(value ?? "").replace(/[&<>"']/g,c=>({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+function safeURL(value){
+ if(!value)return "";
+ try{
+  const u=new URL(value,window.location.href);
+  if(["http:","https:"].includes(u.protocol))return u.href;
+ }catch(e){}
+ return "";
+}
+function esc(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
-
-function safeURL(value){
- try{
-  const url = new URL(value);
-  if(url.protocol === "https:" || url.protocol === "http:") return url.href;
-  return "";
- }catch(e){return "";}
-}
-
+function tr(key){return translations[currentLanguage]?.[key]||translations.ha[key]||key}
 function formatDate(value){
- if(!value) return "";
- const date = new Date(value);
- if(Number.isNaN(date.getTime())) return escapeHTML(value);
- return escapeHTML(date.toLocaleDateString(translations[currentLanguage].dateLocale));
+ if(!value)return "";
+ const d=new Date(value);
+ return isNaN(d)? "":d.toLocaleDateString(
+  currentLanguage==="ar"?"ar":currentLanguage==="en"?"en":"ha",
+  {year:"numeric",month:"short",day:"numeric"}
+ );
+}
+function categoryName(category){
+ const map={
+  News:currentLanguage==="en"?"News":currentLanguage==="ar"?"الأخبار":"Labarai",
+  Politics:currentLanguage==="en"?"Politics":currentLanguage==="ar"?"السياسة":"Siyasa",
+  Entertainment:currentLanguage==="en"?"Entertainment":currentLanguage==="ar"?"الترفيه":"Nishaɗi",
+  Business:currentLanguage==="en"?"Business":currentLanguage==="ar"?"الأعمال":"Kasuwanci",
+  Youth:currentLanguage==="en"?"Youth":currentLanguage==="ar"?"الشباب":"Matasa",
+  Sports:currentLanguage==="en"?"Sports":currentLanguage==="ar"?"الرياضة":"Wasanni",
+  Education:currentLanguage==="en"?"Education":currentLanguage==="ar"?"التعليم":"Ilimi"
+ };
+ return map[category]||category||"Labarai";
 }
 
-function displayCategory(category){
- const t = translations[currentLanguage];
- const value = String(category || "");
- if(value === "General News" || value === "News") return t.news;
- if(value === "Matasa" || value === "Youth") return t.youth;
- if(value === "Politics") return t.politics;
- if(value === "Entertainment") return t.entertainment;
- if(value === "Business") return t.business;
- if(value === "Sports") return t.sports;
- if(value === "Education") return t.education;
- if(value === "Damar Rayuwa") return t.opportunities;
- return value || t.news;
-}
-
-function setLanguage(lang){
- if(!translations[lang]) return;
- currentLanguage = lang;
- try{localStorage.setItem("usman_yobe_language",lang)}catch(e){}
- const t = translations[lang];
- const arabic = lang === "ar";
- document.documentElement.lang = lang;
- document.documentElement.dir = arabic ? "rtl" : "ltr";
- document.body.dir = arabic ? "rtl" : "ltr";
-
- document.querySelectorAll("[data-i18n]").forEach(element=>{
-  const key = element.getAttribute("data-i18n");
-  if(t[key] !== undefined) element.textContent = t[key];
- });
-
- document.getElementById("search").placeholder = t.search;
- document.getElementById("opportunitySearch").placeholder = t.opportunitySearch;
- document.getElementById("menuTitle").textContent = "☰ " + t.menu;
- document.getElementById("languageTitle").textContent = t.language;
-
- ["en","ha","ar"].forEach(code=>{
-  document.getElementById("lang-"+code).classList.toggle("selected-language",code === lang);
- });
-
- closeMenu();
- renderTopStory();
- renderBreakingAlert();
- renderPosts();
- renderVideos();
- renderOpportunities();
-}
-
-function toggleMenu(){
- document.getElementById("menuPanel").classList.toggle("show");
- document.getElementById("menuOverlay").classList.toggle("show");
-}
-
-function closeMenu(){
- document.getElementById("menuPanel").classList.remove("show");
- document.getElementById("menuOverlay").classList.remove("show");
-}
-
-function menuNavigate(id){
- closeMenu();
- const indexes = {home:0,opportunities:1,videos:2,live:3,more:4};
- showSection(id,document.querySelectorAll(".bottom-nav button")[indexes[id]]);
-}
-
-// LOAD PUBLISHED POSTS AND OPPORTUNITY FIELDS
 async function loadNews(){
- const t = translations[currentLanguage];
+ const grid=document.getElementById("newsGrid");
+ grid.innerHTML='<div class="empty">Ana ɗauko labarai...</div>';
 
- document.getElementById("posts").innerHTML = '<div class="empty">'+t.loading+'</div>';
- document.getElementById("videoPosts").innerHTML = '<div class="empty">'+t.loading+'</div>';
- document.getElementById("opportunityPosts").innerHTML = '<div class="empty">'+t.loading+'</div>';
-
- const {data,error} = await db
+ const {data,error}=await db
   .from("news_posts")
-  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
+  .select("id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
   .eq("status","published")
   .order("published_at",{ascending:false});
 
  if(error){
-  console.error("News loading error:",error);
-  document.getElementById("posts").innerHTML = '<div class="empty">'+t.error+'</div>';
-  document.getElementById("videoPosts").innerHTML = '<div class="empty">'+t.error+'</div>';
-  document.getElementById("opportunityPosts").innerHTML = '<div class="empty">'+t.error+'</div>';
+  console.error(error);
+  grid.innerHTML='<div class="empty">An samu matsala wajen ɗauko labarai. Ka duba internet ka sake gwadawa.</div>';
   return;
  }
-
- posts = data || [];
-
-posts = data || [];
-
-renderBreakingAlert();
-renderTopStory();
-renderPosts();
-renderVideos();
-renderOpportunities();
-
-openArticleFromURL();
-}
-// OPEN ARTICLE FROM NOTIFICATION LINK
-function openArticleFromURL(){
-  if(deepLinkHandled) return;
-
-  const params = new URLSearchParams(window.location.search);
-  const articleId = params.get("article");
-
-  if(!articleId) return;
-
-  const index = posts.findIndex(
-    post => String(post.id) === String(articleId)
-  );
-
-  if(index === -1) return;
-
-  deepLinkHandled = true;
-
-  openArticle(index);
-}
-// BREAKING NEWS
- // SHOW LATEST BREAKING NEWS ALERT
-function renderBreakingAlert(){
-
- const container = document.getElementById("breakingAlert");
-
- if(!container) return;
-
- const breakingPosts = posts
-  .filter(p =>
-    p.is_breaking_news === true &&
-    String(p.category || "").toLowerCase() !== "damar rayuwa"
-  )
-  .sort((a,b) =>
-    new Date(b.published_at || b.created_at) -
-    new Date(a.published_at || a.created_at)
-  );
-
- if(!breakingPosts.length){
-  container.style.display = "none";
-  container.innerHTML = "";
-  return;
- }
-
- const latest = breakingPosts[0];
-
- const index = posts.findIndex(
-  p => String(p.id) === String(latest.id)
- );
-
- container.style.display = "block";
-
- container.innerHTML = `
-  <button onclick="openArticle(${index})">
-   <small>🚨 BREAKING NEWS · LABARI MAI ZAFI</small>
-   🔴 ${escapeHTML(latest.title)}
-   <div style="font-size:12px;margin-top:6px;font-weight:normal">
-    Danna nan domin karanta cikakken labari →
-   </div>
-  </button>
- `;
-}
-function renderTopStory(){
- const t = translations[currentLanguage];
- const first = posts.length ? posts[0] : null;
- const container = document.getElementById("topStory");
-
- if(!first){
-  container.innerHTML = `<span class="tag">USMAN YOBE TALK SHOW</span><h1>${escapeHTML(t.welcome)}</h1><p>${escapeHTML(t.welcomeText)}</p>`;
-  return;
- }
-
- const image = safeURL(first.image_url);
- const index = posts.findIndex(p=>p.id === first.id);
-
- container.innerHTML = `
-  ${image ? `<img class="breaking-image" src="${escapeHTML(image)}" alt="${escapeHTML(first.title)}">` : ""}
-  <div style="padding:18px">
-   <span class="tag">${escapeHTML(t.breaking)}</span>
-   <h1>${escapeHTML(first.title)}</h1>
-   <p>${escapeHTML(first.excerpt || first.content || "")}</p>
-   <button class="hero-button" onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
-  </div>`;
+ posts=data||[];
+ renderAll();
+ openArticleFromURL();
 }
 
-// CATEGORY FILTER
-function matchesCategory(post){
- if(currentCategory === "All") return true;
- const category = String(post.category || "");
- if(currentCategory === "News") return category === "News" || category === "General News";
- if(currentCategory === "Youth") return category === "Youth" || category === "Matasa";
- return category.toLowerCase() === currentCategory.toLowerCase();
-}
-
-// RENDER NEWS
-function renderPosts(){
- const t = translations[currentLanguage];
- const query = document.getElementById("search").value.toLowerCase().trim();
-
- const filtered = posts.filter(p=>{
-  const text = [p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
-  return p.category !== "Damar Rayuwa" && matchesCategory(p) && text.includes(query);
+function filteredPosts(){
+ const query=(document.getElementById("searchInput").value||"").toLowerCase().trim();
+ return posts.filter(p=>{
+  const categoryOK=currentCategory==="all"||p.category===currentCategory;
+  const text=[p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
+  return categoryOK&&(!query||text.includes(query));
  });
+}
 
- const container = document.getElementById("posts");
- if(!filtered.length){
-  container.innerHTML = '<div class="empty">'+t.noNews+'</div>';
-  return;
- }
+function audioPlayer(p,full=false){
+ const audio=safeURL(p.audio_url);
+ if(!audio)return "";
+ return `<div class="audio-box">
+  <strong>${full?tr("fullAudio"):tr("audio")}</strong>
+  <audio controls preload="none">
+   <source src="${esc(audio)}">
+   Your browser does not support audio.
+  </audio>
+ </div>`;
+}
 
- container.innerHTML = `<div class="news-grid">${filtered.map(p=>{
-  const image = safeURL(p.image_url);
-  const index = posts.findIndex(item=>item.id === p.id);
-  const date = p.published_at ? formatDate(p.published_at) : "";
-
-  return `<article class="post">
-   ${image ? `<img class="post-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : `<div class="post-placeholder">📰</div>`}
-   <div class="post-content">
-    <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
-    <h3>${escapeHTML(p.title)}</h3>
-    <p>${escapeHTML(p.excerpt || p.content || "")}</p>
-    <div class="post-meta"><span>${date}</span><span>Usman Yobe</span></div>
-    <div class="post-actions">
-     <button onclick="openArticle(${index})">${escapeHTML(t.read)}</button>
-     <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
-    </div>
+function renderCard(p){
+ const image=safeURL(p.image_url);
+ const index=posts.findIndex(x=>String(x.id)===String(p.id));
+ const video=safeURL(p.video_url);
+ return `<article class="post">
+  ${image?`<img class="post-image" src="${esc(image)}" alt="${esc(p.title)}" loading="lazy">`:`<div class="post-placeholder">📰</div>`}
+  <div class="post-content">
+   <span class="tag">${esc(categoryName(p.category))}</span>
+   ${p.is_breaking_news?'<span class="tag" style="background:#ffe5e5;color:#c00;margin-left:5px">🔴 BREAKING</span>':""}
+   <h3>${esc(p.title)}</h3>
+   <p>${esc(p.excerpt||p.content||"")}</p>
+   ${audioPlayer(p)}
+   ${video?`<div class="video-box" style="margin-top:10px"><video controls playsinline preload="metadata"><source src="${esc(video)}"></video></div>`:""}
+   <div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div>
+   <div class="post-actions">
+    <button onclick="openArticleById('${esc(p.id)}')">${tr("read")}</button>
+    <button onclick="sharePost('${esc(p.id)}')">${tr("share")}</button>
    </div>
-  </article>`;
- }).join("")}</div>`;
-}
-
-// NORMALIZE OPPORTUNITY TYPE
-function detectOpportunityType(post){
- const savedType = String(post.opportunity_type || "").trim();
-
- if(savedType){
-  const normalized = savedType.toLowerCase();
-  if(normalized === "job" || normalized === "jobs") return "Jobs";
-  if(normalized === "scholarship" || normalized === "scholarships") return "Scholarship";
-  if(normalized === "training") return "Training";
-  if(normalized === "business grant" || normalized === "business grants" || normalized === "grant") return "Business Grant";
-  if(normalized === "exam" || normalized === "exams" || normalized === "jamb / waec / neco") return "Exams";
-  return "Other";
- }
-
- // Fallback for older opportunities that do not have a saved type
- const text = [post.title || "",post.excerpt || "",post.content || ""].join(" ").toLowerCase();
-
- if(/scholarship|scholarships|bursary|grant for study|tallafin karatu|karatu/i.test(text)) return "Scholarship";
- if(/jamb|waec|neco|nabteb|jarrabawa|examination/i.test(text)) return "Exams";
- if(/training|vocational|skill acquisition|horaswa|koyon sana|koyon fasaha/i.test(text)) return "Training";
- if(/business grant|business support|entrepreneur|small business|tallafin kasuwanci|tallafin sana|tallafin matasa/i.test(text)) return "Business Grant";
- if(/job|jobs|employment|vacancy|vacancies|recruitment|aikin yi|gurbin aiki|daukar ma'aikata|daukar aiki/i.test(text)) return "Jobs";
-
- return "Other";
-}
-
-function opportunityTypeName(type){
- const t = translations[currentLanguage];
- const names = {
-  Jobs:t.jobs,
-  Scholarship:t.scholarship,
-  Training:t.training,
-  "Business Grant":t.grants,
-  Exams:t.exams,
-  Other:t.opportunities
- };
- return names[type] || t.opportunities;
-}
-
-function filterOpportunityType(type,button){
- currentOpportunityType = type;
- document.querySelectorAll(".opportunity-type").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- renderOpportunities();
-}
-
-// RENDER OPPORTUNITIES
-function renderOpportunities(){
- const t = translations[currentLanguage];
- const globalSearch = document.getElementById("search").value.toLowerCase().trim();
- const localSearch = document.getElementById("opportunitySearch").value.toLowerCase().trim();
- const query = (globalSearch + " " + localSearch).trim();
-
- const opportunities = posts.filter(p=>
-  String(p.category || "").trim().toLowerCase() === "damar rayuwa"
- );
-
- const filtered = opportunities.filter(p=>{
-  const text = [p.title,p.excerpt,p.content,p.opportunity_type,p.eligibility,p.how_to_apply,p.contact_info].join(" ").toLowerCase();
-  const type = detectOpportunityType(p);
-  const matchesType = currentOpportunityType === "All" || type === currentOpportunityType;
-  return matchesType && text.includes(query);
- });
-
- const container = document.getElementById("opportunityPosts");
-
- if(!opportunities.length){
-  container.innerHTML = '<div class="empty">💼<br><br>'+t.noOpportunities+'</div>';
-  return;
- }
-
- if(!filtered.length){
-  container.innerHTML = '<div class="empty">'+t.noMatchingOpportunities+'</div>';
-  return;
- }
-
- container.innerHTML = filtered.map(p=>{
-  const image = safeURL(p.image_url);
-  const index = posts.findIndex(item=>item.id === p.id);
-  const date = p.published_at ? formatDate(p.published_at) : "";
-  const type = detectOpportunityType(p);
-  const deadline = p.application_deadline ? formatDate(p.application_deadline) : "";
-
-  return `<article class="opportunity-card">
-   ${image ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}" loading="lazy">` : ""}
-   <div class="opportunity-content">
-    <span class="opportunity-label">💼 ${escapeHTML(opportunityTypeName(type))}</span>
-    <h3>${escapeHTML(p.title)}</h3>
-    <p>${escapeHTML(p.excerpt || p.content || "")}</p>
-    ${deadline ? `<div class="deadline">⏰ ${escapeHTML(t.deadline)}: ${deadline}</div>` : ""}
-    <div class="opportunity-date">${escapeHTML(t.opportunityDate)}: ${date}</div>
-    <button class="opportunity-button" onclick="openArticle(${index})">${escapeHTML(t.opportunityRead)}</button>
-   </div>
-  </article>`;
- }).join("");
-}
-
-// VIDEOS
-function renderVideos(){
- const t = translations[currentLanguage];
- const query = document.getElementById("search").value.toLowerCase().trim();
-
- const videoPosts = posts.filter(p=>{
-  const video = safeURL(p.video_url);
-  const text = [p.title,p.excerpt,p.content].join(" ").toLowerCase();
-  return video && text.includes(query);
- });
-
- const container = document.getElementById("videoPosts");
- if(!videoPosts.length){
-  container.innerHTML = '<div class="empty">'+t.noVideos+'</div>';
-  return;
- }
-
- container.innerHTML = videoPosts.map(p=>{
-  const video = safeURL(p.video_url);
-  const image = safeURL(p.image_url);
-  const date = p.published_at ? formatDate(p.published_at) : "";
-  const index = posts.findIndex(item=>item.id === p.id);
-
-  return `<article class="video-card">
-   <video controls playsinline preload="metadata" ${image ? `poster="${escapeHTML(image)}"` : ""} controlslist="nodownload">
-    <source src="${escapeHTML(video)}">
-    Your browser does not support HTML video.
-   </video>
-   <div class="video-card-content">
-    <span class="video-label">▶ USMAN YOBE VIDEO</span>
-    <h3>${escapeHTML(p.title)}</h3>
-    <p>${escapeHTML(p.excerpt || "")}</p>
-    <div class="post-meta"><span>${date}</span><span>ASAWWARA TV</span></div>
-    <div class="post-actions"><button onclick="sharePost(${index})">${escapeHTML(t.share)}</button></div>
-   </div>
-  </article>`;
- }).join("");
-}
-
-function filterCategory(category,button){
- currentCategory = category;
- document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- showSection("home",document.querySelector(".bottom-nav button"));
- renderPosts();
-}
-
-function showSection(id,button){
- document.querySelectorAll("main section").forEach(s=>s.style.display="none");
- document.getElementById(id).style.display="block";
- document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.remove("active"));
- if(button) button.classList.add("active");
- window.scrollTo({top:0,behavior:"smooth"});
- if(id === "videos") renderVideos();
- if(id === "opportunities") renderOpportunities();
-}
-
-// ARTICLE DETAILS INCLUDING OPPORTUNITY INFORMATION
-function openArticle(index){
- const p = posts[index];
- if(!p) return;
-
- const t = translations[currentLanguage];
- const image = safeURL(p.image_url);
- const video = safeURL(p.video_url);
- const date = p.published_at ? formatDate(p.published_at) : "";
- const isOpportunity = String(p.category || "").trim().toLowerCase() === "damar rayuwa";
- const details = document.getElementById("articleDetails");
- const applyURL = safeURL(p.application_url);
- const deadline = p.application_deadline ? formatDate(p.application_deadline) : "";
- const type = detectOpportunityType(p);
-
- let opportunityDetails = "";
-
- if(isOpportunity){
-  opportunityDetails = `
-   <div class="opportunity-notice">⚠️ ${escapeHTML(t.sourceWarning)}</div>
-
-   <div class="opportunity-detail-box">
-    <h3>💼 ${escapeHTML(opportunityTypeName(type))}</h3>
-    <p>${escapeHTML(p.opportunity_type || opportunityTypeName(type))}</p>
-   </div>
-
-   ${p.eligibility ? `
-    <div class="opportunity-detail-box">
-     <h3>👥 ${escapeHTML(t.eligibility)}</h3>
-     <p>${escapeHTML(p.eligibility)}</p>
-    </div>` : ""}
-
-   ${deadline ? `
-    <div class="opportunity-detail-box">
-     <h3>⏰ ${escapeHTML(t.deadline)}</h3>
-     <p>${deadline}</p>
-    </div>` : ""}
-
-   ${p.how_to_apply ? `
-    <div class="opportunity-detail-box">
-     <h3>📝 ${escapeHTML(t.howToApply)}</h3>
-     <p>${escapeHTML(p.how_to_apply)}</p>
-    </div>` : ""}
-
-   ${p.contact_info ? `
-    <div class="opportunity-detail-box">
-     <h3>📞 ${escapeHTML(t.contact)}</h3>
-     <p>${escapeHTML(p.contact_info)}</p>
-    </div>` : ""}
-
-   ${applyURL ? `
-    <a class="apply-now" href="${escapeHTML(applyURL)}" target="_blank" rel="noopener noreferrer">
-     🌐 ${escapeHTML(t.applyNow)}
-    </a>` : `
-    <div class="opportunity-notice">${escapeHTML(t.noApplyLink)}</div>`}
-  `;
- }
-
- details.dir = currentLanguage === "ar" ? "rtl" : "ltr";
-
- details.innerHTML = `
-  <span class="tag">${escapeHTML(displayCategory(p.category))}</span>
-  <h2>${escapeHTML(p.title)}</h2>
-  <p style="color:#64748b;margin:10px 0">${date} | USMAN YOBE TALK SHOW</p>
-
-  ${image ? `<img class="article-image" src="${escapeHTML(image)}" alt="${escapeHTML(p.title)}">` : ""}
-
-  ${video ? `
-   <video class="article-video" controls playsinline preload="metadata">
-    <source src="${escapeHTML(video)}">
-    Your browser does not support HTML video.
-   </video>` : ""}
-
-  <div style="line-height:1.9;white-space:pre-wrap;margin-top:12px">${escapeHTML(p.content || p.excerpt || "")}</div>
-
-  ${isOpportunity ? opportunityDetails : ""}
-
-  <div class="post-actions">
-   <button onclick="sharePost(${index})">${escapeHTML(t.share)}</button>
   </div>
+ </article>`;
+}
+
+function renderPosts(){
+ const items=filteredPosts();
+ const grid=document.getElementById("newsGrid");
+ grid.innerHTML=items.length?items.map(renderCard).join():`<div class="empty">${tr("empty")}</div>`;
+}
+
+function renderBreakingAlert(){
+ const breaking=posts.filter(p=>p.is_breaking_news);
+ const box=document.getElementById("breakingBox");
+ const items=document.getElementById("breakingItems");
+ if(!breaking.length){box.style.display="none";return;}
+ box.style.display="block";
+ items.innerHTML=breaking.slice(0,4).map(p=>
+  `<p style="margin:7px 0"><button onclick="openArticleById('${esc(p.id)}')">🔴 ${esc(p.title)}</button></p>`
+ ).join("");
+}
+
+function renderOpportunities(){
+ const items=posts.filter(p=>p.opportunity_type);
+ const grid=document.getElementById("opportunitiesGrid");
+ grid.innerHTML=items.length?items.map(p=>{
+  const i=posts.findIndex(x=>String(x.id)===String(p.id));
+  return `<article class="post"><div class="post-content">
+   <span class="tag">🎓 ${esc(p.opportunity_type)}</span>
+   <h3>${esc(p.title)}</h3>
+   <p>${esc(p.excerpt||"")}</p>
+   ${p.eligibility?`<p><b>Sharudda:</b> ${esc(p.eligibility)}</p>`:""}
+   ${p.application_deadline?`<p><b>Ranar ƙarshe:</b> ${esc(p.application_deadline)}</p>`:""}
+   ${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}
+   ${p.application_url&&safeURL(p.application_url)?`<p><a href="${esc(safeURL(p.application_url))}" target="_blank" rel="noopener">Yi Neman Wannan Dama</a></p>`:""}
+   ${p.contact_info?`<p><b>Contact:</b> ${esc(p.contact_info)}</p>`:""}
+   <button class="primary" onclick="openArticleById('${esc(p.id)}')">Ƙarin Bayani</button>
+  </div></article>`;
+ }).join():'<div class="empty">Babu damar da aka wallafa yanzu.</div>';
+}
+
+function renderVideos(){
+ const items=posts.filter(p=>safeURL(p.video_url));
+ const grid=document.getElementById("videosGrid");
+ grid.innerHTML=items.length?items.map(p=>{
+  const video=safeURL(p.video_url);
+  return `<article class="post"><div class="post-content">
+   <h3>${esc(p.title)}</h3>
+   <div class="video-box"><video controls playsinline preload="metadata"><source src="${esc(video)}"></video></div>
+   <p>${esc(p.excerpt||"")}</p>
+   <button class="primary" onclick="openArticleById('${esc(p.id)}')">Cikakken Bayani</button>
+  </div></article>`;
+ }).join():'<div class="empty">Babu bidiyo a yanzu.</div>';
+}
+
+function renderAudio(){
+ const items=posts.filter(p=>safeURL(p.audio_url));
+ const grid=document.getElementById("audioGrid");
+ grid.innerHTML=items.length?items.map(p=>
+  `<article class="post"><div class="post-content">
+   <span class="tag">🎧 AUDIO NEWS</span>
+   <h3>${esc(p.title)}</h3>
+   <p>${esc(p.excerpt||"")}</p>
+   ${audioPlayer(p,true)}
+   <div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div>
+   <button class="primary" style="margin-top:12px" onclick="openArticleById('${esc(p.id)}')">Cikakken Labari</button>
+  </div></article>`
+ ).join():'<div class="empty">Babu audio news a yanzu.</div>';
+}
+
+function renderAll(){
+ renderPosts();
+ renderBreakingAlert();
+ renderOpportunities();
+ renderVideos();
+ renderAudio();
+ document.getElementById("year").textContent=new Date().getFullYear();
+}
+
+function openArticleById(id){
+ const index=posts.findIndex(p=>String(p.id)===String(id));
+ if(index>=0)openArticle(index);
+}
+
+function openArticle(index){
+ const p=posts[index];
+ if(!p)return;
+ const image=safeURL(p.image_url);
+ const video=safeURL(p.video_url);
+ const application=safeURL(p.application_url);
+
+ document.getElementById("articleDetails").innerHTML=`
+  <span class="tag">${esc(categoryName(p.category))}</span>
+  <h2 style="color:#071b49;line-height:1.4">${esc(p.title)}</h2>
+  <p style="color:#778">${formatDate(p.published_at||p.created_at)}</p>
+  ${image?`<img class="article-image" src="${esc(image)}" alt="${esc(p.title)}">`:""}
+  ${video?`<video class="article-video" controls playsinline preload="metadata"><source src="${esc(video)}">Your browser does not support HTML video.</video>`:""}
+  ${audioPlayer(p,true)}
+  <div class="article-body">${esc(p.content||p.excerpt||"")}</div>
+  ${p.opportunity_type?`<hr><h3>🎓 ${esc(p.opportunity_type)}</h3>`:""}
+  ${p.eligibility?`<p><b>Sharudda:</b> ${esc(p.eligibility)}</p>`:""}
+  ${p.application_deadline?`<p><b>Ranar ƙarshe:</b> ${esc(p.application_deadline)}</p>`:""}
+  ${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}
+  ${application?`<p><a class="primary" style="display:inline-block;text-decoration:none" href="${esc(application)}" target="_blank" rel="noopener">Neman Wannan Dama</a></p>`:""}
+  ${p.contact_info?`<p><b>Contact:</b> ${esc(p.contact_info)}</p>`:""}
+  <button class="primary" onclick="sharePost('${esc(p.id)}')">Raba Labari</button>
  `;
+ document.getElementById("articleModal").style.display="block";
 
-const articleURL = new URL(window.location.href);
-articleURL.searchParams.set("article", p.id);
-
-history.replaceState(
-  { articleId: p.id },
-  "",
-  articleURL.pathname + articleURL.search + articleURL.hash
-);
-
-deepLinkHandled = true;
-
-document.getElementById("articleModal").style.display = "block";}
+ const url=new URL(window.location.href);
+ url.searchParams.set("article",p.id);
+ history.replaceState({}, "",url.pathname+url.search+url.hash);
+}
 
 function closeArticle(){
-  const modal = document.getElementById("articleModal");
-
-  modal.querySelectorAll("video").forEach(v => v.pause());
-  modal.style.display = "none";
-
-  const url = new URL(window.location.href);
-  url.searchParams.delete("article");
-
-  history.replaceState(
-    {},
-    "",
-    url.pathname + url.search + url.hash
-  );
-
-  deepLinkHandled = false;
+ const modal=document.getElementById("articleModal");
+ modal.querySelectorAll("video").forEach(v=>v.pause());
+ modal.querySelectorAll("audio").forEach(a=>a.pause());
+ modal.style.display="none";
+ const url=new URL(window.location.href);
+ url.searchParams.delete("article");
+ history.replaceState({}, "",url.pathname+url.search+url.hash);
+ deepLinkHandled=false;
 }
 
-function sharePost(index){
- const p = posts[index];
- if(!p) return;
-
- const text = p.title + " - USMAN YOBE TALK SHOW";
- const t = translations[currentLanguage];
-
- if(navigator.share){
-  navigator.share({title:p.title,text:text,url:location.href}).catch(()=>{});
- }else{
-  window.prompt(t.sharePrompt,text);
+function openArticleFromURL(){
+ if(deepLinkHandled)return;
+ const id=new URL(window.location.href).searchParams.get("article");
+ if(!id)return;
+ const post=posts.find(p=>String(p.id)===String(id));
+ if(post){
+  deepLinkHandled=true;
+  openArticle(posts.indexOf(post));
  }
 }
 
-// INITIALIZE APP
-setLanguage(currentLanguage);
-loadNews();
-
-// AUTOMATIC REFRESH
-setInterval(loadNews,60000);
-</script>
-
-
-<script>
-// REGISTER SERVICE WORKER
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .then(() => console.log("App is ready"))
-      .catch(error => console.log("Service Worker Error:", error));
-  });
-}
-
-// =====================================
-// PUSH NOTIFICATIONS
-// =====================================
-
-const VAPID_PUBLIC_KEY = "BMGpoolbL81i566moft5EyeP23-5D8S8lweR-B8iROmbCKgUy3PiHcIDY8xReq-EaVGtB1Ig9YaPSqRmhqMsEl8";
-
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding)
-    .replace(/-/g, "+")
-    .replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  return Uint8Array.from(
-    [...rawData].map(char => char.charCodeAt(0))
-  );
-}
-
-async function enablePushNotifications() {
-  const status = document.getElementById("pushStatus");
-
-  try {
-    if (!("serviceWorker" in navigator) ||
-        !("PushManager" in window)) {
-      status.textContent = "Browser dinka bai goyi bayan Push ba.";
-      return;
-    }
-
-    status.textContent = "Ana kunna sanarwa...";
-
-    const permission = await Notification.requestPermission();
-
-    if (permission !== "granted") {
-      status.textContent = "Ba a ba da izinin sanarwa ba.";
-      return;
-    }
-
-    const registration = await navigator.serviceWorker.ready;
-
-    let subscription =
-      await registration.pushManager.getSubscription();
-
-    if (!subscription) {
-      subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey:
-          urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-      });
-    }
-
-    const sub = subscription.toJSON();
-
-    const { error } = await db
-  .from("push_subscriptions")
-  .insert({
-    endpoint: sub.endpoint,
-    p256dh: sub.keys.p256dh,
-    auth: sub.keys.auth
-  });
-
-if (error && error.code !== "23505") {
-  throw error;
-}
-
-    status.textContent =
-      "An kunna sanarwa cikin nasara!";
-
-  } catch (error) {
-    console.error(error);
-    status.textContent = "Matsala: " + error.message;
+async function sharePost(id){
+ const p=posts.find(x=>String(x.id)===String(id));
+ if(!p)return;
+ const url=new URL(window.location.href);
+ url.searchParams.set("article",p.id);
+ const shareData={title:p.title,text:p.excerpt||p.title,url:url.href};
+ try{
+  if(navigator.share)await navigator.share(shareData);
+  else if(navigator.clipboard){
+   await navigator.clipboard.writeText(url.href);
+   alert("An kwafi mahadar labarin.");
+  }else{
+   prompt("Kwafi wannan mahada:",url.href);
   }
+ }catch(e){console.log(e);}
 }
-</script>
 
+function showPage(page){
+ document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
+ document.getElementById(page+"Page")?.classList.add("active");
+ document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll(".bottom-nav button").forEach(button=>{
+ button.addEventListener("click",()=>showPage(button.dataset.page));
+});
+
+document.querySelectorAll("#categoryNav button").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll("#categoryNav button").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  currentCategory=button.dataset.category;
+  renderPosts();
+  showPage("home");
+ });
+});
+
+document.getElementById("searchInput").addEventListener("input",renderPosts);
+
+function setLanguage(lang){
+ currentLanguage=translations[lang]?lang:"ha";
+ document.documentElement.lang=currentLanguage;
+ document.documentElement.dir=currentLanguage==="ar"?"rtl":"ltr";
+ const t=translations[currentLanguage];
+ document.getElementById("welcomeTitle").textContent=t.welcome;
+ document.getElementById("welcomeText").textContent=t.intro;
+ document.getElementById("latestHeading").textContent=t.latest;
+ document.getElementById("searchInput").placeholder=t.search;
+ const categoryLabels={
+  all:t.all,News:t.news,Politics:t.politics,Entertainment:t.entertainment,
+  Business:t.business,Youth:t.youth,Sports:t.sports,Education:t.education
+ };
+ document.querySelectorAll("#categoryNav button").forEach(b=>{
+  b.textContent=categoryLabels[b.dataset.category]||b.dataset.category;
+ });
+ renderAll();
+}
+document.getElementById("languageSelect").addEventListener("change",e=>setLanguage(e.target.value));
+
+document.getElementById("articleModal").addEventListener("click",e=>{
+ if(e.target.id==="articleModal")closeArticle();
+});
+
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){
+  document.querySelectorAll("audio,video").forEach(media=>{
+   if(!media.paused)media.pause();
+  });
+ }
+});
+
+async function registerServiceWorker(){
+ if(!("serviceWorker" in navigator))return;
+ try{
+  await navigator.serviceWorker.register("./service-worker.js");
+  console.log("Service worker registered");
+ }catch(error){
+  console.error("Service worker registration failed:",error);
+ }
+}
+
+registerServiceWorker();
+setLanguage("ha");
+loadNews();
+</script>
 </body>
 </html>
-
