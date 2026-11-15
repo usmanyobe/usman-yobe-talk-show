@@ -36,6 +36,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .toprow{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .status{display:inline-block;padding:5px 9px;border-radius:20px;background:#e2f7e9;color:#176b32;font-size:12px}
 .preview{display:none;width:100%;max-height:280px;margin:10px 0;border-radius:10px;background:#101827}
+.audio-preview{display:none;width:100%;margin:12px 0}
 .help{font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px}
 .opportunity-note{background:#eef5ff;border-left:4px solid #bd8b25;padding:12px;border-radius:7px;margin:12px 0;font-size:13px;line-height:1.6}
 .opportunity-fields{border:1px solid #d9e2f0;background:#f8faff;padding:15px;border-radius:10px;margin:15px 0}
@@ -43,38 +44,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
 hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 .push-panel{background:#071b49;color:white;padding:20px;margin-bottom:20px;border-radius:14px}
 .push-panel input,.push-panel textarea{color:#182333}
-.breaking-label{
-display:flex;
-align-items:center;
-gap:10px;
-background:#fff0f0;
-border:1px solid #ffbaba;
-padding:14px;
-border-radius:9px;
-margin:10px 0;
-color:#c0392b;
-}
-.breaking-label input{
-width:20px;
-height:20px;
-margin:0;
-accent-color:red;
-}
-.breaking-badge{
-display:inline-block;
-background:#c90000;
-color:white;
-font-size:11px;
-font-weight:bold;
-padding:5px 9px;
-border-radius:5px;
-margin:5px 0;
-}
+.breaking-label{display:flex;align-items:center;gap:10px;background:#fff0f0;border:1px solid #ffbaba;padding:14px;border-radius:9px;margin:10px 0;color:#c0392b}
+.breaking-label input{width:20px;height:20px;margin:0;accent-color:red}
+.breaking-badge{display:inline-block;background:#c90000;color:white;font-size:11px;font-weight:bold;padding:5px 9px;border-radius:5px;margin:5px 0}
+.audio-badge{display:inline-block;background:#e4f3ff;color:#07528c;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:bold;margin:5px 0}
 </style>
 </head>
 
 <body>
-
 <header>
 <img src="logo.png" alt="Usman Yobe Talk Show Logo" onerror="this.style.display='none'">
 <h2>USMAN YOBE TALK SHOW</h2>
@@ -105,7 +82,6 @@ margin:5px 0;
 </div>
 
 <div class="card">
-
 <h3 id="formTitle">Publish New Story</h3>
 
 <label>News Title</label>
@@ -115,9 +91,7 @@ margin:5px 0;
 <input type="checkbox" id="isBreakingNews">
 <span>🚨 BREAKING NEWS – Labari mai zafi</span>
 </label>
-<p class="help">
-Ka yi alama idan wannan labari ne mai muhimmanci da ya kamata masu karatu su sani cikin gaggawa.
-</p>
+<p class="help">Ka yi alama idan labari ne mai muhimmanci.</p>
 
 <label>Category</label>
 <select id="category">
@@ -133,68 +107,88 @@ Ka yi alama idan wannan labari ne mai muhimmanci da ya kamata masu karatu su san
 
 <div id="opportunityGuide" class="opportunity-note hidden">
 <strong>DAMAR RAYUWA</strong><br>
-Zaɓi nau'in damar da kake wallafawa. Ka cika bayanan neman damar domin masu karatu su san yadda za su nema. Ka tabbatar bayanin ya fito daga sahihin tushe.
+Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin tushe.
 </div>
 
 <div id="opportunityFields" class="opportunity-fields hidden">
 <h3>Opportunity Information</h3>
-<p class="help">Waɗannan bayanai za su bayyana a shafin cikakken damar rayuwa.</p>
 
-<label>Opportunity Type / Nau'in Dama</label>
+<label>Opportunity Type</label>
 <select id="opportunityType">
 <option value="">Zaɓi nau'in dama</option>
 <option value="Jobs">Jobs / Guraben Aiki</option>
-<option value="Scholarship">Scholarships / Tallafin Karatu</option>
-<option value="Training">Training / Horaswa</option>
-<option value="Business Grant">Business Grants / Tallafin Kasuwanci</option>
+<option value="Scholarship">Scholarships</option>
+<option value="Training">Training</option>
+<option value="Business Grant">Business Grants</option>
 <option value="Exams">JAMB / WAEC / NECO</option>
-<option value="Other">Other / Sauran Dama</option>
+<option value="Other">Other</option>
 </select>
 
-<label>Eligibility / Waɗanda Za Su Iya Nema</label>
-<textarea id="eligibility" placeholder="Misali: Matasa masu shekaru 18 zuwa 35, mazauna Yobe State..."></textarea>
+<label>Eligibility</label>
+<textarea id="eligibility"></textarea>
 
-<label>Application Deadline / Ranar Rufe Nema</label>
+<label>Application Deadline</label>
 <input id="applicationDeadline" type="date">
 
-<label>How to Apply / Yadda Ake Nema</label>
-<textarea id="howToApply" placeholder="Bayyana matakan da mutum zai bi domin neman wannan dama..."></textarea>
+<label>How to Apply</label>
+<textarea id="howToApply"></textarea>
 
 <label>Official Application Link</label>
 <input id="applicationUrl" type="url" placeholder="https://official-website.com/apply">
 
-<label>Contact Information / Hanyar Tuntuɓa</label>
-<textarea id="contactInfo" placeholder="Email, Phone, WhatsApp ko adireshin hukumar..."></textarea>
-
-<div class="opportunity-note">
-<strong>MUHIMMI:</strong><br>
-Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hanyar da ba ka tabbatar da ita ba.
-</div>
+<label>Contact Information</label>
+<textarea id="contactInfo"></textarea>
 </div>
 
 <hr>
 
-<label>Hoton Labari</label>
+<h3>📸 Hoton Labari</h3>
+<label>Zaɓi Hoto daga Wayarka</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
 <button type="button" id="uploadImageBtn" onclick="uploadImage()">Upload Image</button>
 <div id="uploadMessage" class="message"></div>
 <img id="imagePreview" class="preview" alt="Image preview">
 
-<label>Image URL (ko saka URL kai tsaye)</label>
-<input id="imageUrl" type="url" placeholder="Image URL (optional)">
+<label>Image URL (optional)</label>
+<input id="imageUrl" type="url" placeholder="Image URL">
 
 <hr>
 
-<h3>Bidiyon Labari</h3>
-<label>Zaɓi Bidiyo daga Gallery na waya</label>
+<h3>🎬 Bidiyon Labari</h3>
+<label>Zaɓi Bidiyo daga Wayarka</label>
 <input id="videoFile" type="file" accept="video/*" onchange="previewSelectedVideo()">
-<p class="help">Zaɓi bidiyo daga wayarka, sannan danna Upload Video. Matsakaicin girman bidiyo 50MB ne.</p>
+<p class="help">Matsakaicin girman bidiyo 50MB.</p>
+button
 <button type="button" id="uploadVideoBtn" onclick="uploadVideo()">Upload Video</button>
 <div id="videoUploadMessage" class="message"></div>
 <video id="videoPreview" class="preview" controls playsinline preload="metadata"></video>
 
-<label>Video URL (ko saka URL kai tsaye)</label>
-<input id="videoUrl" type="url" placeholder="Video URL (optional)">
+<label>Video URL (optional)</label>
+<input id="videoUrl" type="url" placeholder="Video URL">
+
+<hr>
+
+<h3>🎧 AUDIO NEWS – Sautin Labari</h3>
+<label>Zaɓi Audio daga Wayarka</label>
+<input id="audioFile" type="file"
+accept="audio/mpeg,audio/mp4,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav"
+onchange="previewSelectedAudio()">
+
+<p class="help">
+Zaɓi MP3, M4A, AAC, OGG ko WAV daga wayarka. Matsakaicin girman audio 50MB.
+</p>
+
+<button type="button" id="uploadAudioBtn" onclick="uploadAudio()">🎧 Upload Audio</button>
+
+<div id="audioUploadMessage" class="message"></div>
+
+<audio id="audioPreview" class="audio-preview" controls preload="metadata"></audio>
+
+<p id="audioCurrent" class="small"></p>
+
+<button type="button" class="secondary hidden" id="removeAudioBtn" onclick="removeAudioSelection()">
+Cire sabon audio
+</button>
 
 <hr>
 
@@ -213,7 +207,6 @@ Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hany
 <button id="saveBtn" onclick="savePost()">Publish Story</button>
 <button class="secondary" onclick="clearForm()">Clear</button>
 <div id="formMessage" class="message"></div>
-
 </div>
 
 <div class="card">
@@ -224,16 +217,12 @@ Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hany
 
 <div class="push-panel">
 <h2>🔔 Aika Sanarwa</h2>
-<p>Aika sabon bayani ga masu amfani da USMAN YOBE TALK SHOW.</p>
-
+<p>Aika sabon bayani ga masu amfani.</p>
 <input id="pushTitle" type="text" placeholder="Taken sanarwa">
 <textarea id="pushMessage" placeholder="Rubuta sakon sanarwa..."></textarea>
-
-<button id="sendPushBtn" onclick="sendPushNotification()"
-style="background:#f5b400;color:#071b49">
+<button id="sendPushBtn" onclick="sendPushNotification()" style="background:#f5b400;color:#071b49">
 🔔 AIKA SANARWA
 </button>
-
 <p id="pushResult"></p>
 </div>
 
@@ -242,797 +231,611 @@ style="background:#f5b400;color:#071b49">
 
 <script>
 const SUPABASE_URL = "https://latxtetkscajmbqppnad.supabase.co";
-const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-
+const SUPABASE_KEY = "sb_publishable_1dey_UiqdrQ-DmGrK6Vf";
 const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let editingId = null;
 let currentPosts = [];
 let imageObjectURL = null;
 let videoObjectURL = null;
+let audioObjectURL = null;
+let currentAudioURL = "";
+let selectedAudioURL = "";
+let uploadedAudioURL = "";
 
 function showMessage(id,message,type){
-  const box = document.getElementById(id);
-  box.textContent = message;
-  box.className = "message " + type;
-  box.style.display = "block";
+ const box=document.getElementById(id);
+ box.textContent=message;
+ box.className="message "+type;
+ box.style.display="block";
 }
 
 function hideMessage(id){
-  document.getElementById(id).style.display = "none";
+ document.getElementById(id).style.display="none";
 }
 
 function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g,char=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  })[char]);
+ return String(value??"").replace(/[&<>"']/g,char=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[char]);
 }
 
 function isValidHttpURL(value){
-  try{
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:";
-  }catch{
-    return false;
-  }
+ try{
+  const url=new URL(value);
+  return url.protocol==="https:"||url.protocol==="http:";
+ }catch{return false;}
 }
 
 async function verifyAdmin(){
-  const {data:userData,error:userError} = await db.auth.getUser();
-
-  if(userError || !userData.user){
-    throw new Error("Ka fara shiga Admin.");
-  }
-
-  const {data:isAdmin,error:adminError} = await db.rpc("is_admin");
-
-  if(adminError) throw new Error(adminError.message);
-  if(isAdmin !== true) throw new Error("Ba ka da izinin Admin.");
+ const {data:userData,error:userError}=await db.auth.getUser();
+ if(userError||!userData.user) throw new Error("Ka fara shiga Admin.");
+ const {data:isAdmin,error:adminError}=await db.rpc("is_admin");
+ if(adminError) throw new Error(adminError.message);
+ if(isAdmin!==true) throw new Error("Ba ka da izinin Admin.");
 }
 
 async function login(){
-  hideMessage("loginMessage");
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const btn = document.getElementById("loginBtn");
-
-  if(!email || !password){
-    showMessage("loginMessage","Saka email da password.","error");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Ana shiga...";
-
-  try{
-    const {error} = await db.auth.signInWithPassword({email,password});
-    if(error) throw error;
-
-    await checkAdmin();
-  }catch(error){
-    showMessage("loginMessage","Matsalar shiga: "+error.message,"error");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = "Login";
-  }
+ hideMessage("loginMessage");
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const btn=document.getElementById("loginBtn");
+ if(!email||!password){
+  showMessage("loginMessage","Saka email da password.","error");return;
+ }
+ btn.disabled=true;btn.textContent="Ana shiga...";
+ try{
+  const {error}=await db.auth.signInWithPassword({email,password});
+  if(error) throw error;
+  await checkAdmin();
+ }catch(error){
+  showMessage("loginMessage","Matsalar shiga: "+error.message,"error");
+ }finally{btn.disabled=false;btn.textContent="Login";}
 }
 
 async function checkAdmin(){
-  try{
-    await verifyAdmin();
-
-    document.getElementById("loginSection").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-
-    await loadPosts();
-  }catch(error){
-    await db.auth.signOut();
-    showLogin();
-
-    showMessage(
-      "loginMessage",
-      "Ba a tabbatar da Admin ba: "+error.message,
-      "error"
-    );
-  }
+ try{
+  await verifyAdmin();
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  await loadPosts();
+ }catch(error){
+  await db.auth.signOut();showLogin();
+  showMessage("loginMessage","Ba a tabbatar da Admin ba: "+error.message,"error");
+ }
 }
 
 function showLogin(){
-  document.getElementById("loginSection").classList.remove("hidden");
-  document.getElementById("dashboard").classList.add("hidden");
+ document.getElementById("loginSection").classList.remove("hidden");
+ document.getElementById("dashboard").classList.add("hidden");
 }
 
 async function logout(){
-  await db.auth.signOut();
-  showLogin();
-
-  document.getElementById("password").value = "";
-
-  showMessage(
-    "loginMessage",
-    "Ka fita daga Admin Dashboard.",
-    "success"
-  );
+ await db.auth.signOut();showLogin();
+ document.getElementById("password").value="";
+ showMessage("loginMessage","Ka fita daga Admin Dashboard.","success");
 }
 
 function updateOpportunityFields(){
-  const isOpportunity =
-    document.getElementById("category").value === "Damar Rayuwa";
-
-  document.getElementById("opportunityGuide")
-    .classList.toggle("hidden",!isOpportunity);
-
-  document.getElementById("opportunityFields")
-    .classList.toggle("hidden",!isOpportunity);
+ const yes=document.getElementById("category").value==="Damar Rayuwa";
+ document.getElementById("opportunityGuide").classList.toggle("hidden",!yes);
+ document.getElementById("opportunityFields").classList.toggle("hidden",!yes);
 }
+document.getElementById("category").addEventListener("change",updateOpportunityFields);
 
-document.getElementById("category")
-  .addEventListener("change",updateOpportunityFields);
-
+/* IMAGE */
 function previewSelectedImage(){
-  const file = document.getElementById("imageFile").files[0];
-  const preview = document.getElementById("imagePreview");
-
-  if(!file) return;
-
-  if(!file.type.startsWith("image/")){
-    alert("Zaɓi hoto kawai.");
-    document.getElementById("imageFile").value = "";
-    return;
-  }
-
-  if(imageObjectURL) URL.revokeObjectURL(imageObjectURL);
-
-  imageObjectURL = URL.createObjectURL(file);
-  preview.src = imageObjectURL;
-  preview.style.display = "block";
+ const file=document.getElementById("imageFile").files[0];
+ if(!file)return;
+ if(!file.type.startsWith("image/")){
+  alert("Zaɓi hoto kawai.");document.getElementById("imageFile").value="";return;
+ }
+ if(imageObjectURL)URL.revokeObjectURL(imageObjectURL);
+ imageObjectURL=URL.createObjectURL(file);
+ const p=document.getElementById("imagePreview");
+ p.src=imageObjectURL;p.style.display="block";
 }
 
 async function uploadImage(){
-  const file = document.getElementById("imageFile").files[0];
-  const btn = document.getElementById("uploadImageBtn");
-
-  hideMessage("uploadMessage");
-
-  if(!file){
-    showMessage("uploadMessage","Da farko zaɓi hoto daga Gallery.","error");
-    return;
-  }
-
-  if(!file.type.startsWith("image/")){
-    showMessage("uploadMessage","Zaɓi hoto kawai.","error");
-    return;
-  }
-
-  if(file.size > 5*1024*1024){
-    showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Ana ɗora hoto...";
-
-  try{
-    await verifyAdmin();
-
-    const fileName =
-      Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
-
-    const path = "news/"+fileName;
-
-    const {error} = await db.storage.from("news-images").upload(
-      path,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      }
-    );
-
-    if(error) throw error;
-
-    const {data} = db.storage.from("news-images").getPublicUrl(path);
-
-    document.getElementById("imageUrl").value = data.publicUrl;
-    document.getElementById("imagePreview").src = data.publicUrl;
-
-    showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
-
-  }catch(error){
-    showMessage("uploadMessage","Matsala: "+error.message,"error");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = "Upload Image";
-  }
+ const file=document.getElementById("imageFile").files[0];
+ const btn=document.getElementById("uploadImageBtn");
+ hideMessage("uploadMessage");
+ if(!file){showMessage("uploadMessage","Da farko zaɓi hoto.","error");return;}
+ if(!file.type.startsWith("image/")){showMessage("uploadMessage","Zaɓi hoto kawai.","error");return;}
+ if(file.size>5*1024*1024){showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");return;}
+ btn.disabled=true;btn.textContent="Ana ɗora hoto...";
+ try{
+  await verifyAdmin();
+  const name=Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+  const path="news/"+name;
+  const {error}=await db.storage.from("news-images").upload(path,file,{
+   cacheControl:"3600",upsert:false,contentType:file.type
+  });
+  if(error)throw error;
+  const {data}=db.storage.from("news-images").getPublicUrl(path);
+  document.getElementById("imageUrl").value=data.publicUrl;
+  document.getElementById("imagePreview").src=data.publicUrl;
+  showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
+ }catch(error){showMessage("uploadMessage","Matsala: "+error.message,"error");}
+ finally{btn.disabled=false;btn.textContent="Upload Image";}
 }
 
+/* VIDEO */
 function previewSelectedVideo(){
-  const file = document.getElementById("videoFile").files[0];
-  const preview = document.getElementById("videoPreview");
-
-  if(!file) return;
-
-  if(!file.type.startsWith("video/")){
-    alert("Zaɓi bidiyo kawai.");
-    document.getElementById("videoFile").value = "";
-    return;
-  }
-
-  if(videoObjectURL) URL.revokeObjectURL(videoObjectURL);
-
-  videoObjectURL = URL.createObjectURL(file);
-  preview.src = videoObjectURL;
-  preview.style.display = "block";
-  preview.load();
+ const file=document.getElementById("videoFile").files[0];
+ if(!file)return;
+ if(!file.type.startsWith("video/")){
+  alert("Zaɓi bidiyo kawai.");document.getElementById("videoFile").value="";return;
+ }
+ if(videoObjectURL)URL.revokeObjectURL(videoObjectURL);
+ videoObjectURL=URL.createObjectURL(file);
+ const p=document.getElementById("videoPreview");
+ p.src=videoObjectURL;p.style.display="block";p.load();
 }
 
 async function uploadVideo(){
-  const file = document.getElementById("videoFile").files[0];
-  const btn = document.getElementById("uploadVideoBtn");
-
-  hideMessage("videoUploadMessage");
-
-  if(!file){
-    showMessage(
-      "videoUploadMessage",
-      "Da farko zaɓi bidiyo daga Gallery na waya.",
-      "error"
-    );
-    return;
-  }
-
-  if(!file.type.startsWith("video/")){
-    showMessage("videoUploadMessage","Fayil ɗin da ka zaɓa ba bidiyo ba ne.","error");
-    return;
-  }
-
-  if(file.size > 50*1024*1024){
-    showMessage("videoUploadMessage","Bidiyon ya wuce 50MB.","error");
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = "Ana ɗora bidiyo...";
-
-  try{
-    await verifyAdmin();
-
-    const safeName = file.name
-      .replace(/\.[^/.]+$/,"")
-      .replace(/[^a-zA-Z0-9_-]/g,"-")
-      .substring(0,60);
-
-    const extension = file.name.includes(".")
-      ? file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
-      : "mp4";
-
-    const fileName =
-      Date.now()+"-"+safeName+"."+(extension||"mp4");
-
-    const path = "videos/"+fileName;
-
-    const {error} = await db.storage.from("news-videos").upload(
-      path,file,{
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type
-      }
-    );
-
-    if(error) throw error;
-
-    const {data} = db.storage.from("news-videos").getPublicUrl(path);
-
-    document.getElementById("videoUrl").value = data.publicUrl;
-
-    const preview = document.getElementById("videoPreview");
-
-    if(videoObjectURL){
-      URL.revokeObjectURL(videoObjectURL);
-      videoObjectURL = null;
-    }
-
-    preview.src = data.publicUrl;
-    preview.style.display = "block";
-    preview.load();
-
-    showMessage("videoUploadMessage","An ɗora bidiyon cikin nasara!","success");
-
-  }catch(error){
-    showMessage(
-      "videoUploadMessage",
-      "An kasa ɗora bidiyon: "+error.message,
-      "error"
-    );
-  }finally{
-    btn.disabled = false;
-    btn.textContent = "Upload Video";
-  }
+ const file=document.getElementById("videoFile").files[0];
+ const btn=document.getElementById("uploadVideoBtn");
+ hideMessage("videoUploadMessage");
+ if(!file){showMessage("videoUploadMessage","Da farko zaɓi bidiyo.","error");return;}
+ if(!file.type.startsWith("video/")){showMessage("videoUploadMessage","Zaɓi bidiyo kawai.","error");return;}
+ if(file.size>50*1024*1024){showMessage("videoUploadMessage","Bidiyon ya wuce 50MB.","error");return;}
+ btn.disabled=true;btn.textContent="Ana ɗora bidiyo...";
+ try{
+  await verifyAdmin();
+  const safe=file.name.replace(/\.[^/.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
+  const ext=file.name.includes(".")?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,""):"mp4";
+  const path="videos/"+Date.now()+"-"+safe+"."+(ext||"mp4");
+  const {error}=await db.storage.from("news-videos").upload(path,file,{
+   cacheControl:"3600",upsert:false,contentType:file.type
+  });
+  if(error)throw error;
+  const {data}=db.storage.from("news-videos").getPublicUrl(path);
+  document.getElementById("videoUrl").value=data.publicUrl;
+  if(videoObjectURL){URL.revokeObjectURL(videoObjectURL);videoObjectURL=null;}
+  const p=document.getElementById("videoPreview");
+  p.src=data.publicUrl;p.style.display="block";p.load();
+  showMessage("videoUploadMessage","An ɗora bidiyon cikin nasara!","success");
+ }catch(error){showMessage("videoUploadMessage","Matsala: "+error.message,"error");}
+ finally{btn.disabled=false;btn.textContent="Upload Video";}
 }
 
-/* SAVE NEWS + BREAKING NEWS ALERT */
+/* AUDIO UPLOAD */
+function previewSelectedAudio(){
+ const file=document.getElementById("audioFile").files[0];
+ if(!file)return;
+
+ const allowed=["audio/mpeg","audio/mp4","audio/aac","audio/ogg","audio/wav","audio/x-wav","audio/mp4a-latm"];
+ const ext=file.name.split(".").pop().toLowerCase();
+ const allowedExt=["mp3","m4a","aac","ogg","wav"];
+
+ if(!file.type.startsWith("audio/")&&!allowedExt.includes(ext)){
+  alert("Zaɓi audio MP3, M4A, AAC, OGG ko WAV.");
+  document.getElementById("audioFile").value="";
+  return;
+ }
+
+ if(file.size>50*1024*1024){
+  alert("Audio bai kamata ya wuce 50MB ba.");
+  document.getElementById("audioFile").value="";
+  return;
+ }
+
+ if(audioObjectURL)URL.revokeObjectURL(audioObjectURL);
+ audioObjectURL=URL.createObjectURL(file);
+
+ const player=document.getElementById("audioPreview");
+ player.src=audioObjectURL;
+ player.style.display="block";
+ player.load();
+
+ document.getElementById("audioCurrent").textContent="An zaɓi: "+file.name;
+ document.getElementById("removeAudioBtn").classList.remove("hidden");
+ hideMessage("audioUploadMessage");
+}
+
+function removeAudioSelection(){
+ const player=document.getElementById("audioPreview");
+ player.pause();player.removeAttribute("src");player.load();
+ player.style.display="none";
+
+ if(audioObjectURL){URL.revokeObjectURL(audioObjectURL);audioObjectURL=null;}
+
+ document.getElementById("audioFile").value="";
+ document.getElementById("audioCurrent").textContent="";
+ document.getElementById("removeAudioBtn").classList.add("hidden");
+ selectedAudioURL="";
+ uploadedAudioURL="";
+}
+
+async function uploadAudio(){
+ const file=document.getElementById("audioFile").files[0];
+ const btn=document.getElementById("uploadAudioBtn");
+ hideMessage("audioUploadMessage");
+
+ if(!file){
+  showMessage("audioUploadMessage","Da farko zaɓi audio daga wayarka.","error");return;
+ }
+ if(file.size>50*1024*1024){
+  showMessage("audioUploadMessage","Audio ya wuce 50MB.","error");return;
+ }
+
+ btn.disabled=true;btn.textContent="Ana ɗora audio...";
+
+ try{
+  await verifyAdmin();
+
+  const safe=file.name.replace(/\.[^/.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
+  const ext=file.name.includes(".")?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,""):"mp3";
+  const path="audio/"+Date.now()+"-"+safe+"."+(ext||"mp3");
+
+  const contentType=file.type||(
+   ext==="mp3"?"audio/mpeg":
+   ext==="m4a"?"audio/mp4":
+   ext==="ogg"?"audio/ogg":
+   ext==="wav"?"audio/wav":"audio/aac"
+  );
+
+  const {error}=await db.storage.from("news-audio").upload(path,file,{
+   cacheControl:"3600",
+   upsert:false,
+   contentType:contentType
+  });
+
+  if(error)throw error;
+
+  const {data}=db.storage.from("news-audio").getPublicUrl(path);
+
+  selectedAudioURL=data.publicUrl;
+  uploadedAudioURL=data.publicUrl;
+
+  const player=document.getElementById("audioPreview");
+  if(audioObjectURL){URL.revokeObjectURL(audioObjectURL);audioObjectURL=null;}
+  player.src=data.publicUrl;
+  player.style.display="block";
+  player.load();
+
+  document.getElementById("audioCurrent").textContent="An ɗora audio: "+file.name;
+
+  showMessage("audioUploadMessage","An ɗora Audio cikin nasara! Za a haɗa shi da labari idan ka danna Publish.","success");
+
+ }catch(error){
+  showMessage("audioUploadMessage","An kasa ɗora audio: "+error.message,"error");
+ }finally{
+  btn.disabled=false;
+  btn.textContent="🎧 Upload Audio";
+ }
+}
+
+/* SAVE NEWS */
 async function savePost(){
-  hideMessage("formMessage");
+ hideMessage("formMessage");
 
-  const title = document.getElementById("newsTitle").value.trim();
-  const category = document.getElementById("category").value;
-  const is_breaking_news =
-    document.getElementById("isBreakingNews").checked;
+ const title=document.getElementById("newsTitle").value.trim();
+ const category=document.getElementById("category").value;
+ const is_breaking_news=document.getElementById("isBreakingNews").checked;
+ const image_url=document.getElementById("imageUrl").value.trim();
+ const video_url=document.getElementById("videoUrl").value.trim();
+ const excerpt=document.getElementById("excerpt").value.trim();
+ const content=document.getElementById("content").value.trim();
+ const status=document.getElementById("status").value;
+ const isOpportunity=category==="Damar Rayuwa";
 
-  const image_url = document.getElementById("imageUrl").value.trim();
-  const video_url = document.getElementById("videoUrl").value.trim();
-  const excerpt = document.getElementById("excerpt").value.trim();
-  const content = document.getElementById("content").value.trim();
-  const status = document.getElementById("status").value;
-  const isOpportunity = category === "Damar Rayuwa";
+ const opportunity_type=isOpportunity?document.getElementById("opportunityType").value:null;
+ const eligibility=isOpportunity?document.getElementById("eligibility").value.trim():null;
+ const application_deadline=isOpportunity?document.getElementById("applicationDeadline").value||null:null;
+ const how_to_apply=isOpportunity?document.getElementById("howToApply").value.trim():null;
+ const application_url=isOpportunity?document.getElementById("applicationUrl").value.trim():null;
+ const contact_info=isOpportunity?document.getElementById("contactInfo").value.trim():null;
 
-  const opportunity_type = isOpportunity
-    ? document.getElementById("opportunityType").value : null;
+ if(!title||!content){
+  showMessage("formMessage","Saka taken labari da cikakken bayani.","error");return;
+ }
+ if(image_url&&!isValidHttpURL(image_url)){
+  showMessage("formMessage","Image URL ba daidai ba ne.","error");return;
+ }
+ if(video_url&&!isValidHttpURL(video_url)){
+  showMessage("formMessage","Video URL ba daidai ba ne.","error");return;
+ }
+ if(application_url&&!isValidHttpURL(application_url)){
+  showMessage("formMessage","Application Link ba daidai ba ne.","error");return;
+ }
+ if(isOpportunity&&!opportunity_type){
+  showMessage("formMessage","Zaɓi nau'in damar rayuwa.","error");return;
+ }
 
-  const eligibility = isOpportunity
-    ? document.getElementById("eligibility").value.trim() : null;
+ const btn=document.getElementById("saveBtn");
+ const isEditing=editingId!==null;
+ const existingPost=isEditing?currentPosts.find(p=>String(p.id)===String(editingId)):null;
+ const wasPublished=existingPost?.status==="published";
 
-  const application_deadline = isOpportunity
-    ? document.getElementById("applicationDeadline").value || null : null;
+ const shouldSendPush=status==="published"&&(
+  !wasPublished||
+  (is_breaking_news&&existingPost?.is_breaking_news!==true)
+ );
 
-  const how_to_apply = isOpportunity
-    ? document.getElementById("howToApply").value.trim() : null;
+ btn.disabled=true;btn.textContent="Ana adanawa...";
 
-  const application_url = isOpportunity
-    ? document.getElementById("applicationUrl").value.trim() : null;
+ try{
+  await verifyAdmin();
 
-  const contact_info = isOpportunity
-    ? document.getElementById("contactInfo").value.trim() : null;
+  const now=new Date().toISOString();
 
-  if(!title || !content){
-    showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
-    return;
+  const post={
+   title,
+   category,
+   is_breaking_news,
+   image_url:image_url||null,
+   video_url:video_url||null,
+   audio_url:selectedAudioURL||existingPost?.audio_url||null,
+   excerpt:excerpt||null,
+   content,
+   status,
+   opportunity_type,
+   eligibility,
+   application_deadline,
+   how_to_apply,
+   application_url:application_url||null,
+   contact_info,
+   updated_at:now,
+   published_at:status==="published"?(existingPost?.published_at||now):null
+  };
+
+  let result;
+
+  if(isEditing){
+   result=await db.from("news_posts").update(post).eq("id",editingId).select("id").single();
+  }else{
+   result=await db.from("news_posts").insert(post).select("id").single();
   }
 
-  if(image_url && !isValidHttpURL(image_url)){
-    showMessage("formMessage","Image URL ba daidai ba ne.","error");
-    return;
-  }
+  if(result.error)throw result.error;
 
-  if(video_url && !isValidHttpURL(video_url)){
-    showMessage("formMessage","Video URL ba daidai ba ne.","error");
-    return;
-  }
+  const savedPostId=result.data.id;
 
-  if(isOpportunity && !opportunity_type){
-    showMessage("formMessage","Da fatan zaɓi nau'in damar rayuwa.","error");
-    return;
-  }
+  let successMessage=isOpportunity
+   ?"An adana DAMAR RAYUWA cikin nasara!"
+   :"An adana labarin cikin nasara!";
 
-  if(application_url && !isValidHttpURL(application_url)){
-    showMessage("formMessage","Application Link ba daidai ba ne.","error");
-    return;
-  }
+  if(is_breaking_news&&status==="published")successMessage+=" 🚨 BREAKING NEWS!";
+  if(post.audio_url)successMessage+=" 🎧 Audio yana tare da labarin.";
 
-  const btn = document.getElementById("saveBtn");
-  const isEditing = editingId !== null;
+  if(shouldSendPush){
+   try{
+    const pushTitle=is_breaking_news?"🚨 BREAKING NEWS: "+title:"SABON LABARI: "+title;
+    const {data,error}=await db.functions.invoke("send-push-notification",{
+     body:{
+      title:pushTitle,
+      body:excerpt||content.substring(0,180),
+      url:"./?article="+encodeURIComponent(savedPostId)
+     }
+    });
 
-  const existingPost = isEditing
-    ? currentPosts.find(item => String(item.id) === String(editingId))
-    : null;
-
-  const wasPublished = existingPost?.status === "published";
-
-  const shouldSendPush =
-    status === "published" &&
-    (
-      !wasPublished ||
-      (is_breaking_news && existingPost?.is_breaking_news !== true)
-    );
-
-  btn.disabled = true;
-  btn.textContent = "Ana adanawa...";
-
-  try{
-    await verifyAdmin();
-
-    const now = new Date().toISOString();
-
-    const post = {
-      title,
-      category,
-      is_breaking_news,
-      image_url: image_url || null,
-      video_url: video_url || null,
-      excerpt: excerpt || null,
-      content,
-      status,
-      opportunity_type,
-      eligibility,
-      application_deadline,
-      how_to_apply,
-      application_url: application_url || null,
-      contact_info,
-      updated_at: now,
-      published_at: status === "published"
-        ? (existingPost?.published_at || now)
-        : null
-    };
-
-    let result;
-
-    if(isEditing){
-      result = await db.from("news_posts")
-        .update(post)
-        .eq("id",editingId)
-        .select("id")
-        .single();
-    }else{
-      result = await db.from("news_posts")
-        .insert(post)
-        .select("id")
-        .single();
+    if(error){
+     let details=error.message;
+     if(error.context instanceof Response){
+      try{details=await error.context.clone().text();}catch(e){}
+     }
+     throw new Error(details);
     }
 
-    if(result.error) throw result.error;
+    if(!data||!data.success)throw new Error(data?.error||"An kasa aika sanarwa.");
 
-    const savedPostId = result.data.id;
-
-    let successMessage = isOpportunity
-      ? "An adana DAMAR RAYUWA cikin nasara!"
-      : "An adana labarin cikin nasara!";
-
-    if(is_breaking_news && status === "published"){
-      successMessage += " 🚨 BREAKING NEWS!";
-    }
-
-    /* AUTOMATIC PUSH NOTIFICATION */
-    if(shouldSendPush){
-      try{
-        const pushTitle = is_breaking_news
-          ? "🚨 BREAKING NEWS: " + title
-          : "SABON LABARI: " + title;
-
-        const pushBody = excerpt || content.substring(0,180);
-
-        const {data,error} = await db.functions.invoke(
-          "send-push-notification",
-          {
-            body:{
-              title:pushTitle,
-              body:pushBody,
-              url:"./?article=" + encodeURIComponent(savedPostId)
-            }
-          }
-        );
-
-        if(error){
-          let details = error.message;
-
-          if(error.context instanceof Response){
-            try{
-              details = await error.context.clone().text();
-            }catch(e){}
-          }
-
-          throw new Error(details);
-        }
-
-        if(!data || !data.success){
-          throw new Error(data?.error || "An kasa aika sanarwa.");
-        }
-
-        successMessage +=
-          " An aika sanarwa: "+data.sent+
-          " | An kasa: "+data.failed;
-
-      }catch(pushError){
-        console.error("Automatic Push Error:",pushError);
-
-        successMessage +=
-          " Amma sanarwar ba ta tafi ba: "+pushError.message;
-      }
-    }
-
-    showMessage("formMessage",successMessage,"success");
-
-    clearForm();
-    await loadPosts();
-
-  }catch(error){
-    showMessage("formMessage","Matsala: "+error.message,"error");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = editingId !== null
-      ? "Save Changes"
-      : "Publish Story";
+    successMessage+=" An aika sanarwa: "+data.sent+" | An kasa: "+data.failed;
+   }catch(pushError){
+    console.error("Automatic Push Error:",pushError);
+    successMessage+=" Amma sanarwar ba ta tafi ba: "+pushError.message;
+   }
   }
+
+  showMessage("formMessage",successMessage,"success");
+  clearForm();
+  await loadPosts();
+
+ }catch(error){
+  showMessage("formMessage","Matsala: "+error.message,"error");
+ }finally{
+  btn.disabled=false;
+  btn.textContent=editingId!==null?"Save Changes":"Publish Story";
+ }
 }
 
 function clearForm(){
-  editingId = null;
+ editingId=null;
 
-  [
-    "newsTitle","imageUrl","videoUrl","excerpt","content",
-    "opportunityType","eligibility","applicationDeadline",
-    "howToApply","applicationUrl","contactInfo"
-  ].forEach(id=>{
-    document.getElementById(id).value = "";
-  });
+ [
+  "newsTitle","imageUrl","videoUrl","excerpt","content",
+  "opportunityType","eligibility","applicationDeadline",
+  "howToApply","applicationUrl","contactInfo"
+ ].forEach(id=>document.getElementById(id).value="");
 
-  document.getElementById("isBreakingNews").checked = false;
+ document.getElementById("isBreakingNews").checked=false;
+ document.getElementById("imageFile").value="";
+ document.getElementById("videoFile").value="";
 
-  document.getElementById("imageFile").value = "";
-  document.getElementById("videoFile").value = "";
+ const img=document.getElementById("imagePreview");
+ img.style.display="none";img.src="";
 
-  document.getElementById("imagePreview").style.display = "none";
-  document.getElementById("imagePreview").src = "";
+ const video=document.getElementById("videoPreview");
+ video.pause();video.removeAttribute("src");video.load();video.style.display="none";
 
-  const video = document.getElementById("videoPreview");
-  video.pause();
-  video.removeAttribute("src");
-  video.load();
-  video.style.display = "none";
+ removeAudioSelection();
 
-  document.getElementById("category").value = "News";
-  document.getElementById("status").value = "published";
+ document.getElementById("category").value="News";
+ document.getElementById("status").value="published";
+ updateOpportunityFields();
 
-  updateOpportunityFields();
+ if(imageObjectURL){URL.revokeObjectURL(imageObjectURL);imageObjectURL=null;}
+ if(videoObjectURL){URL.revokeObjectURL(videoObjectURL);videoObjectURL=null;}
 
-  if(imageObjectURL){
-    URL.revokeObjectURL(imageObjectURL);
-    imageObjectURL = null;
-  }
+ document.getElementById("formTitle").textContent="Publish New Story";
+ document.getElementById("saveBtn").textContent="Publish Story";
 
-  if(videoObjectURL){
-    URL.revokeObjectURL(videoObjectURL);
-    videoObjectURL = null;
-  }
-
-  document.getElementById("formTitle").textContent = "Publish New Story";
-  document.getElementById("saveBtn").textContent = "Publish Story";
-
-  hideMessage("uploadMessage");
-  hideMessage("videoUploadMessage");
+ hideMessage("uploadMessage");
+ hideMessage("videoUploadMessage");
+ hideMessage("audioUploadMessage");
 }
 
 async function loadPosts(){
-  const area = document.getElementById("posts");
-  area.textContent = "Loading news...";
+ const area=document.getElementById("posts");
+ area.textContent="Loading news...";
 
-  try{
-    const {data,error} = await db.from("news_posts")
-      .select("*")
-      .order("created_at",{ascending:false});
+ try{
+  const {data,error}=await db.from("news_posts").select("*").order("created_at",{ascending:false});
+  if(error)throw error;
 
-    if(error) throw error;
+  currentPosts=data||[];
 
-    currentPosts = data || [];
+  if(!currentPosts.length){area.textContent="Babu labari tukuna.";return;}
 
-    if(currentPosts.length === 0){
-      area.textContent = "Babu labari tukuna.";
-      return;
-    }
+  area.innerHTML=currentPosts.map(post=>`
+   <div class="post">
+    ${post.is_breaking_news===true?'<span class="breaking-badge">🚨 BREAKING NEWS</span>':""}
+    ${post.audio_url?'<span class="audio-badge">🎧 AUDIO NEWS</span>':""}
+    <h4>${escapeHTML(post.title)}</h4>
+    <p class="small">${escapeHTML(post.category)} | ${escapeHTML(post.status)}</p>
+    <p>${escapeHTML(post.excerpt||"")}</p>
+    ${post.category==="Damar Rayuwa"?`
+     <p class="small">DAMAR RAYUWA | ${escapeHTML(post.opportunity_type||"Ba a zaɓa ba")}</p>
+     ${post.application_deadline?`<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>`:""}
+     ${post.application_url?'<p class="small">Application link: An saka</p>':""}
+    `:""}
+    ${post.video_url?'<p class="small">▶ Akwai bidiyo</p>':""}
+    ${post.audio_url?'<p class="small">🎧 Akwai sautin labari</p>':""}
+    <div class="actions">
+     <button class="secondary" data-action="edit" data-id="${escapeHTML(post.id)}">Edit</button>
+     <button class="danger" data-action="delete" data-id="${escapeHTML(post.id)}">Delete</button>
+    </div>
+   </div>
+  `).join("");
 
-    area.innerHTML = currentPosts.map(post=>`
-      <div class="post">
-
-        ${post.is_breaking_news === true
-          ? '<span class="breaking-badge">🚨 BREAKING NEWS</span>'
-          : ''}
-
-        <h4>${escapeHTML(post.title)}</h4>
-
-        <p class="small">
-          ${escapeHTML(post.category)} |
-          ${escapeHTML(post.status)}
-        </p>
-
-        <p>${escapeHTML(post.excerpt || "")}</p>
-
-        ${post.category === "Damar Rayuwa" ? `
-          <p class="small">
-            DAMAR RAYUWA |
-            ${escapeHTML(post.opportunity_type || "Ba a zaɓa ba")}
-          </p>
-
-          ${post.application_deadline
-            ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>`
-            : ""}
-
-          ${post.application_url
-            ? `<p class="small">Application link: An saka</p>`
-            : ""}
-        ` : ""}
-
-        ${post.video_url
-          ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>'
-          : ""}
-
-        <div class="actions">
-          <button class="secondary"
-            data-action="edit"
-            data-id="${escapeHTML(post.id)}">Edit</button>
-
-          <button class="danger"
-            data-action="delete"
-            data-id="${escapeHTML(post.id)}">Delete</button>
-        </div>
-      </div>
-    `).join("");
-
-  }catch(error){
-    area.textContent = "Matsala: "+error.message;
-  }
+ }catch(error){area.textContent="Matsala: "+error.message;}
 }
 
 document.getElementById("posts").addEventListener("click",event=>{
-  const button = event.target.closest("button[data-action]");
-  if(!button) return;
-
-  const id = button.dataset.id;
-
-  if(button.dataset.action === "edit") editPost(id);
-  if(button.dataset.action === "delete") deletePost(id);
+ const button=event.target.closest("button[data-action]");
+ if(!button)return;
+ const id=button.dataset.id;
+ if(button.dataset.action==="edit")editPost(id);
+ if(button.dataset.action==="delete")deletePost(id);
 });
 
 function editPost(id){
-  const post = currentPosts.find(
-    item=>String(item.id) === String(id)
-  );
+ const post=currentPosts.find(item=>String(item.id)===String(id));
+ if(!post)return;
 
-  if(!post) return;
+ editingId=post.id;
 
-  editingId = post.id;
+ document.getElementById("newsTitle").value=post.title||"";
+ document.getElementById("category").value=post.category||"News";
+ document.getElementById("isBreakingNews").checked=post.is_breaking_news===true;
+ updateOpportunityFields();
 
-  document.getElementById("newsTitle").value = post.title || "";
-  document.getElementById("category").value = post.category || "News";
+ document.getElementById("opportunityType").value=post.opportunity_type||"";
+ document.getElementById("eligibility").value=post.eligibility||"";
+ document.getElementById("applicationDeadline").value=post.application_deadline||"";
+ document.getElementById("howToApply").value=post.how_to_apply||"";
+ document.getElementById("applicationUrl").value=post.application_url||"";
+ document.getElementById("contactInfo").value=post.contact_info||"";
 
-  document.getElementById("isBreakingNews").checked =
-    post.is_breaking_news === true;
+ document.getElementById("imageUrl").value=post.image_url||"";
+ document.getElementById("videoUrl").value=post.video_url||"";
+ document.getElementById("excerpt").value=post.excerpt||"";
+ document.getElementById("content").value=post.content||"";
+ document.getElementById("status").value=post.status||"draft";
 
-  updateOpportunityFields();
+ removeAudioSelection();
+ selectedAudioURL="";
 
-  document.getElementById("opportunityType").value = post.opportunity_type || "";
-  document.getElementById("eligibility").value = post.eligibility || "";
-  document.getElementById("applicationDeadline").value = post.application_deadline || "";
-  document.getElementById("howToApply").value = post.how_to_apply || "";
-  document.getElementById("applicationUrl").value = post.application_url || "";
-  document.getElementById("contactInfo").value = post.contact_info || "";
+ if(post.audio_url){
+  currentAudioURL=post.audio_url;
+  const player=document.getElementById("audioPreview");
+  player.src=post.audio_url;
+  player.style.display="block";
+  player.load();
+  document.getElementById("audioCurrent").textContent="🎧 Wannan labari yana da audio. Za a ci gaba da amfani da shi idan ba ka ɗora wani sabon audio ba.";
+ }
 
-  document.getElementById("imageUrl").value = post.image_url || "";
-  document.getElementById("videoUrl").value = post.video_url || "";
-  document.getElementById("excerpt").value = post.excerpt || "";
-  document.getElementById("content").value = post.content || "";
-  document.getElementById("status").value = post.status || "draft";
+ document.getElementById("formTitle").textContent="Edit News";
+ document.getElementById("saveBtn").textContent="Save Changes";
 
-  document.getElementById("formTitle").textContent = "Edit News";
-  document.getElementById("saveBtn").textContent = "Save Changes";
+ const imagePreview=document.getElementById("imagePreview");
+ if(post.image_url&&isValidHttpURL(post.image_url)){
+  imagePreview.src=post.image_url;imagePreview.style.display="block";
+ }else{imagePreview.style.display="none";}
 
-  const imagePreview = document.getElementById("imagePreview");
+ const videoPreview=document.getElementById("videoPreview");
+ if(post.video_url&&isValidHttpURL(post.video_url)){
+  videoPreview.src=post.video_url;videoPreview.style.display="block";videoPreview.load();
+ }else{
+  videoPreview.removeAttribute("src");videoPreview.style.display="none";
+ }
 
-  if(post.image_url && isValidHttpURL(post.image_url)){
-    imagePreview.src = post.image_url;
-    imagePreview.style.display = "block";
-  }else{
-    imagePreview.style.display = "none";
-  }
-
-  const videoPreview = document.getElementById("videoPreview");
-
-  if(post.video_url && isValidHttpURL(post.video_url)){
-    videoPreview.src = post.video_url;
-    videoPreview.style.display = "block";
-    videoPreview.load();
-  }else{
-    videoPreview.removeAttribute("src");
-    videoPreview.style.display = "none";
-  }
-
-  window.scrollTo({top:0,behavior:"smooth"});
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
 async function deletePost(id){
-  if(!confirm("Da gaske kana son goge wannan labari?")) return;
-
-  try{
-    await verifyAdmin();
-
-    const {error} = await db.from("news_posts")
-      .delete()
-      .eq("id",id);
-
-    if(error) throw error;
-
-    alert("An goge labarin.");
-    await loadPosts();
-
-  }catch(error){
-    alert("Matsala: "+error.message);
-  }
+ if(!confirm("Da gaske kana son goge wannan labari?"))return;
+ try{
+  await verifyAdmin();
+  const {error}=await db.from("news_posts").delete().eq("id",id);
+  if(error)throw error;
+  alert("An goge labarin.");
+  await loadPosts();
+ }catch(error){alert("Matsala: "+error.message);}
 }
 
-/* MANUAL PUSH NOTIFICATION */
+/* MANUAL PUSH */
 async function sendPushNotification(){
-  const title = document.getElementById("pushTitle").value.trim();
-  const message = document.getElementById("pushMessage").value.trim();
-  const result = document.getElementById("pushResult");
-  const button = document.getElementById("sendPushBtn");
+ const title=document.getElementById("pushTitle").value.trim();
+ const message=document.getElementById("pushMessage").value.trim();
+ const result=document.getElementById("pushResult");
+ const button=document.getElementById("sendPushBtn");
 
-  if(!title || !message){
-    result.textContent = "Ka cika taken da sakon sanarwa.";
-    return;
+ if(!title||!message){result.textContent="Ka cika taken da sakon sanarwa.";return;}
+ if(!confirm("Kana tabbatar da aika wannan sanarwa?"))return;
+
+ button.disabled=true;button.textContent="Ana aika sanarwa...";
+ result.textContent="Ana haɗawa da Supabase...";
+
+ try{
+  await verifyAdmin();
+  const {data,error}=await db.functions.invoke("send-push-notification",{
+   body:{title:title,body:message,url:"./"}
+  });
+
+  if(error){
+   let details=error.message;
+   if(error.context instanceof Response){
+    try{details=await error.context.clone().text();}catch(e){}
+   }
+   throw new Error(details);
   }
 
-  if(!confirm("Kana tabbatar da aika wannan sanarwa ga masu amfani?")){
-    return;
-  }
+  if(!data||!data.success)throw new Error(data?.error||"An kasa aika sanarwa.");
 
-  button.disabled = true;
-  button.textContent = "Ana aika sanarwa...";
-  result.textContent = "Ana haɗawa da Supabase...";
+  result.textContent="An gama! An aika: "+data.sent+" | An kasa: "+data.failed+" | Jimilla: "+data.total;
+  document.getElementById("pushTitle").value="";
+  document.getElementById("pushMessage").value="";
 
-  try{
-    await verifyAdmin();
-
-    const {data,error} = await db.functions.invoke(
-      "send-push-notification",
-      {
-        body:{
-          title:title,
-          body:message,
-          url:"./"
-        }
-      }
-    );
-
-    if(error){
-      let details = error.message;
-
-      if(error.context instanceof Response){
-        try{
-          details = await error.context.clone().text();
-        }catch(e){}
-      }
-
-      throw new Error(details);
-    }
-
-    if(!data || !data.success){
-      throw new Error(data?.error || "An kasa aika sanarwa.");
-    }
-
-    result.textContent =
-      "An gama! An aika: "+data.sent+
-      " | An kasa: "+data.failed+
-      " | Jimilla: "+data.total;
-
-    document.getElementById("pushTitle").value = "";
-    document.getElementById("pushMessage").value = "";
-
-  }catch(error){
-    console.error("Push error:",error);
-    result.textContent = "Matsala: "+error.message;
-  }finally{
-    button.disabled = false;
-    button.textContent = "🔔 AIKA SANARWA";
-  }
+ }catch(error){
+  console.error("Push error:",error);
+  result.textContent="Matsala: "+error.message;
+ }finally{
+  button.disabled=false;
+  button.textContent="🔔 AIKA SANARWA";
+ }
 }
 
 db.auth.onAuthStateChange((event,session)=>{
-  if(event === "SIGNED_OUT") showLogin();
+ if(event==="SIGNED_OUT")showLogin();
 });
 
 (async function start(){
-  const {data,error} = await db.auth.getSession();
-
-  if(error){
-    showLogin();
-    return;
-  }
-
-  if(data.session) await checkAdmin();
+ const {data,error}=await db.auth.getSession();
+ if(error){showLogin();return;}
+ if(data.session)await checkAdmin();
 })();
 </script>
-
 </body>
 </html>
