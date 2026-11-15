@@ -750,8 +750,17 @@ async function sendPushNotification() {
       }
     );
 
-    if (error) throw error;
+    if (error) {
+  let details = error.message;
 
+  if (error.context instanceof Response) {
+    try {
+      details = await error.context.clone().text();
+    } catch (e) {}
+  }
+
+  throw new Error(details);
+}
     if (!data || !data.success) {
       throw new Error(data?.error || "An kasa aika sanarwa.");
     }
