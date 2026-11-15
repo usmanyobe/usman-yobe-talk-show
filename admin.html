@@ -696,5 +696,82 @@ db.auth.onAuthStateChange((event,session)=>{
 })();
 </script>
 
+<!-- PUSH NOTIFICATION PANEL -->
+<div style="background:#071b49;color:white;padding:20px;margin:20px;border-radius:14px">
+  <h2>🔔 Aika Sanarwa</h2>
+  <p>Aika sabon bayani ga masu amfani da USMAN YOBE TALK SHOW.</p>
+
+  <input id="pushTitle"
+    type="text"
+    placeholder="Taken sanarwa"
+    style="width:100%;padding:12px;margin:8px 0;border-radius:7px">
+
+  <textarea id="pushMessage"
+    placeholder="Rubuta sakon sanarwa..."
+    style="width:100%;padding:12px;margin:8px 0;border-radius:7px;min-height:100px"></textarea>
+
+  <button id="sendPushBtn" onclick="sendPushNotification()"
+    style="background:#f5b400;color:#071b49;padding:13px 20px;border:0;border-radius:8px;font-weight:bold">
+    🔔 AIKA SANARWA
+  </button>
+
+  <p id="pushResult"></p>
+</div>
+  
+<script>
+async function sendPushNotification() {
+  const title = document.getElementById("pushTitle").value.trim();
+  const message = document.getElementById("pushMessage").value.trim();
+  const result = document.getElementById("pushResult");
+  const button = document.getElementById("sendPushBtn");
+
+  if (!title || !message) {
+    result.textContent = "Ka cika taken da sakon sanarwa.";
+    return;
+  }
+
+  if (!confirm("Kana tabbatar da aika wannan sanarwa ga masu amfani?")) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Ana aika sanarwa...";
+  result.textContent = "Ana haɗawa da Supabase...";
+
+  try {
+    const { data, error } = await db.functions.invoke(
+      "send-push-notification",
+      {
+        body: {
+          title: title,
+          body: message,
+          url: "./"
+        }
+      }
+    );
+
+    if (error) throw error;
+
+    if (!data || !data.success) {
+      throw new Error(data?.error || "An kasa aika sanarwa.");
+    }
+
+    result.textContent =
+      "An gama! An aika: " + data.sent +
+      " | An kasa: " + data.failed +
+      " | Jimilla: " + data.total;
+
+    document.getElementById("pushTitle").value = "";
+    document.getElementById("pushMessage").value = "";
+
+  } catch (error) {
+    console.error("Push error:", error);
+    result.textContent = "Matsala: " + error.message;
+  } finally {
+    button.disabled = false;
+    button.textContent = "🔔 AIKA SANARWA";
+  }
+}
+                                         </script>
 </body>
 </html>
