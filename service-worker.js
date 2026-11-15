@@ -113,12 +113,10 @@ self.addEventListener("notificationclick", event => {
 
   const target = new URL(
     event.notification.data?.url || "./",
-    self.location.origin
+    self.registration.scope
   );
 
-  if (target.origin !== self.location.origin) {
-    return;
-  }
+  if (target.origin !== self.location.origin) return;
 
   event.waitUntil(
     self.clients.matchAll({
