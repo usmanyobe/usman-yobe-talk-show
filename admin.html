@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101827">
 <title>USMAN YOBE TALK SHOW - Admin</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
@@ -42,6 +41,8 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .opportunity-fields{border:1px solid #d9e2f0;background:#f8faff;padding:15px;border-radius:10px;margin:15px 0}
 .opportunity-fields h3{margin-bottom:8px}
 hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
+.push-panel{background:#071b49;color:white;padding:20px;margin-bottom:20px;border-radius:14px}
+.push-panel input,.push-panel textarea{color:#182333}
 </style>
 </head>
 
@@ -186,6 +187,23 @@ Ka tabbatar application link ɗin sahihin shafin hukuma ne. Kada ka wallafa hany
 <div id="posts">Loading news...</div>
 </div>
 
+<!-- MANUAL PUSH NOTIFICATION -->
+<div class="push-panel">
+<h2>🔔 Aika Sanarwa</h2>
+<p>Aika sabon bayani ga masu amfani da USMAN YOBE TALK SHOW.</p>
+
+<input id="pushTitle" type="text" placeholder="Taken sanarwa">
+
+<textarea id="pushMessage" placeholder="Rubuta sakon sanarwa..."></textarea>
+
+<button id="sendPushBtn" onclick="sendPushNotification()"
+style="background:#f5b400;color:#071b49">
+🔔 AIKA SANARWA
+</button>
+
+<p id="pushResult"></p>
+</div>
+
 </div>
 </div>
 
@@ -213,7 +231,11 @@ function hideMessage(id){
 
 function escapeHTML(value){
   return String(value ?? "").replace(/[&<>"']/g,char=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
   })[char]);
 }
 
@@ -228,9 +250,13 @@ function isValidHttpURL(value){
 
 async function verifyAdmin(){
   const {data:userData,error:userError} = await db.auth.getUser();
-  if(userError || !userData.user) throw new Error("Ka fara shiga Admin.");
+
+  if(userError || !userData.user){
+    throw new Error("Ka fara shiga Admin.");
+  }
 
   const {data:isAdmin,error:adminError} = await db.rpc("is_admin");
+
   if(adminError) throw new Error(adminError.message);
   if(isAdmin !== true) throw new Error("Ba ka da izinin Admin.");
 }
@@ -253,6 +279,7 @@ async function login(){
   try{
     const {error} = await db.auth.signInWithPassword({email,password});
     if(error) throw error;
+
     await checkAdmin();
   }catch(error){
     showMessage("loginMessage","Matsalar shiga: "+error.message,"error");
@@ -265,13 +292,20 @@ async function login(){
 async function checkAdmin(){
   try{
     await verifyAdmin();
+
     document.getElementById("loginSection").classList.add("hidden");
     document.getElementById("dashboard").classList.remove("hidden");
+
     await loadPosts();
   }catch(error){
     await db.auth.signOut();
     showLogin();
-    showMessage("loginMessage","Ba a tabbatar da Admin ba: "+error.message,"error");
+
+    showMessage(
+      "loginMessage",
+      "Ba a tabbatar da Admin ba: "+error.message,
+      "error"
+    );
   }
 }
 
@@ -283,21 +317,34 @@ function showLogin(){
 async function logout(){
   await db.auth.signOut();
   showLogin();
+
   document.getElementById("password").value = "";
-  showMessage("loginMessage","Ka fita daga Admin Dashboard.","success");
+
+  showMessage(
+    "loginMessage",
+    "Ka fita daga Admin Dashboard.",
+    "success"
+  );
 }
 
 function updateOpportunityFields(){
-  const isOpportunity = document.getElementById("category").value === "Damar Rayuwa";
-  document.getElementById("opportunityGuide").classList.toggle("hidden",!isOpportunity);
-  document.getElementById("opportunityFields").classList.toggle("hidden",!isOpportunity);
+  const isOpportunity =
+    document.getElementById("category").value === "Damar Rayuwa";
+
+  document.getElementById("opportunityGuide")
+    .classList.toggle("hidden",!isOpportunity);
+
+  document.getElementById("opportunityFields")
+    .classList.toggle("hidden",!isOpportunity);
 }
 
-document.getElementById("category").addEventListener("change",updateOpportunityFields);
+document.getElementById("category")
+  .addEventListener("change",updateOpportunityFields);
 
 function previewSelectedImage(){
   const file = document.getElementById("imageFile").files[0];
   const preview = document.getElementById("imagePreview");
+
   if(!file) return;
 
   if(!file.type.startsWith("image/")){
@@ -307,6 +354,7 @@ function previewSelectedImage(){
   }
 
   if(imageObjectURL) URL.revokeObjectURL(imageObjectURL);
+
   imageObjectURL = URL.createObjectURL(file);
   preview.src = imageObjectURL;
   preview.style.display = "block";
@@ -315,16 +363,19 @@ function previewSelectedImage(){
 async function uploadImage(){
   const file = document.getElementById("imageFile").files[0];
   const btn = document.getElementById("uploadImageBtn");
+
   hideMessage("uploadMessage");
 
   if(!file){
     showMessage("uploadMessage","Da farko zaɓi hoto daga Gallery.","error");
     return;
   }
+
   if(!file.type.startsWith("image/")){
     showMessage("uploadMessage","Zaɓi hoto kawai.","error");
     return;
   }
+
   if(file.size > 5*1024*1024){
     showMessage("uploadMessage","Hoton bai kamata ya wuce 5MB ba.","error");
     return;
@@ -336,19 +387,28 @@ async function uploadImage(){
   try{
     await verifyAdmin();
 
-    const fileName = Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+    const fileName =
+      Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
+
     const path = "news/"+fileName;
 
-    const {error} = await db.storage.from("news-images").upload(path,file,{
-      cacheControl:"3600",upsert:false,contentType:file.type
-    });
+    const {error} = await db.storage.from("news-images").upload(
+      path,file,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      }
+    );
+
     if(error) throw error;
 
     const {data} = db.storage.from("news-images").getPublicUrl(path);
+
     document.getElementById("imageUrl").value = data.publicUrl;
     document.getElementById("imagePreview").src = data.publicUrl;
 
     showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
+
   }catch(error){
     showMessage("uploadMessage","Matsala: "+error.message,"error");
   }finally{
@@ -360,6 +420,7 @@ async function uploadImage(){
 function previewSelectedVideo(){
   const file = document.getElementById("videoFile").files[0];
   const preview = document.getElementById("videoPreview");
+
   if(!file) return;
 
   if(!file.type.startsWith("video/")){
@@ -369,6 +430,7 @@ function previewSelectedVideo(){
   }
 
   if(videoObjectURL) URL.revokeObjectURL(videoObjectURL);
+
   videoObjectURL = URL.createObjectURL(file);
   preview.src = videoObjectURL;
   preview.style.display = "block";
@@ -378,16 +440,23 @@ function previewSelectedVideo(){
 async function uploadVideo(){
   const file = document.getElementById("videoFile").files[0];
   const btn = document.getElementById("uploadVideoBtn");
+
   hideMessage("videoUploadMessage");
 
   if(!file){
-    showMessage("videoUploadMessage","Da farko zaɓi bidiyo daga Gallery na waya.","error");
+    showMessage(
+      "videoUploadMessage",
+      "Da farko zaɓi bidiyo daga Gallery na waya.",
+      "error"
+    );
     return;
   }
+
   if(!file.type.startsWith("video/")){
     showMessage("videoUploadMessage","Fayil ɗin da ka zaɓa ba bidiyo ba ne.","error");
     return;
   }
+
   if(file.size > 50*1024*1024){
     showMessage("videoUploadMessage","Bidiyon ya wuce 50MB.","error");
     return;
@@ -399,43 +468,60 @@ async function uploadVideo(){
   try{
     await verifyAdmin();
 
-    const safeName = file.name.replace(/\.[^/.]+$/,"")
-      .replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
+    const safeName = file.name
+      .replace(/\.[^/.]+$/,"")
+      .replace(/[^a-zA-Z0-9_-]/g,"-")
+      .substring(0,60);
 
     const extension = file.name.includes(".")
       ? file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
       : "mp4";
 
-    const fileName = Date.now()+"-"+safeName+"."+(extension||"mp4");
+    const fileName =
+      Date.now()+"-"+safeName+"."+(extension||"mp4");
+
     const path = "videos/"+fileName;
 
-    const {error} = await db.storage.from("news-videos").upload(path,file,{
-      cacheControl:"3600",upsert:false,contentType:file.type
-    });
+    const {error} = await db.storage.from("news-videos").upload(
+      path,file,{
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type
+      }
+    );
+
     if(error) throw error;
 
     const {data} = db.storage.from("news-videos").getPublicUrl(path);
+
     document.getElementById("videoUrl").value = data.publicUrl;
 
     const preview = document.getElementById("videoPreview");
+
     if(videoObjectURL){
       URL.revokeObjectURL(videoObjectURL);
       videoObjectURL = null;
     }
+
     preview.src = data.publicUrl;
     preview.style.display = "block";
     preview.load();
 
     showMessage("videoUploadMessage","An ɗora bidiyon cikin nasara!","success");
+
   }catch(error){
-    showMessage("videoUploadMessage","An kasa ɗora bidiyon: "+error.message,"error");
+    showMessage(
+      "videoUploadMessage",
+      "An kasa ɗora bidiyon: "+error.message,
+      "error"
+    );
   }finally{
     btn.disabled = false;
     btn.textContent = "Upload Video";
   }
 }
 
-
+/* AUTOMATIC PUSH + SAVE NEWS */
 async function savePost(){
   hideMessage("formMessage");
 
@@ -448,12 +534,23 @@ async function savePost(){
   const status = document.getElementById("status").value;
   const isOpportunity = category === "Damar Rayuwa";
 
-  const opportunity_type = isOpportunity ? document.getElementById("opportunityType").value : null;
-  const eligibility = isOpportunity ? document.getElementById("eligibility").value.trim() : null;
-  const application_deadline = isOpportunity ? document.getElementById("applicationDeadline").value || null : null;
-  const how_to_apply = isOpportunity ? document.getElementById("howToApply").value.trim() : null;
-  const application_url = isOpportunity ? document.getElementById("applicationUrl").value.trim() : null;
-  const contact_info = isOpportunity ? document.getElementById("contactInfo").value.trim() : null;
+  const opportunity_type = isOpportunity
+    ? document.getElementById("opportunityType").value : null;
+
+  const eligibility = isOpportunity
+    ? document.getElementById("eligibility").value.trim() : null;
+
+  const application_deadline = isOpportunity
+    ? document.getElementById("applicationDeadline").value || null : null;
+
+  const how_to_apply = isOpportunity
+    ? document.getElementById("howToApply").value.trim() : null;
+
+  const application_url = isOpportunity
+    ? document.getElementById("applicationUrl").value.trim() : null;
+
+  const contact_info = isOpportunity
+    ? document.getElementById("contactInfo").value.trim() : null;
 
   if(!title || !content){
     showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
@@ -489,74 +586,8 @@ async function savePost(){
 
   const wasPublished = existingPost?.status === "published";
 
-  // Aika sanarwa ne kawai idan sabon labari ne,
-  // ko kuma an sauya Draft zuwa Published.
-  const shouldSendPush = status === "published" && !wasPublished;
-
-  btn.disabled = true;
-  btn.textContent = "Ana adanawa...";
-
-  try{
-    await verifyAdmin();
-
-    const now = new Date().toISOString();
-
-async function savePost(){
-  hideMessage("formMessage");
-
-  const title = document.getElementById("newsTitle").value.trim();
-  const category = document.getElementById("category").value;
-  const image_url = document.getElementById("imageUrl").value.trim();
-  const video_url = document.getElementById("videoUrl").value.trim();
-  const excerpt = document.getElementById("excerpt").value.trim();
-  const content = document.getElementById("content").value.trim();
-  const status = document.getElementById("status").value;
-  const isOpportunity = category === "Damar Rayuwa";
-
-  const opportunity_type = isOpportunity ? document.getElementById("opportunityType").value : null;
-  const eligibility = isOpportunity ? document.getElementById("eligibility").value.trim() : null;
-  const application_deadline = isOpportunity ? document.getElementById("applicationDeadline").value || null : null;
-  const how_to_apply = isOpportunity ? document.getElementById("howToApply").value.trim() : null;
-  const application_url = isOpportunity ? document.getElementById("applicationUrl").value.trim() : null;
-  const contact_info = isOpportunity ? document.getElementById("contactInfo").value.trim() : null;
-
-  if(!title || !content){
-    showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
-    return;
-  }
-
-  if(image_url && !isValidHttpURL(image_url)){
-    showMessage("formMessage","Image URL ba daidai ba ne.","error");
-    return;
-  }
-
-  if(video_url && !isValidHttpURL(video_url)){
-    showMessage("formMessage","Video URL ba daidai ba ne.","error");
-    return;
-  }
-
-  if(isOpportunity && !opportunity_type){
-    showMessage("formMessage","Da fatan zaɓi nau'in damar rayuwa.","error");
-    return;
-  }
-
-  if(application_url && !isValidHttpURL(application_url)){
-    showMessage("formMessage","Application Link ba daidai ba ne.","error");
-    return;
-  }
-
-  const btn = document.getElementById("saveBtn");
-  const isEditing = editingId !== null;
-
-  const existingPost = isEditing
-    ? currentPosts.find(item => String(item.id) === String(editingId))
-    : null;
-
-  const wasPublished = existingPost?.status === "published";
-
-  // Aika sanarwa ne kawai idan sabon labari ne,
-  // ko kuma an sauya Draft zuwa Published.
-  const shouldSendPush = status === "published" && !wasPublished;
+  const shouldSendPush =
+    status === "published" && !wasPublished;
 
   btn.disabled = true;
   btn.textContent = "Ana adanawa...";
@@ -591,7 +622,7 @@ async function savePost(){
     if(isEditing){
       result = await db.from("news_posts")
         .update(post)
-        .eq("id", editingId);
+        .eq("id",editingId);
     }else{
       result = await db.from("news_posts")
         .insert(post);
@@ -603,19 +634,19 @@ async function savePost(){
       ? "An adana DAMAR RAYUWA cikin nasara!"
       : "An adana labarin cikin nasara!";
 
-    // AUTOMATIC PUSH NOTIFICATION
+    /* AUTOMATIC PUSH NOTIFICATION */
     if(shouldSendPush){
       try{
         const pushTitle = "SABON LABARI: " + title;
         const pushBody = excerpt || content.substring(0,180);
 
-        const {data, error} = await db.functions.invoke(
+        const {data,error} = await db.functions.invoke(
           "send-push-notification",
           {
-            body: {
-              title: pushTitle,
-              body: pushBody,
-              url: window.location.pathname
+            body:{
+              title:pushTitle,
+              body:pushBody,
+              url:"./"
             }
           }
         );
@@ -637,14 +668,14 @@ async function savePost(){
         }
 
         successMessage +=
-          " An aika sanarwa: " + data.sent +
-          " | An kasa: " + data.failed;
+          " An aika sanarwa: "+data.sent+
+          " | An kasa: "+data.failed;
 
       }catch(pushError){
-        console.error("Automatic Push Error:", pushError);
+        console.error("Automatic Push Error:",pushError);
 
         successMessage +=
-          " Amma sanarwar ba ta tafi ba: " + pushError.message;
+          " Amma sanarwar ba ta tafi ba: "+pushError.message;
       }
     }
 
@@ -660,97 +691,6 @@ async function savePost(){
     btn.textContent = editingId !== null
       ? "Save Changes"
       : "Publish Story";
-  }
-}
-
-          }
-        );
-
-        if(error){
-          let details = error.message;
-
-          if(error.context instanceof Response){
-            try{
-              details = await error.context.clone().text();
-            }catch(e){}
-          }
-
-          throw new Error(details);
-        }
-
-        if(!data || !data.success){
-          throw new Error(data?.error || "An kasa aika sanarwa.");
-        }
-
-        successMessage +=
-          " An aika sanarwa: " + data.sent +
-          " | An kasa: " + data.failed;
-
-      }catch(pushError){
-        console.error("Automatic Push Error:", pushError);
-
-        successMessage +=
-          " Amma sanarwar ba ta tafi ba: " + pushError.message;
-      }
-    }
-
-    showMessage("formMessage",successMessage,"success");
-
-    clearForm();
-    await loadPosts();
-
-  }catch(error){
-    showMessage("formMessage","Matsala: "+error.message,"error");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = editingId !== null
-      ? "Save Changes"
-      : "Publish Story";
-  }
-}
-
-    await verifyAdmin();
-
-    const post = {
-      title,
-      category,
-      image_url:image_url||null,
-      video_url:video_url||null,
-      excerpt:excerpt||null,
-      content,
-      status,
-      opportunity_type,
-      eligibility,
-      application_deadline,
-      how_to_apply,
-      application_url:application_url||null,
-      contact_info,
-      updated_at:new Date().toISOString(),
-      published_at:status==="published" ? new Date().toISOString() : null
-    };
-
-    let result;
-    if(isEditing){
-      result = await db.from("news_posts").update(post).eq("id",editingId);
-    }else{
-      result = await db.from("news_posts").insert(post);
-    }
-
-    if(result.error) throw result.error;
-
-    showMessage("formMessage",
-      isOpportunity ? "An adana DAMAR RAYUWA cikin nasara!" : "An adana labarin cikin nasara!",
-      "success"
-    );
-
-    clearForm();
-    await loadPosts();
-
-  }catch(error){
-    showMessage("formMessage","Matsala: "+error.message,"error");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = editingId !== null ? "Save Changes" : "Publish Story";
   }
 }
 
@@ -761,10 +701,13 @@ function clearForm(){
     "newsTitle","imageUrl","videoUrl","excerpt","content",
     "opportunityType","eligibility","applicationDeadline",
     "howToApply","applicationUrl","contactInfo"
-  ].forEach(id=>document.getElementById(id).value="");
+  ].forEach(id=>{
+    document.getElementById(id).value = "";
+  });
 
   document.getElementById("imageFile").value = "";
   document.getElementById("videoFile").value = "";
+
   document.getElementById("imagePreview").style.display = "none";
   document.getElementById("imagePreview").src = "";
 
@@ -783,6 +726,7 @@ function clearForm(){
     URL.revokeObjectURL(imageObjectURL);
     imageObjectURL = null;
   }
+
   if(videoObjectURL){
     URL.revokeObjectURL(videoObjectURL);
     videoObjectURL = null;
@@ -801,12 +745,14 @@ async function loadPosts(){
 
   try{
     const {data,error} = await db.from("news_posts")
-      .select("*").order("created_at",{ascending:false});
+      .select("*")
+      .order("created_at",{ascending:false});
 
     if(error) throw error;
+
     currentPosts = data || [];
 
-    if(currentPosts.length===0){
+    if(currentPosts.length === 0){
       area.textContent = "Babu labari tukuna.";
       return;
     }
@@ -814,20 +760,41 @@ async function loadPosts(){
     area.innerHTML = currentPosts.map(post=>`
       <div class="post">
         <h4>${escapeHTML(post.title)}</h4>
-        <p class="small">${escapeHTML(post.category)} | ${escapeHTML(post.status)}</p>
-        <p>${escapeHTML(post.excerpt||"")}</p>
 
-        ${post.category==="Damar Rayuwa" ? `
-          <p class="small">DAMAR RAYUWA | ${escapeHTML(post.opportunity_type||"Ba a zaɓa ba")}</p>
-          ${post.application_deadline ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>` : ""}
-          ${post.application_url ? `<p class="small">Application link: An saka</p>` : ""}
+        <p class="small">
+          ${escapeHTML(post.category)} |
+          ${escapeHTML(post.status)}
+        </p>
+
+        <p>${escapeHTML(post.excerpt || "")}</p>
+
+        ${post.category === "Damar Rayuwa" ? `
+          <p class="small">
+            DAMAR RAYUWA |
+            ${escapeHTML(post.opportunity_type || "Ba a zaɓa ba")}
+          </p>
+
+          ${post.application_deadline
+            ? `<p class="small">Deadline: ${escapeHTML(post.application_deadline)}</p>`
+            : ""}
+
+          ${post.application_url
+            ? `<p class="small">Application link: An saka</p>`
+            : ""}
         ` : ""}
 
-        ${post.video_url ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>' : ""}
+        ${post.video_url
+          ? '<p class="small">▶ Akwai bidiyo a wannan labarin</p>'
+          : ""}
 
         <div class="actions">
-          <button class="secondary" data-action="edit" data-id="${escapeHTML(post.id)}">Edit</button>
-          <button class="danger" data-action="delete" data-id="${escapeHTML(post.id)}">Delete</button>
+          <button class="secondary"
+            data-action="edit"
+            data-id="${escapeHTML(post.id)}">Edit</button>
+
+          <button class="danger"
+            data-action="delete"
+            data-id="${escapeHTML(post.id)}">Delete</button>
         </div>
       </div>
     `).join("");
@@ -837,43 +804,48 @@ async function loadPosts(){
   }
 }
 
-// Edit/Delete event handling supports numeric and UUID IDs.
 document.getElementById("posts").addEventListener("click",event=>{
   const button = event.target.closest("button[data-action]");
   if(!button) return;
 
   const id = button.dataset.id;
-  if(button.dataset.action==="edit") editPost(id);
-  if(button.dataset.action==="delete") deletePost(id);
+
+  if(button.dataset.action === "edit") editPost(id);
+  if(button.dataset.action === "delete") deletePost(id);
 });
 
 function editPost(id){
-  const post = currentPosts.find(item=>String(item.id)===String(id));
+  const post = currentPosts.find(
+    item=>String(item.id) === String(id)
+  );
+
   if(!post) return;
 
   editingId = post.id;
 
-  document.getElementById("newsTitle").value = post.title||"";
-  document.getElementById("category").value = post.category||"News";
+  document.getElementById("newsTitle").value = post.title || "";
+  document.getElementById("category").value = post.category || "News";
+
   updateOpportunityFields();
 
-  document.getElementById("opportunityType").value = post.opportunity_type||"";
-  document.getElementById("eligibility").value = post.eligibility||"";
-  document.getElementById("applicationDeadline").value = post.application_deadline||"";
-  document.getElementById("howToApply").value = post.how_to_apply||"";
-  document.getElementById("applicationUrl").value = post.application_url||"";
-  document.getElementById("contactInfo").value = post.contact_info||"";
+  document.getElementById("opportunityType").value = post.opportunity_type || "";
+  document.getElementById("eligibility").value = post.eligibility || "";
+  document.getElementById("applicationDeadline").value = post.application_deadline || "";
+  document.getElementById("howToApply").value = post.how_to_apply || "";
+  document.getElementById("applicationUrl").value = post.application_url || "";
+  document.getElementById("contactInfo").value = post.contact_info || "";
 
-  document.getElementById("imageUrl").value = post.image_url||"";
-  document.getElementById("videoUrl").value = post.video_url||"";
-  document.getElementById("excerpt").value = post.excerpt||"";
-  document.getElementById("content").value = post.content||"";
-  document.getElementById("status").value = post.status||"draft";
+  document.getElementById("imageUrl").value = post.image_url || "";
+  document.getElementById("videoUrl").value = post.video_url || "";
+  document.getElementById("excerpt").value = post.excerpt || "";
+  document.getElementById("content").value = post.content || "";
+  document.getElementById("status").value = post.status || "draft";
 
   document.getElementById("formTitle").textContent = "Edit News";
   document.getElementById("saveBtn").textContent = "Save Changes";
 
   const imagePreview = document.getElementById("imagePreview");
+
   if(post.image_url && isValidHttpURL(post.image_url)){
     imagePreview.src = post.image_url;
     imagePreview.style.display = "block";
@@ -882,6 +854,7 @@ function editPost(id){
   }
 
   const videoPreview = document.getElementById("videoPreview");
+
   if(post.video_url && isValidHttpURL(post.video_url)){
     videoPreview.src = post.video_url;
     videoPreview.style.display = "block";
@@ -899,65 +872,34 @@ async function deletePost(id){
 
   try{
     await verifyAdmin();
-    const {error} = await db.from("news_posts").delete().eq("id",id);
+
+    const {error} = await db.from("news_posts")
+      .delete()
+      .eq("id",id);
+
     if(error) throw error;
 
     alert("An goge labarin.");
     await loadPosts();
+
   }catch(error){
     alert("Matsala: "+error.message);
   }
 }
 
-db.auth.onAuthStateChange((event,session)=>{
-  if(event==="SIGNED_OUT") showLogin();
-});
-
-(async function start(){
-  const {data,error} = await db.auth.getSession();
-  if(error){
-    showLogin();
-    return;
-  }
-  if(data.session) await checkAdmin();
-})();
-</script>
-
-<!-- PUSH NOTIFICATION PANEL -->
-<div style="background:#071b49;color:white;padding:20px;margin:20px;border-radius:14px">
-  <h2>🔔 Aika Sanarwa</h2>
-  <p>Aika sabon bayani ga masu amfani da USMAN YOBE TALK SHOW.</p>
-
-  <input id="pushTitle"
-    type="text"
-    placeholder="Taken sanarwa"
-    style="width:100%;padding:12px;margin:8px 0;border-radius:7px">
-
-  <textarea id="pushMessage"
-    placeholder="Rubuta sakon sanarwa..."
-    style="width:100%;padding:12px;margin:8px 0;border-radius:7px;min-height:100px"></textarea>
-
-  <button id="sendPushBtn" onclick="sendPushNotification()"
-    style="background:#f5b400;color:#071b49;padding:13px 20px;border:0;border-radius:8px;font-weight:bold">
-    🔔 AIKA SANARWA
-  </button>
-
-  <p id="pushResult"></p>
-</div>
-  
-<script>
-async function sendPushNotification() {
+/* MANUAL PUSH NOTIFICATION */
+async function sendPushNotification(){
   const title = document.getElementById("pushTitle").value.trim();
   const message = document.getElementById("pushMessage").value.trim();
   const result = document.getElementById("pushResult");
   const button = document.getElementById("sendPushBtn");
 
-  if (!title || !message) {
+  if(!title || !message){
     result.textContent = "Ka cika taken da sakon sanarwa.";
     return;
   }
 
-  if (!confirm("Kana tabbatar da aika wannan sanarwa ga masu amfani?")) {
+  if(!confirm("Kana tabbatar da aika wannan sanarwa ga masu amfani?")){
     return;
   }
 
@@ -965,49 +907,68 @@ async function sendPushNotification() {
   button.textContent = "Ana aika sanarwa...";
   result.textContent = "Ana haɗawa da Supabase...";
 
-  try {
-    const { data, error } = await db.functions.invoke(
+  try{
+    await verifyAdmin();
+
+    const {data,error} = await db.functions.invoke(
       "send-push-notification",
       {
-        body: {
-          title: title,
-          body: message,
-          url: "./"
+        body:{
+          title:title,
+          body:message,
+          url:"./"
         }
       }
     );
 
-    if (error) {
-  let details = error.message;
+    if(error){
+      let details = error.message;
 
-  if (error.context instanceof Response) {
-    try {
-      details = await error.context.clone().text();
-    } catch (e) {}
-  }
+      if(error.context instanceof Response){
+        try{
+          details = await error.context.clone().text();
+        }catch(e){}
+      }
 
-  throw new Error(details);
-}
-    if (!data || !data.success) {
+      throw new Error(details);
+    }
+
+    if(!data || !data.success){
       throw new Error(data?.error || "An kasa aika sanarwa.");
     }
 
     result.textContent =
-      "An gama! An aika: " + data.sent +
-      " | An kasa: " + data.failed +
-      " | Jimilla: " + data.total;
+      "An gama! An aika: "+data.sent+
+      " | An kasa: "+data.failed+
+      " | Jimilla: "+data.total;
 
     document.getElementById("pushTitle").value = "";
     document.getElementById("pushMessage").value = "";
 
-  } catch (error) {
-    console.error("Push error:", error);
-    result.textContent = "Matsala: " + error.message;
-  } finally {
+  }catch(error){
+    console.error("Push error:",error);
+    result.textContent = "Matsala: "+error.message;
+  }finally{
     button.disabled = false;
     button.textContent = "🔔 AIKA SANARWA";
   }
 }
-                                         </script>
+
+db.auth.onAuthStateChange((event,session)=>{
+  if(event === "SIGNED_OUT") showLogin();
+});
+
+(async function start(){
+  const {data,error} = await db.auth.getSession();
+
+  if(error){
+    showLogin();
+    return;
+  }
+
+  if(data.session) await checkAdmin();
+})();
+</script>
+
 </body>
 </html>
