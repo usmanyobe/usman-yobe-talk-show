@@ -619,17 +619,22 @@ async function savePost(){
 
     let result;
 
-    if(isEditing){
-      result = await db.from("news_posts")
-        .update(post)
-        .eq("id",editingId);
-    }else{
-      result = await db.from("news_posts")
-        .insert(post);
-    }
+if(isEditing){
+  result = await db.from("news_posts")
+    .update(post)
+    .eq("id",editingId)
+    .select("id")
+    .single();
+}else{
+  result = await db.from("news_posts")
+    .insert(post)
+    .select("id")
+    .single();
+}
 
-    if(result.error) throw result.error;
+if(result.error) throw result.error;
 
+const savedPostId = result.data.id;
     let successMessage = isOpportunity
       ? "An adana DAMAR RAYUWA cikin nasara!"
       : "An adana labarin cikin nasara!";
@@ -646,7 +651,7 @@ async function savePost(){
             body:{
               title:pushTitle,
               body:pushBody,
-              url:"./"
+              url:"./?article=" + encodeURIComponent(savedPostId)
             }
           }
         );
