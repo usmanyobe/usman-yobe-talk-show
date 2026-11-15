@@ -361,8 +361,11 @@ async function loadNews(){
  const {data,error}=await db.from("news_posts")
  .select("id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
  .eq("status","published").order("published_at",{ascending:false});
- if(error){console.error("News error:",error);grid.innerHTML='<div class="empty">Could not load news. Please check your internet connection.</div>';return}
- posts=data||[];
+if(error){
+ console.error("News error:",error);
+ grid.innerHTML='<div class="empty">Database Error: '+esc(error.message)+'</div>';
+ return;
+} posts=data||[];
  renderAll();
  openArticleFromURL();
 }
