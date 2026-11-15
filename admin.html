@@ -576,10 +576,49 @@ async function savePost(){
   if(post.audio_url)msg+=" 🎧 Audio yana tare da labarin.";
   if(shouldSendPush){
    try{
-    const {data,error}=await db.functions.invoke("send-push-notification",{body:{
-     title:is_breaking_news?"🚨 BREAKING NEWS: "+title:"SABON LABARI: "+title,
-     body:excerpt||content.substring(0,180),url:"./?article="+encodeURIComponent(savedPostId)
-    }});
+    let notificationTitle;
+
+    if(isOpportunity){
+      notificationTitle="🎓 SABON DAMAR RAYUWA: "+title;
+    }else if(is_breaking_news){
+      notificationTitle="🚨 BREAKING NEWS: "+title;
+    }else{
+      notificationTitle="📰 SABON LABARI: "+title;
+    }
+
+    let notificationBody=excerpt||content.substring(0,180);
+
+    if(isOpportunity){
+      notificationBody="Nau'i: "+opportunity_type+". "+notificationBody;
+
+      if(application_deadline){
+        notificationBody+=" | Ranar ƙarshe: "+application_deadline;
+      }
+    }
+
+    const {data,error}=await db.functions.invoke(
+      "send-push-notification",
+      {
+        body:{
+          title:notificationTitle,
+          body:notificationBody,
+          url:"./?article="+encodeURIComponent(savedPostId)
+        }
+      }
+    );
+
+    if(error)throw error;
+    if(!data||!data.success){
+      throw new Error(data?.error||"An kasa aika sanarwa.");
+    }
+
+    msg+=" An aika sanarwa: "+data.sent+" | An kasa: "+data.failed;
+
+   }catch(e){
+    console.error(e);
+    msg+=" Amma sanarwar ba ta tafi ba: "+e.message;
+   }
+}
     if(error)throw error;
     if(!data||!data.success)throw new Error(data?.error||"An kasa aika sanarwa.");
     msg+=" An aika sanarwa: "+data.sent+" | An kasa: "+data.failed;
