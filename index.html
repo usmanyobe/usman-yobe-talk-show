@@ -34,6 +34,46 @@ header{background:var(--navy);color:white;padding:13px 15px;position:sticky;top:
 .breaking-content{padding:19px}
 .breaking-content h1{font-size:24px;line-height:1.35;margin:10px 0}
 .breaking-content p{color:#dce5fa;line-height:1.7;font-size:14px}
+ /* BREAKING NEWS ALERT BANNER */
+.breaking-alert{
+ display:none;
+ background:#c90016;
+ color:white;
+ border-radius:10px;
+ margin:12px 0;
+ overflow:hidden;
+ box-shadow:0 3px 12px #0002;
+ animation:breakingPulse 1.8s infinite;
+}
+
+.breaking-alert button{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:white;
+ padding:15px;
+ text-align:left;
+ cursor:pointer;
+ font-weight:bold;
+ font-size:15px;
+ line-height:1.6;
+}
+
+.breaking-alert small{
+ display:block;
+ font-size:11px;
+ letter-spacing:1px;
+ margin-bottom:5px;
+}
+
+@keyframes breakingPulse{
+ 0%,100%{opacity:1}
+ 50%{opacity:.82}
+}
+
+@media(prefers-reduced-motion:reduce){
+ .breaking-alert{animation:none}
+}
 .breaking-image{width:100%;max-height:300px;object-fit:cover;display:block}
 .tag{display:inline-block;background:var(--red);color:white;padding:5px 9px;border-radius:4px;font-size:11px;font-weight:bold}
 .hero-button{display:inline-block;border:0;border-radius:7px;padding:10px 15px;margin-top:13px;background:var(--gold);color:var(--navy);font-weight:bold;cursor:pointer}
@@ -177,6 +217,9 @@ footer p{font-size:12px;color:#ccd7ec;margin-top:8px}
 </div>
 
 <section id="home">
+
+ <div id="breakingAlert" class="breaking-alert" aria-live="polite"></div>
+
  <div class="breaking">
   <div class="breaking-top" data-i18n="breaking">🔴 LABARI DA DUMI-DUMI</div>
   <div id="topStory" class="breaking-content">
@@ -482,6 +525,7 @@ function setLanguage(lang){
 
  closeMenu();
  renderTopStory();
+ renderBreakingAlert();
  renderPosts();
  renderVideos();
  renderOpportunities();
@@ -513,7 +557,7 @@ async function loadNews(){
 
  const {data,error} = await db
   .from("news_posts")
-  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
+  .select("id,title,excerpt,content,category,image_url,video_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
   .eq("status","published")
   .order("published_at",{ascending:false});
 
@@ -527,6 +571,9 @@ async function loadNews(){
 
  posts = data || [];
 
+posts = data || [];
+
+renderBreakingAlert();
 renderTopStory();
 renderPosts();
 renderVideos();
@@ -554,6 +601,47 @@ function openArticleFromURL(){
   openArticle(index);
 }
 // BREAKING NEWS
+ // SHOW LATEST BREAKING NEWS ALERT
+function renderBreakingAlert(){
+
+ const container = document.getElementById("breakingAlert");
+
+ if(!container) return;
+
+ const breakingPosts = posts
+  .filter(p =>
+    p.is_breaking_news === true &&
+    String(p.category || "").toLowerCase() !== "damar rayuwa"
+  )
+  .sort((a,b) =>
+    new Date(b.published_at || b.created_at) -
+    new Date(a.published_at || a.created_at)
+  );
+
+ if(!breakingPosts.length){
+  container.style.display = "none";
+  container.innerHTML = "";
+  return;
+ }
+
+ const latest = breakingPosts[0];
+
+ const index = posts.findIndex(
+  p => String(p.id) === String(latest.id)
+ );
+
+ container.style.display = "block";
+
+ container.innerHTML = `
+  <button onclick="openArticle(${index})">
+   <small>🚨 BREAKING NEWS · LABARI MAI ZAFI</small>
+   🔴 ${escapeHTML(latest.title)}
+   <div style="font-size:12px;margin-top:6px;font-weight:normal">
+    Danna nan domin karanta cikakken labari →
+   </div>
+  </button>
+ `;
+}
 function renderTopStory(){
  const t = translations[currentLanguage];
  const first = posts.length ? posts[0] : null;
