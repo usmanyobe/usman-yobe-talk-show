@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -60,8 +61,8 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 .gallery-view .close{position:absolute;top:15px;right:15px;width:42px;height:42px}
 .gallery-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:8px}
 .gallery-buttons button{border:0;border-radius:8px;padding:11px 15px;font-weight:bold;background:#1478ed;color:white}
-.gallery-refresh{margin:0 0 13px;border:0;background:#e7efff;color:var(--navy);padding:9px 13px;border-radius:8px;font-weight:bold}
-[dir="rtl"] body{text-align:right}[dir="rtl"] .breaking{border-left:0;border-right:5px solid var(--red)}
+.opportunity-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0 20px}.opportunity-category{border:1px solid var(--border);background:#fff;border-radius:13px;padding:16px 10px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow);color:var(--navy);font-weight:800;text-align:center}.opportunity-category .opp-icon{font-size:32px;line-height:1}.opportunity-category small{font-size:12px;color:var(--muted);font-weight:600}.opportunity-category.active{border:2px solid var(--blue);background:#edf4ff}.gallery-refresh{margin:0 0 13px;border:0;background:#e7efff;color:var(--navy);padding:9px 13px;border-radius:8px;font-weight:bold}
+[dir="rtl"] body{text-align:right}[dir="rtl] .breaking{border-left:0;border-right:5px solid var(--red)}
 [dir="rtl"] .close{float:left}
 @media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}.gallery-card img{height:125px}.section-title{font-size:19px}}
 </style>
@@ -99,6 +100,7 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 <section id="opportunitiesPage" class="page">
  <h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2>
  <p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p>
+ <div id="opportunityCategories" class="opportunity-categories"></div>
  <div id="opportunitiesGrid" class="grid"></div>
 </section>
 <section id="videosPage" class="page">
@@ -259,10 +261,33 @@ function opportunityInfo(type){
  if(t.includes("jamb")||t.includes("waec")||t.includes("neco"))return{icon:"📚",en:"JAMB / WAEC / NECO",ha:"JAMB / WAEC / NECO",ar:"JAMB / WAEC / NECO"};
  return{icon:"📌",en:"Other",ha:"Sauran Damammaki",ar:"أخرى"};
 }
+let selectedOpportunityCategory="all";
+const opportunityCategories=[
+ {id:"job",icon:"💼",en:"Jobs",ha:"Ayyuka",ar:"وظائف",match:["job","aiki","vacanc"]},
+ {id:"scholarship",icon:"🎓",en:"Scholarships",ha:"Tallafin Karatu",ar:"منح دراسية",match:["scholar","karatu"]},
+ {id:"training",icon:"🛠️",en:"Training",ha:"Horo",ar:"التدريب",match:["training","horo"]},
+ {id:"business",icon:"🏢",en:"Business Grants",ha:"Tallafin Kasuwanci",ar:"منح الأعمال",match:["grant","business","kasuwanci"]},
+ {id:"exam",icon:"📚",en:"JAMB / WAEC / NECO",ha:"JAMB / WAEC / NECO",ar:"JAMB / WAEC / NECO",match:["jamb","waec","neco"]},
+ {id:"other",icon:"📌",en:"Other",ha:"Sauran Damammaki",ar:"أخرى",match:[]}
+];
+function renderOpportunityCategories(){
+ const holder=document.getElementById("opportunityCategories");
+ holder.innerHTML=opportunityCategories.map(c=>{
+  const label=c[currentLanguage]||c.en;
+  return `<button class="opportunity-category ${selectedOpportunityCategory===c.id?"active":""}" onclick="selectOpportunityCategory('${c.id}')"><span class="opp-icon">${c.icon}</span><span>${esc(label)}</span><small>${currentLanguage==="ha"?"Duba damarmaki":currentLanguage==="ar"?"عرض الفرص":"Browse opportunities"}</small></button>`;
+ }).join("");
+}
+function selectOpportunityCategory(id){selectedOpportunityCategory=id;renderOpportunities();}
 function renderOpportunities(){
+ renderOpportunityCategories();
  const items=posts.filter(p=>p.opportunity_type),grid=document.getElementById("opportunitiesGrid");
- if(!items.length){grid.innerHTML=`<div class="empty">${tr("noOpp")}</div>`;return}
- grid.innerHTML=items.map(p=>{
+ const category=opportunityCategories.find(c=>c.id===selectedOpportunityCategory);
+ const shown=selectedOpportunityCategory==="all"?items:items.filter(p=>{
+  const value=String(p.opportunity_type||"").toLowerCase();
+  return category.id==="other"?!opportunityCategories.slice(0,5).some(c=>c.match.some(k=>value.includes(k))):category.match.some(k=>value.includes(k));
+ });
+ if(!shown.length){grid.innerHTML=`<div class="empty">${tr("noOpp")}</div>`;return}
+ grid.innerHTML=shown.map(p=>{
   const info=opportunityInfo(p.opportunity_type),name=info[currentLanguage]||info.en,application=safeURL(p.application_url);
   return `<article class="post"><div class="post-content"><span class="tag" style="font-size:13px;padding:8px 11px">${info.icon} ${esc(name)}</span>
   <h3>${esc(p.title)}</h3><p>${esc(p.excerpt||"")}</p>
