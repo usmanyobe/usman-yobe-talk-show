@@ -6,9 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101827">
 <title>USMAN YOBE TALK SHOW - Admin</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f2f4f8;color:#182333;font-family:Arial,sans-serif}
@@ -41,6 +39,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .help{font-size:12px;color:#697586;line-height:1.6;margin:4px 0 12px}
 .opportunity-note{background:#eef5ff;border-left:4px solid #bd8b25;padding:12px;border-radius:7px;margin:12px 0;font-size:13px;line-height:1.6}
 .opportunity-fields{border:1px solid #d9e2f0;background:#f8faff;padding:15px;border-radius:10px;margin:15px 0}
+.event-fields{border:1px solid #b8d9f5;background:#f0f8ff;padding:15px;border-radius:10px;margin:15px 0}
 hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 .push-panel{background:#071b49;color:white;padding:20px;margin-bottom:20px;border-radius:14px}
 .push-panel input,.push-panel textarea{color:#182333}
@@ -48,6 +47,7 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 .breaking-label input{width:20px;height:20px;margin:0;accent-color:red}
 .breaking-badge{display:inline-block;background:#c90000;color:white;font-size:11px;font-weight:bold;padding:5px 9px;border-radius:5px;margin:5px 0}
 .audio-badge{display:inline-block;background:#e4f3ff;color:#07528c;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:bold;margin:5px 0}
+.event-badge{display:inline-block;background:#e6f3ff;color:#07528c;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:bold;margin:5px 0}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:12px;margin-top:15px}
 .gallery-item{border:1px solid #e1e5eb;border-radius:10px;padding:9px;min-width:0}
 .gallery-item img{width:100%;height:130px;object-fit:cover;border-radius:7px;background:#eee}
@@ -55,7 +55,6 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 .gallery-item p{font-size:12px;color:#697586;overflow-wrap:anywhere}
 </style>
 </head>
-
 <body>
 
 <header>
@@ -67,7 +66,6 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 
 <div class="container">
 
-<!-- LOGIN -->
 <div id="loginSection" class="card">
 <h3>Admin Login</h3>
 <p class="small">Shiga da email da password ɗinka na Admin.</p>
@@ -77,7 +75,6 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <div id="loginMessage" class="message"></div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard" class="hidden">
 
 <div class="card">
@@ -93,38 +90,30 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <div class="card" id="galleryAdmin">
 <h3>📸 PHOTO GALLERY – Hotunan Abubuwan da suka faru</h3>
 <p class="help">Ɗora hotuna daga wayarka domin jama'a su gani a Photo Gallery na app.</p>
-
 <label>Taken hoto</label>
 <input id="galleryTitle" placeholder="Misali: Taron al'umma a Damaturu">
-
 <label>Bayani game da hoton</label>
 <textarea id="galleryDescription" placeholder="Rubuta ɗan bayani game da hoton..."></textarea>
-
 <label>Zaɓi hoto daga wayarka</label>
 <input id="galleryFile" type="file" accept="image/*" onchange="previewGalleryPhoto()">
 <p class="help">Hoton bai kamata ya wuce 5MB ba.</p>
 <img id="galleryPreview" class="preview" alt="Gallery preview">
-
 <button id="galleryUploadBtn" onclick="uploadGalleryPhoto()">📸 Ɗora Hoto</button>
 <div id="galleryMessage" class="message"></div>
-
 <hr>
-
 <div class="toprow">
 <h3>Hotunan da aka ɗora</h3>
 <button class="secondary" onclick="loadGallery()">Refresh</button>
 </div>
-
 <div id="galleryList">Ana ɗauko hotuna...</div>
 </div>
 
-<!-- NEWS FORM -->
+<!-- NEWS AND EVENTS FORM -->
 <div class="card">
-
 <h3 id="formTitle">Publish New Story</h3>
 
-<label>News Title</label>
-<input id="newsTitle" placeholder="Taken labari">
+<label>News Title / Taken Labari ko Taro</label>
+<input id="newsTitle" placeholder="Taken labari ko taro">
 
 <label class="breaking-label">
 <input type="checkbox" id="isBreakingNews">
@@ -142,9 +131,11 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <option value="Matasa">Matasa</option>
 <option value="Sports">Sports</option>
 <option value="Education">Education</option>
+<option value="Events">📅 Events / Taruka da Shirye-shirye</option>
 <option value="Damar Rayuwa">DAMAR RAYUWA</option>
 </select>
 
+<!-- OPPORTUNITY FIELDS -->
 <div id="opportunityGuide" class="opportunity-note hidden">
 <strong>DAMAR RAYUWA</strong><br>
 Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin tushe.
@@ -152,7 +143,6 @@ Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin 
 
 <div id="opportunityFields" class="opportunity-fields hidden">
 <h3>Opportunity Information</h3>
-
 <label>Opportunity Type</label>
 <select id="opportunityType">
 <option value="">Zaɓi nau'in dama</option>
@@ -163,37 +153,49 @@ Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin 
 <option value="Exams">JAMB / WAEC / NECO</option>
 <option value="Other">Other</option>
 </select>
-
 <label>Eligibility</label>
 <textarea id="eligibility"></textarea>
-
 <label>Application Deadline</label>
 <input id="applicationDeadline" type="date">
-
 <label>How to Apply</label>
 <textarea id="howToApply"></textarea>
-
 <label>Official Application Link</label>
 <input id="applicationUrl" type="url" placeholder="https://official-website.com/apply">
-
 <label>Contact Information</label>
 <textarea id="contactInfo"></textarea>
 </div>
 
-<hr>
+<!-- EVENT FIELDS -->
+<div id="eventFields" class="event-fields hidden">
+<h3>📅 EVENT MANAGEMENT – Bayanan Taro</h3>
+<p class="help">Cika waɗannan bayanai domin masu amfani da app su san ranar taro, lokaci da wurin da za a yi shi.</p>
 
-<h3>📸 Hoton Labari</h3>
+<label>Ranar Taro</label>
+<input type="date" id="eventDate">
+
+<label>Lokacin Taro</label>
+<input type="time" id="eventTime">
+
+<label>Wurin Taro</label>
+<input type="text" id="eventVenue" placeholder="Misali: Damaturu, Yobe State">
+
+<label>Hanyar Rajista (Optional)</label>
+<input type="url" id="eventRegistration" placeholder="https://example.com/register">
+
+<p class="help">Ranar taro da wurinsa suna da muhimmanci. Hanyar rajista zaɓi ne.</p>
+</div>
+
+<hr>
+<h3>📸 Hoton Labari ko Taro</h3>
 <label>Zaɓi Hoto daga Wayarka</label>
 <input id="imageFile" type="file" accept="image/*" onchange="previewSelectedImage()">
 <button type="button" id="uploadImageBtn" onclick="uploadImage()">Upload Image</button>
 <div id="uploadMessage" class="message"></div>
 <img id="imagePreview" class="preview" alt="Image preview">
-
 <label>Image URL (optional)</label>
 <input id="imageUrl" type="url" placeholder="Image URL">
 
 <hr>
-
 <h3>🎬 Bidiyon Labari</h3>
 <label>Zaɓi Bidiyo daga Wayarka</label>
 <input id="videoFile" type="file" accept="video/*" onchange="previewSelectedVideo()">
@@ -201,12 +203,10 @@ Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin 
 <button type="button" id="uploadVideoBtn" onclick="uploadVideo()">Upload Video</button>
 <div id="videoUploadMessage" class="message"></div>
 <video id="videoPreview" class="preview" controls playsinline preload="metadata"></video>
-
 <label>Video URL (optional)</label>
 <input id="videoUrl" type="url" placeholder="Video URL">
 
 <hr>
-
 <h3>🎧 AUDIO NEWS – Sautin Labari</h3>
 <label>Zaɓi Audio daga Wayarka</label>
 <input id="audioFile" type="file" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav" onchange="previewSelectedAudio()">
@@ -218,28 +218,23 @@ Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin 
 <button type="button" class="secondary hidden" id="removeAudioBtn" onclick="removeAudioSelection()">Cire sabon audio</button>
 
 <hr>
-
-<label>Short News Summary</label>
-<textarea id="excerpt" placeholder="Takaitaccen labari"></textarea>
-
-<label>Full News Story</label>
+<label>Short News Summary / Takaitaccen Bayani</label>
+<textarea id="excerpt" placeholder="Takaitaccen labari ko sanarwar taro"></textarea>
+<label>Full News Story / Cikakken Bayani</label>
 <textarea id="content" placeholder="Rubuta cikakken bayani anan..."></textarea>
-
 <label>Publication Status</label>
 <select id="status">
 <option value="published">Publish Now</option>
 <option value="draft">Save as Draft</option>
 </select>
-
 <button id="saveBtn" onclick="savePost()">Publish Story</button>
 <button class="secondary" onclick="clearForm()">Clear</button>
-
 <div id="formMessage" class="message"></div>
 </div>
 
 <!-- NEWS LIST -->
 <div class="card">
-<h3>Manage News & Opportunities</h3>
+<h3>Manage News, Events & Opportunities</h3>
 <button class="secondary" onclick="loadPosts()">Refresh News</button>
 <div id="posts">Loading news...</div>
 </div>
@@ -262,8 +257,7 @@ Zaɓi nau'in damar da kake wallafawa. Ka tabbatar bayanan sun fito daga sahihin 
 
 /* SUPABASE CONNECTION */
 const SUPABASE_URL="https://latxtetkscajmbqppnad.supabase.co";
-const SUPABASE_KEY="sb_publishable_1dey_UiqdrQ-DmGr-5CCnQ_fEPlK6Vf";
-
+const SUPABASE_KEY="sb_publishable_1dey_UiqdrQ-DmGr5-CCnQ_fEPlK6Vf";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let editingId=null;
@@ -283,71 +277,82 @@ function showMessage(id,message,type){
  box.className="message "+type;
  box.style.display="block";
 }
-
 function hideMessage(id){
  const box=document.getElementById(id);
  if(box)box.style.display="none";
 }
-
 function escapeHTML(value){
  return String(value??"").replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
-
 function isValidHttpURL(value){
  try{
   const u=new URL(value);
   return u.protocol==="https:"||u.protocol==="http:";
- }catch{
-  return false;
+ }catch{return false;}
+}
+
+/* EVENT DETAILS HELPERS */
+const EVENT_MARKER="\n\n--- EVENT DETAILS ---\n";
+
+function makeEventExcerpt(summary,date,time,venue,registration){
+ let details=[];
+ if(date)details.push("📅 Ranar: "+date);
+ if(time)details.push("🕒 Lokaci: "+time);
+ if(venue)details.push("📍 Wuri: "+venue);
+ if(registration)details.push("🔗 Rajista: "+registration);
+ return (summary||"").trim()+(details.length?"\n\n"+details.join("\n"):"");
+}
+
+function readEventExcerpt(value){
+ const text=String(value||"");
+ const lines=text.split("\n");
+ const result={summary:text,date:"",time:"",venue:"",registration:""};
+ const dateLine=lines.find(x=>x.startsWith("📅 Ranar: "));
+ const timeLine=lines.find(x=>x.startsWith("🕒 Lokaci: "));
+ const venueLine=lines.find(x=>x.startsWith("📍 Wuri: "));
+ const regLine=lines.find(x=>x.startsWith("🔗 Rajista: "));
+ if(dateLine||timeLine||venueLine||regLine){
+  result.summary=lines.filter(x=>
+   !x.startsWith("📅 Ranar: ")&&
+   !x.startsWith("🕒 Lokaci: ")&&
+   !x.startsWith("📍 Wuri: ")&&
+   !x.startsWith("🔗 Rajista: ")
+  ).join("\n").trim();
+  if(dateLine)result.date=dateLine.replace("📅 Ranar: ","");
+  if(timeLine)result.time=timeLine.replace("🕒 Lokaci: ","");
+  if(venueLine)result.venue=venueLine.replace("📍 Wuri: ","");
+  if(regLine)result.registration=regLine.replace("🔗 Rajista: ","");
  }
+ return result;
 }
 
 /* ADMIN SECURITY */
 async function verifyAdmin(){
  const {data,error}=await db.auth.getUser();
-
- if(error||!data.user){
-  throw new Error("Ka fara shiga Admin.");
- }
-
+ if(error||!data.user)throw new Error("Ka fara shiga Admin.");
  const {data:isAdmin,error:adminError}=await db.rpc("is_admin");
-
  if(adminError)throw adminError;
-
- if(isAdmin!==true){
-  throw new Error("Ba ka da izinin Admin.");
- }
+ if(isAdmin!==true)throw new Error("Ba ka da izinin Admin.");
 }
 
 /* LOGIN */
 async function login(){
  hideMessage("loginMessage");
-
  const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
  const btn=document.getElementById("loginBtn");
-
  if(!email||!password){
   showMessage("loginMessage","Saka email da password.","error");
   return;
  }
-
  btn.disabled=true;
  btn.textContent="Ana shiga...";
-
  try{
   const {error}=await db.auth.signInWithPassword({email,password});
-
   if(error)throw error;
-
   await checkAdmin();
-
  }catch(e){
   showMessage("loginMessage","Matsalar shiga: "+e.message,"error");
  }finally{
@@ -359,27 +364,19 @@ async function login(){
 async function checkAdmin(){
  try{
   await verifyAdmin();
-
   document.getElementById("loginSection").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-
-  await Promise.all([
-   loadPosts(),
-   loadGallery()
-  ]);
-
+  await Promise.all([loadPosts(),loadGallery()]);
  }catch(e){
   await db.auth.signOut();
   showLogin();
   showMessage("loginMessage","Ba a tabbatar da Admin ba: "+e.message,"error");
  }
 }
-
 function showLogin(){
  document.getElementById("loginSection").classList.remove("hidden");
  document.getElementById("dashboard").classList.add("hidden");
 }
-
 async function logout(){
  await db.auth.signOut();
  showLogin();
@@ -391,23 +388,18 @@ async function logout(){
 function previewGalleryPhoto(){
  const file=document.getElementById("galleryFile").files[0];
  if(!file)return;
-
  if(!file.type.startsWith("image/")){
   alert("Zaɓi hoto kawai.");
   document.getElementById("galleryFile").value="";
   return;
  }
-
  if(file.size>5*1024*1024){
   alert("Hoton bai kamata ya wuce 5MB ba.");
   document.getElementById("galleryFile").value="";
   return;
  }
-
  if(galleryObjectURL)URL.revokeObjectURL(galleryObjectURL);
-
  galleryObjectURL=URL.createObjectURL(file);
-
  const img=document.getElementById("galleryPreview");
  img.src=galleryObjectURL;
  img.style.display="block";
@@ -418,73 +410,47 @@ async function uploadGalleryPhoto(){
  const description=document.getElementById("galleryDescription").value.trim();
  const file=document.getElementById("galleryFile").files[0];
  const btn=document.getElementById("galleryUploadBtn");
-
  hideMessage("galleryMessage");
-
  if(!title){
   showMessage("galleryMessage","Da farko saka taken hoton.","error");
   return;
  }
-
  if(!file){
   showMessage("galleryMessage","Zaɓi hoto daga wayarka.","error");
   return;
  }
-
  if(!file.type.startsWith("image/")||file.size>5*1024*1024){
   showMessage("galleryMessage","Zaɓi hoto wanda bai wuce 5MB ba.","error");
   return;
  }
-
  btn.disabled=true;
  btn.textContent="Ana ɗora hoto...";
-
  let uploadedPath=null;
-
  try{
   await verifyAdmin();
-
   const ext=(file.name.split(".").pop()||"jpg").replace(/[^a-zA-Z0-9]/g,"")||"jpg";
-
   uploadedPath="gallery/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ext;
-
   const {error:uploadError}=await db.storage.from("gallery-photos").upload(
-   uploadedPath,
-   file,
-   {cacheControl:"3600",upsert:false,contentType:file.type}
+   uploadedPath,file,{cacheControl:"3600",upsert:false,contentType:file.type}
   );
-
   if(uploadError)throw uploadError;
-
   const {data:urlData}=db.storage.from("gallery-photos").getPublicUrl(uploadedPath);
-
   const {error:insertError}=await db.from("gallery_photos").insert({
-   title,
-   description:description||null,
-   image_url:urlData.publicUrl
+   title,description:description||null,image_url:urlData.publicUrl
   });
-
   if(insertError){
    await db.storage.from("gallery-photos").remove([uploadedPath]);
    throw insertError;
   }
-
   document.getElementById("galleryTitle").value="";
   document.getElementById("galleryDescription").value="";
   document.getElementById("galleryFile").value="";
-
   const preview=document.getElementById("galleryPreview");
   preview.style.display="none";
   preview.src="";
-
-  if(galleryObjectURL){
-   URL.revokeObjectURL(galleryObjectURL);
-   galleryObjectURL=null;
-  }
-
+  if(galleryObjectURL){URL.revokeObjectURL(galleryObjectURL);galleryObjectURL=null;}
   showMessage("galleryMessage","An ɗora hoton Photo Gallery cikin nasara!","success");
   await loadGallery();
-
  }catch(e){
   showMessage("galleryMessage","Matsala wajen ɗora hoto: "+e.message,"error");
  }finally{
@@ -496,21 +462,14 @@ async function uploadGalleryPhoto(){
 async function loadGallery(){
  const area=document.getElementById("galleryList");
  area.textContent="Ana ɗauko hotuna...";
-
  try{
-  const {data,error}=await db.from("gallery_photos")
-   .select("*")
-   .order("created_at",{ascending:false});
-
+  const {data,error}=await db.from("gallery_photos").select("*").order("created_at",{ascending:false});
   if(error)throw error;
-
   galleryPhotos=data||[];
-
   if(!galleryPhotos.length){
    area.textContent="Babu hotuna a Photo Gallery tukuna.";
    return;
   }
-
   area.innerHTML='<div class="gallery-grid">'+galleryPhotos.map(photo=>`
    <div class="gallery-item">
     <img src="${escapeHTML(photo.image_url)}" alt="${escapeHTML(photo.title)}" loading="lazy">
@@ -520,402 +479,221 @@ async function loadGallery(){
      <button class="secondary" data-gallery-action="edit" data-id="${escapeHTML(photo.id)}">Gyara</button>
      <button class="danger" data-gallery-action="delete" data-id="${escapeHTML(photo.id)}">Goge</button>
     </div>
-   </div>
-  `).join("")+'</div>';
-
- }catch(e){
-  area.textContent="Matsala wajen ɗauko hotuna: "+e.message;
- }
+   </div>`).join("")+'</div>';
+ }catch(e){area.textContent="Matsala wajen ɗauko hotuna: "+e.message;}
 }
 
 function getGalleryStoragePath(url){
  const marker="/storage/v1/object/public/gallery-photos/";
  const index=String(url||"").indexOf(marker);
-
  if(index<0)return null;
-
- try{
-  return decodeURIComponent(url.substring(index+marker.length).split("?")[0]);
- }catch{
-  return null;
- }
+ try{return decodeURIComponent(url.substring(index+marker.length).split("?")[0]);}
+ catch{return null;}
 }
 
 async function editGalleryPhoto(id){
  const photo=galleryPhotos.find(p=>String(p.id)===String(id));
  if(!photo)return;
-
  const title=prompt("Sabon taken hoto:",photo.title||"");
  if(title===null)return;
-
- if(!title.trim()){
-  alert("Dole ne a saka taken hoto.");
-  return;
- }
-
+ if(!title.trim()){alert("Dole ne a saka taken hoto.");return;}
  const description=prompt("Sabon bayanin hoto:",photo.description||"");
  if(description===null)return;
-
  try{
   await verifyAdmin();
-
-  const {error}=await db.from("gallery_photos")
-   .update({
-    title:title.trim(),
-    description:description.trim()||null
-   })
-   .eq("id",id);
-
+  const {error}=await db.from("gallery_photos").update({
+   title:title.trim(),description:description.trim()||null
+  }).eq("id",id);
   if(error)throw error;
-
   alert("An gyara bayanin hoton cikin nasara.");
   await loadGallery();
-
- }catch(e){
-  alert("Matsala: "+e.message);
- }
+ }catch(e){alert("Matsala: "+e.message);}
 }
 
 async function deleteGalleryPhoto(id){
  const photo=galleryPhotos.find(p=>String(p.id)===String(id));
  if(!photo)return;
-
  if(!confirm("Kana tabbatar da goge wannan hoto daga Photo Gallery?"))return;
-
  try{
   await verifyAdmin();
-
   const path=getGalleryStoragePath(photo.image_url);
-
   if(path){
    const {error:storageError}=await db.storage.from("gallery-photos").remove([path]);
    if(storageError)throw storageError;
   }
-
   const {error}=await db.from("gallery_photos").delete().eq("id",id);
   if(error)throw error;
-
   alert("An goge hoton.");
   await loadGallery();
-
- }catch(e){
-  alert("Matsala wajen gogewa: "+e.message);
- }
+ }catch(e){alert("Matsala wajen gogewa: "+e.message);}
 }
 
 document.getElementById("galleryList").addEventListener("click",event=>{
  const button=event.target.closest("button[data-gallery-action]");
  if(!button)return;
-
  const id=button.dataset.id;
-
  if(button.dataset.galleryAction==="edit")editGalleryPhoto(id);
  if(button.dataset.galleryAction==="delete")deleteGalleryPhoto(id);
 });
 
-/* OPPORTUNITY */
+/* CATEGORY FIELDS */
 function updateOpportunityFields(){
- const yes=document.getElementById("category").value==="Damar Rayuwa";
-
+ const category=document.getElementById("category").value;
+ const yes=category==="Damar Rayuwa";
+ const event=category==="Events"||category==="Event";
  document.getElementById("opportunityGuide").classList.toggle("hidden",!yes);
  document.getElementById("opportunityFields").classList.toggle("hidden",!yes);
+ document.getElementById("eventFields").classList.toggle("hidden",!event);
 }
-
 document.getElementById("category").addEventListener("change",updateOpportunityFields);
 
 /* NEWS IMAGE */
 function previewSelectedImage(){
  const file=document.getElementById("imageFile").files[0];
  if(!file)return;
-
  if(!file.type.startsWith("image/")){
   alert("Zaɓi hoto kawai.");
   document.getElementById("imageFile").value="";
   return;
  }
-
  if(file.size>5*1024*1024){
   alert("Hoton bai kamata ya wuce 5MB ba.");
   document.getElementById("imageFile").value="";
   return;
  }
-
  if(imageObjectURL)URL.revokeObjectURL(imageObjectURL);
-
  imageObjectURL=URL.createObjectURL(file);
-
  const p=document.getElementById("imagePreview");
  p.src=imageObjectURL;
  p.style.display="block";
 }
-
 async function uploadImage(){
  const file=document.getElementById("imageFile").files[0];
  const btn=document.getElementById("uploadImageBtn");
-
  hideMessage("uploadMessage");
-
- if(!file){
-  showMessage("uploadMessage","Da farko zaɓi hoto.","error");
-  return;
- }
-
+ if(!file){showMessage("uploadMessage","Da farko zaɓi hoto.","error");return;}
  if(!file.type.startsWith("image/")||file.size>5*1024*1024){
-  showMessage("uploadMessage","Zaɓi hoto wanda bai wuce 5MB ba.","error");
-  return;
+  showMessage("uploadMessage","Zaɓi hoto wanda bai wuce 5MB ba.","error");return;
  }
-
- btn.disabled=true;
- btn.textContent="Ana ɗora hoto...";
-
+ btn.disabled=true;btn.textContent="Ana ɗora hoto...";
  try{
   await verifyAdmin();
-
   const path="news/"+Date.now()+"-"+file.name.replace(/[^a-zA-Z0-9._-]/g,"-");
-
-  const {error}=await db.storage.from("news-images").upload(
-   path,
-   file,
-   {cacheControl:"3600",upsert:false,contentType:file.type}
-  );
-
+  const {error}=await db.storage.from("news-images").upload(path,file,{
+   cacheControl:"3600",upsert:false,contentType:file.type
+  });
   if(error)throw error;
-
   const {data}=db.storage.from("news-images").getPublicUrl(path);
-
   document.getElementById("imageUrl").value=data.publicUrl;
   document.getElementById("imagePreview").src=data.publicUrl;
-
   showMessage("uploadMessage","An ɗora hoton cikin nasara!","success");
-
- }catch(e){
-  showMessage("uploadMessage","Matsala: "+e.message,"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="Upload Image";
- }
+ }catch(e){showMessage("uploadMessage","Matsala: "+e.message,"error");}
+ finally{btn.disabled=false;btn.textContent="Upload Image";}
 }
 
 /* VIDEO */
 function previewSelectedVideo(){
  const file=document.getElementById("videoFile").files[0];
  if(!file)return;
-
  if(!file.type.startsWith("video/")){
-  alert("Zaɓi bidiyo kawai.");
-  document.getElementById("videoFile").value="";
-  return;
+  alert("Zaɓi bidiyo kawai.");document.getElementById("videoFile").value="";return;
  }
-
  if(file.size>50*1024*1024){
-  alert("Bidiyo bai kamata ya wuce 50MB ba.");
-  document.getElementById("videoFile").value="";
-  return;
+  alert("Bidiyo bai kamata ya wuce 50MB ba.");document.getElementById("videoFile").value="";return;
  }
-
  if(videoObjectURL)URL.revokeObjectURL(videoObjectURL);
-
  videoObjectURL=URL.createObjectURL(file);
-
  const p=document.getElementById("videoPreview");
- p.src=videoObjectURL;
- p.style.display="block";
- p.load();
+ p.src=videoObjectURL;p.style.display="block";p.load();
 }
-
 async function uploadVideo(){
  const file=document.getElementById("videoFile").files[0];
  const btn=document.getElementById("uploadVideoBtn");
-
  hideMessage("videoUploadMessage");
-
- if(!file){
-  showMessage("videoUploadMessage","Da farko zaɓi bidiyo.","error");
-  return;
- }
-
+ if(!file){showMessage("videoUploadMessage","Da farko zaɓi bidiyo.","error");return;}
  if(!file.type.startsWith("video/")||file.size>50*1024*1024){
-  showMessage("videoUploadMessage","Zaɓi bidiyo wanda bai wuce 50MB ba.","error");
-  return;
+  showMessage("videoUploadMessage","Zaɓi bidiyo wanda bai wuce 50MB ba.","error");return;
  }
-
- btn.disabled=true;
- btn.textContent="Ana ɗora bidiyo...";
-
+ btn.disabled=true;btn.textContent="Ana ɗora bidiyo...";
  try{
   await verifyAdmin();
-
-  const safe=file.name.replace(/\.[^/.]+$/,"")
-   .replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
-
-  const ext=file.name.includes(".")
-   ?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"")
-   :"mp4";
-
+  const safe=file.name.replace(/\.[^/.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
+  const ext=file.name.includes(".")?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,""):"mp4";
   const path="videos/"+Date.now()+"-"+safe+"."+(ext||"mp4");
-
-  const {error}=await db.storage.from("news-videos").upload(
-   path,
-   file,
-   {cacheControl:"3600",upsert:false,contentType:file.type}
-  );
-
+  const {error}=await db.storage.from("news-videos").upload(path,file,{
+   cacheControl:"3600",upsert:false,contentType:file.type
+  });
   if(error)throw error;
-
   const {data}=db.storage.from("news-videos").getPublicUrl(path);
-
   document.getElementById("videoUrl").value=data.publicUrl;
-
-  if(videoObjectURL){
-   URL.revokeObjectURL(videoObjectURL);
-   videoObjectURL=null;
-  }
-
+  if(videoObjectURL){URL.revokeObjectURL(videoObjectURL);videoObjectURL=null;}
   const p=document.getElementById("videoPreview");
-  p.src=data.publicUrl;
-  p.style.display="block";
-  p.load();
-
+  p.src=data.publicUrl;p.style.display="block";p.load();
   showMessage("videoUploadMessage","An ɗora bidiyon cikin nasara!","success");
-
- }catch(e){
-  showMessage("videoUploadMessage","Matsala: "+e.message,"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="Upload Video";
- }
+ }catch(e){showMessage("videoUploadMessage","Matsala: "+e.message,"error");}
+ finally{btn.disabled=false;btn.textContent="Upload Video";}
 }
 
 /* AUDIO */
 function previewSelectedAudio(){
  const file=document.getElementById("audioFile").files[0];
  if(!file)return;
-
  const ext=file.name.split(".").pop().toLowerCase();
-
  if(!file.type.startsWith("audio/")&&!["mp3","m4a","aac","ogg","wav"].includes(ext)){
   alert("Zaɓi audio MP3, M4A, AAC, OGG ko WAV.");
-  document.getElementById("audioFile").value="";
-  return;
+  document.getElementById("audioFile").value="";return;
  }
-
  if(file.size>50*1024*1024){
   alert("Audio bai kamata ya wuce 50MB ba.");
-  document.getElementById("audioFile").value="";
-  return;
+  document.getElementById("audioFile").value="";return;
  }
-
  if(audioObjectURL)URL.revokeObjectURL(audioObjectURL);
-
  audioObjectURL=URL.createObjectURL(file);
-
  const p=document.getElementById("audioPreview");
- p.src=audioObjectURL;
- p.style.display="block";
- p.load();
-
+ p.src=audioObjectURL;p.style.display="block";p.load();
  document.getElementById("audioCurrent").textContent="An zaɓi: "+file.name;
  document.getElementById("removeAudioBtn").classList.remove("hidden");
-
  hideMessage("audioUploadMessage");
 }
-
 function removeAudioSelection(){
  const p=document.getElementById("audioPreview");
-
- p.pause();
- p.removeAttribute("src");
- p.load();
- p.style.display="none";
-
- if(audioObjectURL){
-  URL.revokeObjectURL(audioObjectURL);
-  audioObjectURL=null;
- }
-
+ p.pause();p.removeAttribute("src");p.load();p.style.display="none";
+ if(audioObjectURL){URL.revokeObjectURL(audioObjectURL);audioObjectURL=null;}
  document.getElementById("audioFile").value="";
  document.getElementById("audioCurrent").textContent="";
  document.getElementById("removeAudioBtn").classList.add("hidden");
-
  selectedAudioURL="";
  uploadedAudioURL="";
 }
-
 async function uploadAudio(){
  const file=document.getElementById("audioFile").files[0];
  const btn=document.getElementById("uploadAudioBtn");
-
  hideMessage("audioUploadMessage");
-
- if(!file){
-  showMessage("audioUploadMessage","Da farko zaɓi audio daga wayarka.","error");
-  return;
- }
-
- if(file.size>50*1024*1024){
-  showMessage("audioUploadMessage","Audio ya wuce 50MB.","error");
-  return;
- }
-
- btn.disabled=true;
- btn.textContent="Ana ɗora audio...";
-
+ if(!file){showMessage("audioUploadMessage","Da farko zaɓi audio daga wayarka.","error");return;}
+ if(file.size>50*1024*1024){showMessage("audioUploadMessage","Audio ya wuce 50MB.","error");return;}
+ btn.disabled=true;btn.textContent="Ana ɗora audio...";
  try{
   await verifyAdmin();
-
-  const safe=file.name.replace(/\.[^/.]+$/,"")
-   .replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
-
-  const ext=file.name.includes(".")
-   ?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"").toLowerCase()
-   :"mp3";
-
+  const safe=file.name.replace(/\.[^/.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60);
+  const ext=file.name.includes(".")?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"").toLowerCase():"mp3";
   const path="audio/"+Date.now()+"-"+safe+"."+(ext||"mp3");
-
-  const contentType=file.type||({
-   mp3:"audio/mpeg",
-   m4a:"audio/mp4",
-   ogg:"audio/ogg",
-   wav:"audio/wav"
-  }[ext]||"audio/aac");
-
-  const {error}=await db.storage.from("news-audio").upload(
-   path,
-   file,
-   {cacheControl:"3600",upsert:false,contentType}
-  );
-
+  const contentType=file.type||({mp3:"audio/mpeg",m4a:"audio/mp4",ogg:"audio/ogg",wav:"audio/wav"}[ext]||"audio/aac");
+  const {error}=await db.storage.from("news-audio").upload(path,file,{
+   cacheControl:"3600",upsert:false,contentType
+  });
   if(error)throw error;
-
   const {data}=db.storage.from("news-audio").getPublicUrl(path);
-
-  selectedAudioURL=data.publicUrl;
-  uploadedAudioURL=data.publicUrl;
-
+  selectedAudioURL=data.publicUrl;uploadedAudioURL=data.publicUrl;
   const p=document.getElementById("audioPreview");
-
-  if(audioObjectURL){
-   URL.revokeObjectURL(audioObjectURL);
-   audioObjectURL=null;
-  }
-
-  p.src=data.publicUrl;
-  p.style.display="block";
-  p.load();
-
+  if(audioObjectURL){URL.revokeObjectURL(audioObjectURL);audioObjectURL=null;}
+  p.src=data.publicUrl;p.style.display="block";p.load();
   document.getElementById("audioCurrent").textContent="An ɗora audio: "+file.name;
-
   showMessage("audioUploadMessage","An ɗora Audio cikin nasara! Za a haɗa shi da labari idan ka danna Publish.","success");
-
- }catch(e){
-  showMessage("audioUploadMessage","An kasa ɗora audio: "+e.message,"error");
- }finally{
-  btn.disabled=false;
-  btn.textContent="🎧 Upload Audio";
- }
+ }catch(e){showMessage("audioUploadMessage","An kasa ɗora audio: "+e.message,"error");}
+ finally{btn.disabled=false;btn.textContent="🎧 Upload Audio";}
 }
 
-/* SAVE NEWS - SINGLE FUNCTION */
+/* SAVE NEWS, EVENTS AND OPPORTUNITIES */
 async function savePost(){
  hideMessage("formMessage");
 
@@ -924,11 +702,12 @@ async function savePost(){
  const is_breaking_news=document.getElementById("isBreakingNews").checked;
  const image_url=document.getElementById("imageUrl").value.trim();
  const video_url=document.getElementById("videoUrl").value.trim();
- const excerpt=document.getElementById("excerpt").value.trim();
+ let excerpt=document.getElementById("excerpt").value.trim();
  const content=document.getElementById("content").value.trim();
  const status=document.getElementById("status").value;
 
  const isOpportunity=category==="Damar Rayuwa";
+ const isEvent=category==="Events"||category==="Event";
 
  const opportunity_type=isOpportunity?document.getElementById("opportunityType").value:null;
  const eligibility=isOpportunity?document.getElementById("eligibility").value.trim():null;
@@ -937,45 +716,51 @@ async function savePost(){
  const application_url=isOpportunity?document.getElementById("applicationUrl").value.trim():null;
  const contact_info=isOpportunity?document.getElementById("contactInfo").value.trim():null;
 
+ const eventDate=isEvent?document.getElementById("eventDate").value:"";
+ const eventTime=isEvent?document.getElementById("eventTime").value:"";
+ const eventVenue=isEvent?document.getElementById("eventVenue").value.trim():"";
+ const eventRegistration=isEvent?document.getElementById("eventRegistration").value.trim():"";
+
  if(!title||!content){
-  showMessage("formMessage","Saka taken labari da cikakken bayani.","error");
-  return;
+  showMessage("formMessage","Saka taken labari da cikakken bayani.","error");return;
  }
-
  if(image_url&&!isValidHttpURL(image_url)){
-  showMessage("formMessage","Image URL ba daidai ba ne.","error");
-  return;
+  showMessage("formMessage","Image URL ba daidai ba ne.","error");return;
  }
-
  if(video_url&&!isValidHttpURL(video_url)){
-  showMessage("formMessage","Video URL ba daidai ba ne.","error");
-  return;
+  showMessage("formMessage","Video URL ba daidai ba ne.","error");return;
  }
-
- if(application_url&&!isValidHttpURL(application_url)){
-  showMessage("formMessage","Application Link ba daidai ba ne.","error");
-  return;
- }
-
  if(isOpportunity&&!opportunity_type){
-  showMessage("formMessage","Zaɓi nau'in damar rayuwa.","error");
-  return;
+  showMessage("formMessage","Zaɓi nau'in damar rayuwa.","error");return;
+ }
+ if(isEvent&&!eventDate){
+  showMessage("formMessage","Da fatan zaɓi ranar taro.","error");return;
+ }
+ if(isEvent&&!eventVenue){
+  showMessage("formMessage","Saka wurin da za a gudanar da taro.","error");return;
+ }
+ if(eventRegistration&&!isValidHttpURL(eventRegistration)){
+  showMessage("formMessage","Hanyar rajista ba daidai ba ce.","error");return;
+ }
+ if(application_url&&!isValidHttpURL(application_url)){
+  showMessage("formMessage","Application Link ba daidai ba ne.","error");return;
  }
 
  const btn=document.getElementById("saveBtn");
  const isEditing=editingId!==null;
  const existingPost=isEditing?currentPosts.find(p=>String(p.id)===String(editingId)):null;
  const wasPublished=existingPost?.status==="published";
+ const shouldSendPush=status==="published"&&(!wasPublished||(is_breaking_news&&existingPost?.is_breaking_news!==true));
 
- const shouldSendPush=status==="published"&&
-  (!wasPublished||(is_breaking_news&&existingPost?.is_breaking_news!==true));
+ if(isEvent){
+  excerpt=makeEventExcerpt(excerpt,eventDate,eventTime,eventVenue,eventRegistration);
+ }
 
  btn.disabled=true;
  btn.textContent="Ana adanawa...";
 
  try{
   await verifyAdmin();
-
   const now=new Date().toISOString();
 
   const post={
@@ -999,72 +784,37 @@ async function savePost(){
   };
 
   let result;
-
   if(isEditing){
-   result=await db.from("news_posts")
-    .update(post)
-    .eq("id",editingId)
-    .select("id")
-    .single();
+   result=await db.from("news_posts").update(post).eq("id",editingId).select("id").single();
   }else{
-   result=await db.from("news_posts")
-    .insert(post)
-    .select("id")
-    .single();
+   result=await db.from("news_posts").insert(post).select("id").single();
   }
-
   if(result.error)throw result.error;
 
   const savedPostId=result.data.id;
-
-  let msg=isOpportunity
-   ?"An adana DAMAR RAYUWA cikin nasara!"
-   :"An adana labarin cikin nasara!";
-
+  let msg=isEvent?"An wallafa sanarwar taro cikin nasara! 📅":isOpportunity?"An adana DAMAR RAYUWA cikin nasara!":"An adana labarin cikin nasara!";
   if(is_breaking_news&&status==="published")msg+=" 🚨 BREAKING NEWS!";
   if(post.audio_url)msg+=" 🎧 Audio yana tare da labarin.";
 
   if(shouldSendPush){
    try{
     let notificationTitle;
-
-    if(isOpportunity){
-     notificationTitle="🎓 SABON DAMAR RAYUWA: "+title;
-    }else if(is_breaking_news){
-     notificationTitle="🚨 BREAKING NEWS: "+title;
-    }else{
-     notificationTitle="📰 SABON LABARI: "+title;
-    }
+    if(isEvent)notificationTitle="📅 SABON TARO: "+title;
+    else if(isOpportunity)notificationTitle="🎓 SABON DAMAR RAYUWA: "+title;
+    else if(is_breaking_news)notificationTitle="🚨 BREAKING NEWS: "+title;
+    else notificationTitle="📰 SABON LABARI: "+title;
 
     let notificationBody=excerpt||content.substring(0,180);
-
     if(isOpportunity){
      notificationBody="Nau'i: "+opportunity_type+". "+notificationBody;
-
-     if(application_deadline){
-      notificationBody+=" | Ranar ƙarshe: "+application_deadline;
-     }
+     if(application_deadline)notificationBody+=" | Ranar ƙarshe: "+application_deadline;
     }
-
-    const {data,error}=await db.functions.invoke(
-     "send-push-notification",
-     {
-      body:{
-       title:notificationTitle,
-       body:notificationBody,
-       url:"./?article="+encodeURIComponent(savedPostId)
-      }
-     }
-    );
-
+    const {data,error}=await db.functions.invoke("send-push-notification",{
+     body:{title:notificationTitle,body:notificationBody,url:"./?article="+encodeURIComponent(savedPostId)}
+    });
     if(error)throw error;
-
-    if(!data||!data.success){
-     throw new Error(data?.error||"An kasa aika sanarwa.");
-    }
-
+    if(!data||!data.success)throw new Error(data?.error||"An kasa aika sanarwa.");
     msg+=" An aika sanarwa: "+data.sent+" | An kasa: "+data.failed;
-
    }catch(e){
     console.error(e);
     msg+=" Amma sanarwar ba ta tafi ba: "+e.message;
@@ -1087,107 +837,81 @@ async function savePost(){
 /* CLEAR FORM */
 function clearForm(){
  editingId=null;
-
  [
   "newsTitle","imageUrl","videoUrl","excerpt","content",
   "opportunityType","eligibility","applicationDeadline",
-  "howToApply","applicationUrl","contactInfo"
- ].forEach(id=>{
-  document.getElementById(id).value="";
- });
+  "howToApply","applicationUrl","contactInfo",
+  "eventDate","eventTime","eventVenue","eventRegistration"
+ ].forEach(id=>{document.getElementById(id).value="";});
 
  document.getElementById("isBreakingNews").checked=false;
  document.getElementById("imageFile").value="";
  document.getElementById("videoFile").value="";
 
  const img=document.getElementById("imagePreview");
- img.style.display="none";
- img.src="";
-
+ img.style.display="none";img.src="";
  const v=document.getElementById("videoPreview");
- v.pause();
- v.removeAttribute("src");
- v.load();
- v.style.display="none";
+ v.pause();v.removeAttribute("src");v.load();v.style.display="none";
 
  removeAudioSelection();
-
  document.getElementById("category").value="News";
  document.getElementById("status").value="published";
-
  updateOpportunityFields();
 
- if(imageObjectURL){
-  URL.revokeObjectURL(imageObjectURL);
-  imageObjectURL=null;
- }
-
- if(videoObjectURL){
-  URL.revokeObjectURL(videoObjectURL);
-  videoObjectURL=null;
- }
+ if(imageObjectURL){URL.revokeObjectURL(imageObjectURL);imageObjectURL=null;}
+ if(videoObjectURL){URL.revokeObjectURL(videoObjectURL);videoObjectURL=null;}
 
  document.getElementById("formTitle").textContent="Publish New Story";
  document.getElementById("saveBtn").textContent="Publish Story";
 
- [
-  "uploadMessage",
-  "videoUploadMessage",
-  "audioUploadMessage"
- ].forEach(hideMessage);
+ ["uploadMessage","videoUploadMessage","audioUploadMessage"].forEach(hideMessage);
 }
 
-/* NEWS LIST */
+/* NEWS AND EVENTS LIST */
 async function loadPosts(){
  const area=document.getElementById("posts");
  area.textContent="Loading news...";
-
  try{
-  const {data,error}=await db.from("news_posts")
-   .select("*")
-   .order("created_at",{ascending:false});
-
+  const {data,error}=await db.from("news_posts").select("*").order("created_at",{ascending:false});
   if(error)throw error;
-
   currentPosts=data||[];
+  if(!currentPosts.length){area.textContent="Babu labari tukuna.";return;}
 
-  if(!currentPosts.length){
-   area.textContent="Babu labari tukuna.";
-   return;
-  }
-
-  area.innerHTML=currentPosts.map(p=>`
+  area.innerHTML=currentPosts.map(p=>{
+   const isEvent=p.category==="Events"||p.category==="Event";
+   const eventInfo=isEvent?readEventExcerpt(p.excerpt):null;
+   return `
    <div class="post">
     ${p.is_breaking_news===true?'<span class="breaking-badge">🚨 BREAKING NEWS</span>':""}
     ${p.audio_url?'<span class="audio-badge">🎧 AUDIO NEWS</span>':""}
+    ${isEvent?'<span class="event-badge">📅 EVENT / T A R O</span>':""}
     <h4>${escapeHTML(p.title)}</h4>
     <p class="small">${escapeHTML(p.category)} | ${escapeHTML(p.status)}</p>
-    <p>${escapeHTML(p.excerpt||"")}</p>
-
+    <p>${escapeHTML(eventInfo?eventInfo.summary:(p.excerpt||""))}</p>
+    ${isEvent?`
+     <p class="small">📅 Ranar taro: ${escapeHTML(eventInfo.date||"Ba a saka ba")}</p>
+     <p class="small">🕒 Lokaci: ${escapeHTML(eventInfo.time||"Ba a saka ba")}</p>
+     <p class="small">📍 Wuri: ${escapeHTML(eventInfo.venue||"Ba a saka ba")}</p>
+     ${eventInfo.registration?`<p class="small">🔗 Rajista: ${escapeHTML(eventInfo.registration)}</p>`:""}
+    `:""}
     ${p.category==="Damar Rayuwa"?`
      <p class="small">DAMAR RAYUWA | ${escapeHTML(p.opportunity_type||"Ba a zaɓa ba")}</p>
      ${p.application_deadline?`<p class="small">Deadline: ${escapeHTML(p.application_deadline)}</p>`:""}
     `:""}
-
     ${p.video_url?'<p class="small">▶ Akwai bidiyo</p>':""}
     ${p.audio_url?'<p class="small">🎧 Akwai sautin labari</p>':""}
-
     <div class="actions">
      <button class="secondary" data-action="edit" data-id="${escapeHTML(p.id)}">Edit</button>
      <button class="danger" data-action="delete" data-id="${escapeHTML(p.id)}">Delete</button>
     </div>
-   </div>
-  `).join("");
-
- }catch(e){
-  area.textContent="Matsala: "+e.message;
- }
+   </div>`;
+  }).join("");
+ }catch(e){area.textContent="Matsala: "+e.message;}
 }
 
 document.getElementById("posts").addEventListener("click",event=>{
  const b=event.target.closest("button[data-action]");
  if(!b)return;
-
  if(b.dataset.action==="edit")editPost(b.dataset.id);
  if(b.dataset.action==="delete")deletePost(b.dataset.id);
 });
@@ -1196,95 +920,77 @@ document.getElementById("posts").addEventListener("click",event=>{
 function editPost(id){
  const p=currentPosts.find(x=>String(x.id)===String(id));
  if(!p)return;
-
  editingId=p.id;
 
  document.getElementById("newsTitle").value=p.title||"";
  document.getElementById("category").value=p.category||"News";
  document.getElementById("isBreakingNews").checked=p.is_breaking_news===true;
-
  updateOpportunityFields();
 
  [
-  "opportunityType",
-  "eligibility",
-  "applicationDeadline",
-  "howToApply",
-  "applicationUrl",
-  "contactInfo"
+  "opportunityType","eligibility","applicationDeadline",
+  "howToApply","applicationUrl","contactInfo"
  ].forEach((id,i)=>{
   document.getElementById(id).value=[
-   p.opportunity_type,
-   p.eligibility,
-   p.application_deadline,
-   p.how_to_apply,
-   p.application_url,
-   p.contact_info
+   p.opportunity_type,p.eligibility,p.application_deadline,
+   p.how_to_apply,p.application_url,p.contact_info
   ][i]||"";
  });
 
  document.getElementById("imageUrl").value=p.image_url||"";
  document.getElementById("videoUrl").value=p.video_url||"";
- document.getElementById("excerpt").value=p.excerpt||"";
+
+ const isEvent=p.category==="Events"||p.category==="Event";
+ if(isEvent){
+  const ev=readEventExcerpt(p.excerpt);
+  document.getElementById("excerpt").value=ev.summary;
+  document.getElementById("eventDate").value=ev.date;
+  document.getElementById("eventTime").value=ev.time;
+  document.getElementById("eventVenue").value=ev.venue;
+  document.getElementById("eventRegistration").value=ev.registration;
+ }else{
+  document.getElementById("excerpt").value=p.excerpt||"";
+  document.getElementById("eventDate").value="";
+  document.getElementById("eventTime").value="";
+  document.getElementById("eventVenue").value="";
+  document.getElementById("eventRegistration").value="";
+ }
+
  document.getElementById("content").value=p.content||"";
  document.getElementById("status").value=p.status||"draft";
 
  removeAudioSelection();
  selectedAudioURL="";
-
  if(p.audio_url){
   const player=document.getElementById("audioPreview");
-  player.src=p.audio_url;
-  player.style.display="block";
-  player.load();
-
-  document.getElementById("audioCurrent").textContent=
-   "🎧 Wannan labari yana da audio. Za a ci gaba da amfani da shi idan ba ka ɗora wani sabon audio ba.";
+  player.src=p.audio_url;player.style.display="block";player.load();
+  document.getElementById("audioCurrent").textContent="🎧 Wannan labari yana da audio. Za a ci gaba da amfani da shi idan ba ka ɗora wani sabon audio ba.";
  }
 
- document.getElementById("formTitle").textContent="Edit News";
+ document.getElementById("formTitle").textContent=isEvent?"Edit Event / Gyara Taro":"Edit News";
  document.getElementById("saveBtn").textContent="Save Changes";
 
  const ip=document.getElementById("imagePreview");
-
- if(p.image_url&&isValidHttpURL(p.image_url)){
-  ip.src=p.image_url;
-  ip.style.display="block";
- }else{
-  ip.style.display="none";
- }
+ if(p.image_url&&isValidHttpURL(p.image_url)){ip.src=p.image_url;ip.style.display="block";}
+ else{ip.style.display="none";}
 
  const vp=document.getElementById("videoPreview");
-
- if(p.video_url&&isValidHttpURL(p.video_url)){
-  vp.src=p.video_url;
-  vp.style.display="block";
-  vp.load();
- }else{
-  vp.removeAttribute("src");
-  vp.style.display="none";
- }
+ if(p.video_url&&isValidHttpURL(p.video_url)){vp.src=p.video_url;vp.style.display="block";vp.load();}
+ else{vp.removeAttribute("src");vp.style.display="none";}
 
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 /* DELETE POST */
 async function deletePost(id){
- if(!confirm("Da gaske kana son goge wannan labari?"))return;
-
+ if(!confirm("Da gaske kana son goge wannan labari ko taro?"))return;
  try{
   await verifyAdmin();
-
   const {error}=await db.from("news_posts").delete().eq("id",id);
-
   if(error)throw error;
-
-  alert("An goge labarin.");
+  alert("An goge bayanin.");
   await loadPosts();
-
- }catch(e){
-  alert("Matsala: "+e.message);
- }
+ }catch(e){alert("Matsala: "+e.message);}
 }
 
 /* MANUAL PUSH NOTIFICATION */
@@ -1294,11 +1000,7 @@ async function sendPushNotification(){
  const result=document.getElementById("pushResult");
  const button=document.getElementById("sendPushBtn");
 
- if(!title||!message){
-  result.textContent="Ka cika taken da sakon sanarwa.";
-  return;
- }
-
+ if(!title||!message){result.textContent="Ka cika taken da sakon sanarwa.";return;}
  if(!confirm("Kana tabbatar da aika wannan sanarwa?"))return;
 
  button.disabled=true;
@@ -1307,32 +1009,14 @@ async function sendPushNotification(){
 
  try{
   await verifyAdmin();
-
-  const {data,error}=await db.functions.invoke(
-   "send-push-notification",
-   {
-    body:{
-     title,
-     body:message,
-     url:"./"
-    }
-   }
-  );
-
+  const {data,error}=await db.functions.invoke("send-push-notification",{
+   body:{title,body:message,url:"./"}
+  });
   if(error)throw error;
-
-  if(!data||!data.success){
-   throw new Error(data?.error||"An kasa aika sanarwa.");
-  }
-
-  result.textContent=
-   "An gama! An aika: "+data.sent+
-   " | An kasa: "+data.failed+
-   " | Jimilla: "+data.total;
-
+  if(!data||!data.success)throw new Error(data?.error||"An kasa aika sanarwa.");
+  result.textContent="An gama! An aika: "+data.sent+" | An kasa: "+data.failed+" | Jimilla: "+data.total;
   document.getElementById("pushTitle").value="";
   document.getElementById("pushMessage").value="";
-
  }catch(e){
   console.error(e);
   result.textContent="Matsala: "+e.message;
@@ -1344,31 +1028,22 @@ async function sendPushNotification(){
 
 /* AUTH SESSION */
 db.auth.onAuthStateChange((event,session)=>{
- if(event==="SIGNED_OUT"){
-  showLogin();
- }
+ if(event==="SIGNED_OUT")showLogin();
 });
 
 /* START APPLICATION */
 (async function start(){
  try{
   const {data,error}=await db.auth.getSession();
-
   if(error)throw error;
-
-  if(data.session){
-   await checkAdmin();
-  }else{
-   showLogin();
-  }
-
+  if(data.session)await checkAdmin();
+  else showLogin();
  }catch(e){
   console.error("Admin startup error:",e);
   showLogin();
   showMessage("loginMessage","Matsala wajen buɗe Admin: "+e.message,"error");
  }
 })();
-
 </script>
 </body>
 </html>
