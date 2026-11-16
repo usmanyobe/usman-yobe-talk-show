@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#071b49">
-<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. News, opportunities, education, videos, audio and photos.">
+<meta name="description" content="USMAN YOBE TALK SHOW - TASHAR AL'UMMA. News, opportunities, education, health, videos, audio and photos.">
 <title>USMAN YOBE TALK SHOW</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./74556.png">
@@ -23,7 +23,7 @@ header{background:linear-gradient(120deg,#061638,#0b3985);color:white;padding:14
 .brand h1{font-size:18px;margin:0;font-weight:800}
 .brand p{font-size:11px;margin:5px 0 0;color:#d9e8ff;line-height:1.4}
 .header-tools{display:flex;gap:8px;margin-top:13px}
-.header-tools input{flex:1;min-width:0;padding:12px;border:0;border-radius:9px;font-size:14px;outline:none}
+.header-tools input{flex:1;min-width:0;padding:12px;border:0;border-radius:9px;font-size:14px}
 .language{border:0;border-radius:8px;padding:9px;background:white;color:var(--navy)}
 nav{display:flex;gap:7px;overflow-x:auto;padding:10px;background:white;position:sticky;top:132px;z-index:15;box-shadow:0 2px 5px #0001;scrollbar-width:none}
 nav::-webkit-scrollbar,.bottom-nav::-webkit-scrollbar{display:none}
@@ -79,77 +79,64 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 .gallery-view{display:none;position:fixed;inset:0;z-index:120;background:#050914f5;padding:15px;align-items:center;justify-content:center;flex-direction:column}
 .gallery-view.open{display:flex}
 .gallery-view img{max-width:100%;max-height:68vh;object-fit:contain;border-radius:8px}
-.gallery-view h3{color:white;text-align:center;font-size:16px}
-.gallery-view p{color:#d8e2f4;text-align:center;font-size:13px}
-.gallery-view .close{position:absolute;top:15px;right:15px;width:42px;height:42px}
+.gallery-view h3,.gallery-view p{color:white;text-align:center}
+.gallery-view .close{position:absolute;top:15px;right:15px}
 .gallery-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:8px}
 .gallery-buttons button{border:0;border-radius:8px;padding:11px 15px;font-weight:bold;background:#1478ed;color:white}
 .opportunity-categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0 20px}
 .opportunity-category{border:1px solid var(--border);background:#fff;border-radius:13px;padding:16px 10px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:var(--shadow);color:var(--navy);font-weight:800;text-align:center}
-.opportunity-category .opp-icon{font-size:32px;line-height:1}
-.opportunity-category small{font-size:12px;color:var(--muted);font-weight:600}
+.opportunity-category .opp-icon{font-size:32px}
+.opportunity-category small{font-size:12px;color:var(--muted)}
 .opportunity-category.active{border:2px solid var(--blue);background:#edf4ff}
 .gallery-refresh{margin:0 0 13px;border:0;background:#e7efff;color:var(--navy);padding:9px 13px;border-radius:8px;font-weight:bold}
 .education-centre{margin:22px 0;background:white;border:1px solid var(--border);border-radius:15px;padding:15px;box-shadow:var(--shadow)}
 .education-centre h3{margin:0 0 7px;color:var(--navy);font-size:20px}
-.education-centre>p{margin:0 0 15px;color:var(--muted);font-size:13px;line-height:1.6}
+.education-centre>p{color:var(--muted);font-size:13px;line-height:1.6}
 .education-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.education-card{background:#f8faff;border:1px solid var(--border);border-radius:13px;padding:14px 9px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
-.education-icon{font-size:35px;line-height:1.2}
+.education-card{background:#f8faff;border:1px solid var(--border);border-radius:13px;padding:14px 9px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.education-icon{font-size:35px}
 .education-card strong{color:var(--navy);font-size:15px}
 .education-card small{color:var(--muted);font-size:11px;line-height:1.5}
 .education-links{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:5px}
 .education-links a,.education-links button{border:0;border-radius:7px;background:var(--blue);color:white;text-decoration:none;padding:9px 10px;font-size:11px;font-weight:bold}
 .education-links a.secondary{background:#e7efff;color:var(--navy)}
-.education-card button{cursor:pointer;font-family:inherit}
+.health-call{background:linear-gradient(120deg,#075b35,#12834e);color:white;border-radius:15px;padding:18px;margin:12px 0 18px;text-align:center}
+.health-call h3{margin:0 0 8px}
+.health-number{display:inline-block;background:white;color:#075b35;font-size:34px;font-weight:900;text-decoration:none;border-radius:12px;padding:10px 25px;margin:8px}
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.health-card{background:white;border:1px solid var(--border);border-radius:13px;padding:15px;box-shadow:var(--shadow);line-height:1.65}
+.health-card h3{margin:0 0 8px;color:var(--navy);font-size:16px}
+.health-card p,.health-card li{font-size:13px}
+.health-card ul{padding-left:20px;margin:8px 0}
+.health-links{display:flex;gap:8px;flex-wrap:wrap}
+.health-links a{display:inline-block;background:#eaf2ff;color:#0750a9;padding:9px 11px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold}
 [dir="rtl"] body{text-align:right}
 [dir="rtl"] .breaking{border-left:0;border-right:5px solid var(--red)}
 [dir="rtl"] .close{float:left}
-@media(max-width:420px){
- .brand h1{font-size:16px}
- nav{top:132px}
- .post-image{height:165px}
- .gallery-card img{height:125px}
- .section-title{font-size:19px}
-}
+@media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}.gallery-card img{height:125px}.section-title{font-size:19px}}
 </style>
 </head>
 <body>
-
 <header>
  <div class="brand">
   <img class="logo" src="./74556.png" alt="USMAN YOBE logo" onerror="this.style.display='none'">
-  <div>
-   <h1>USMAN YOBE TALK SHOW</h1>
-   <p>TASHAR AL'UMMA • ...one voice, one community, one future</p>
-  </div>
+  <div><h1>USMAN YOBE TALK SHOW</h1><p>TASHAR AL'UMMA • ...one voice, one community, one future</p></div>
  </div>
  <div class="header-tools">
   <input id="searchInput" type="search" placeholder="Search news...">
   <select class="language" id="languageSelect" aria-label="Language">
-   <option value="en">English</option>
-   <option value="ha">Hausa</option>
-   <option value="ar">العربية</option>
+   <option value="en">English</option><option value="ha">Hausa</option><option value="ar">العربية</option>
   </select>
  </div>
 </header>
-
 <nav id="categoryNav">
  <button class="active" data-category="all">All</button>
- <button data-category="News">News</button>
- <button data-category="Politics">Politics</button>
- <button data-category="Entertainment">Entertainment</button>
- <button data-category="Business">Business</button>
- <button data-category="Youth">Youth</button>
- <button data-category="Sports">Sports</button>
- <button data-category="Education">Education</button>
+ <button data-category="News">News</button><button data-category="Politics">Politics</button>
+ <button data-category="Entertainment">Entertainment</button><button data-category="Business">Business</button>
+ <button data-category="Youth">Youth</button><button data-category="Sports">Sports</button><button data-category="Education">Education</button>
 </nav>
-
 <main>
-<div id="breakingBox" class="breaking">
- <strong id="breakingTitle">🔴 BREAKING NEWS</strong>
- <div id="breakingItems"></div>
-</div>
+<div id="breakingBox" class="breaking"><strong id="breakingTitle">🔴 BREAKING NEWS</strong><div id="breakingItems"></div></div>
 
 <section id="homePage" class="page active">
  <div class="hero">
@@ -159,112 +146,90 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
    <button onclick="showPage('opportunities')">🎓 <span data-i18n="opportunities">Opportunities</span></button>
    <button onclick="showPage('gallery')">📸 <span data-i18n="gallery">Photo Gallery</span></button>
    <button onclick="showPage('audio')">🎧 <span data-i18n="audioNews">Audio News</span></button>
+   <button onclick="showPage('health')">🏥 <span data-i18n="health">Health</span></button>
   </div>
  </div>
- <h2 class="section-title" id="latestHeading">Latest News</h2>
- <div id="newsGrid" class="grid"></div>
+ <h2 class="section-title" id="latestHeading">Latest News</h2><div id="newsGrid" class="grid"></div>
 </section>
 
 <section id="opportunitiesPage" class="page">
  <h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2>
  <p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p>
  <div id="opportunityCategories" class="opportunity-categories"></div>
-
  <section class="education-centre">
   <h3 data-i18n="educationCentre">🎓 Education Centre</h3>
   <p id="educationCentreIntro">Access official examination websites, student services and scholarship opportunities.</p>
-
   <div class="education-grid">
-   <article class="education-card">
-    <span class="education-icon">📘</span>
-    <strong>JAMB</strong>
-    <small data-i18n="jambDesc">Official website and e-Facility</small>
-    <div class="education-links">
-     <a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a>
-     <a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a>
-    </div>
-   </article>
-
-   <article class="education-card">
-    <span class="education-icon">📗</span>
-    <strong>WAEC</strong>
-    <small data-i18n="waecDesc">Official website and online services</small>
-    <div class="education-links">
-     <a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a>
-     <a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a>
-    </div>
-   </article>
-
-   <article class="education-card">
-    <span class="education-icon">📕</span>
-    <strong>NECO</strong>
-    <small data-i18n="necoDesc">Official website and examination information</small>
-    <div class="education-links">
-     <a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a>
-    </div>
-   </article>
-
-   <article class="education-card">
-    <span class="education-icon">🎓</span>
-    <strong data-i18n="scholarships">Scholarships</strong>
-    <small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small>
-    <div class="education-links">
-     <button type="button" onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button>
-    </div>
-   </article>
+   <article class="education-card"><span class="education-icon">📘</span><strong>JAMB</strong><small data-i18n="jambDesc">Official website and e-Facility</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
+   <article class="education-card"><span class="education-icon">📗</span><strong>WAEC</strong><small data-i18n="waecDesc">Official website and online services</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
+   <article class="education-card"><span class="education-icon">📕</span><strong>NECO</strong><small data-i18n="necoDesc">Official website and examination information</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+   <article class="education-card"><span class="education-icon">🎓</span><strong data-i18n="scholarships">Scholarships</strong><small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small><div class="education-links"><button onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button></div></article>
   </div>
  </section>
-
  <div id="opportunitiesGrid" class="grid"></div>
 </section>
 
 <section id="videosPage" class="page">
- <h2 class="section-title" id="videosHeading">📹 Videos</h2>
- <p class="page-intro" id="videosIntro">Watch videos published on USMAN YOBE TALK SHOW.</p>
+ <h2 class="section-title" id="videosHeading">📹 Videos</h2><p class="page-intro" id="videosIntro">Watch videos published on USMAN YOBE TALK SHOW.</p>
  <div id="videosGrid" class="grid"></div>
- <p style="text-align:center;margin-top:20px">
-  <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" id="youtubeMore">Watch more ASAWWARA TV videos on YouTube</a>
- </p>
+ <p style="text-align:center;margin-top:20px"><a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" id="youtubeMore">Watch more ASAWWARA TV videos on YouTube</a></p>
 </section>
 
 <section id="galleryPage" class="page">
- <h2 class="section-title" id="galleryHeading">📸 Photo Gallery</h2>
- <p class="page-intro" id="galleryIntro">Photos of events, activities and important moments.</p>
- <button class="gallery-refresh" onclick="loadGallery()" id="galleryRefresh">↻ Refresh Photos</button>
- <div id="galleryGrid" class="gallery-grid"></div>
+ <h2 class="section-title" id="galleryHeading">📸 Photo Gallery</h2><p class="page-intro" id="galleryIntro">Photos of events, activities and important moments.</p>
+ <button class="gallery-refresh" onclick="loadGallery()" id="galleryRefresh">↻ Refresh Photos</button><div id="galleryGrid" class="gallery-grid"></div>
 </section>
 
 <section id="audioPage" class="page">
- <h2 class="section-title" id="audioHeading">🎧 Audio News</h2>
- <p class="page-intro" id="audioIntro">Listen to news stories on your phone.</p>
- <div id="audioGrid" class="grid"></div>
+ <h2 class="section-title" id="audioHeading">🎧 Audio News</h2><p class="page-intro" id="audioIntro">Listen to news stories on your phone.</p><div id="audioGrid" class="grid"></div>
 </section>
 
 <section id="livePage" class="page">
- <div class="hero">
-  <h2 id="liveHeading">📺 ASAWWARA TV — LIVE</h2>
-  <p id="liveIntro">Watch our channel live.</p>
-  <p style="margin-top:15px">
-   <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" style="color:white;font-weight:bold" id="liveLink">Open ASAWWARA TV on YouTube</a>
-  </p>
+ <div class="hero"><h2 id="liveHeading">📺 ASAWWARA TV — LIVE</h2><p id="liveIntro">Watch our channel live.</p><p style="margin-top:15px"><a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" style="color:white;font-weight:bold" id="liveLink">Open ASAWWARA TV on YouTube</a></p></div>
+</section>
+
+<section id="healthPage" class="page">
+ <h2 class="section-title" id="healthHeading">🏥 Health &amp; Emergency</h2>
+ <p class="page-intro" id="healthIntro">Trusted health information, emergency guidance and official health resources.</p>
+ <div class="health-call">
+  <h3 id="emergencyTitle">🚨 National Emergency Number</h3>
+  <a class="health-number" href="tel:112">112</a>
+  <p id="emergencyNote">Tap to call for urgent emergencies in Nigeria. If the call does not connect, go to the nearest hospital or contact local emergency responders.</p>
  </div>
+ <div class="health-grid">
+  <article class="health-card"><h3 id="firstAidTitle">🩹 First Aid Basics</h3><ul id="firstAidList">
+   <li>Keep yourself and the injured person away from danger.</li>
+   <li>Call 112 for a life-threatening emergency.</li>
+   <li>For heavy bleeding, apply firm direct pressure with a clean cloth.</li>
+   <li>Do not move someone with a possible neck or back injury unless there is immediate danger.</li>
+   <li>Do not give food, drink or medicine to an unconscious person.</li>
+  </ul></article>
+  <article class="health-card"><h3 id="urgentTitle">⚠️ When to seek urgent help</h3><p id="urgentText">Seek emergency help for difficulty breathing, severe bleeding, chest pain, stroke signs, seizures, unconsciousness, serious burns or major injuries.</p></article>
+  <article class="health-card"><h3 id="preventionTitle">🧼 Everyday Prevention</h3><p id="preventionText">Wash hands with soap, drink safe water, use mosquito nets, keep vaccinations up to date and seek advice from a qualified health worker when unwell.</p></article>
+  <article class="health-card"><h3 id="resourcesTitle">🌍 Official Health Resources</h3>
+   <div class="health-links">
+    <a href="https://www.who.int/" target="_blank" rel="noopener">WHO</a>
+    <a href="https://ncdc.gov.ng/" target="_blank" rel="noopener">NCDC</a>
+    <a href="https://health.gov.ng/" target="_blank" rel="noopener">Federal Ministry of Health</a>
+    <a href="https://nphcda.gov.ng/" target="_blank" rel="noopener">NPHCDA</a>
+   </div>
+  </article>
+ </div>
+ <p class="page-intro" id="healthDisclaimer" style="margin-top:15px">This page provides general information only. It is not a hospital, ambulance service or substitute for professional medical care. In an emergency, call 112 or go to the nearest hospital.</p>
 </section>
 
 <section id="morePage" class="page">
  <h2 class="section-title" id="aboutHeading">About Us</h2>
  <div class="post" style="padding:16px;line-height:1.8">
-  <h3>USMAN YOBE TALK SHOW</h3>
-  <p>TASHAR AL'UMMA — ...one voice, one community, one future.</p>
+  <h3>USMAN YOBE TALK SHOW</h3><p>TASHAR AL'UMMA — ...one voice, one community, one future.</p>
   <p id="aboutText">Our mission is to provide news, education and useful information to the community.</p>
   <p><b>YouTube:</b> <a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener">ASAWWARA TV</a></p>
   <p><b>TikTok:</b> <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">@usman1yobe</a></p>
-  <p><b>Facebook:</b> <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a></p>
-  <hr>
+  <p><b>Facebook:</b> <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a></p><hr>
   <p id="aboutGalleryText">Photo Gallery: View photos of our activities.</p>
   <button class="primary" onclick="showPage('gallery')" id="openGalleryButton">Open Photo Gallery</button>
  </div>
 </section>
-
 <footer>© <span id="year"></span> USMAN YOBE TALK SHOW<br>TASHAR AL'UMMA</footer>
 </main>
 
@@ -274,207 +239,112 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
  <button data-page="videos"><span>📹</span><label data-i18n="videos">Videos</label></button>
  <button data-page="gallery"><span>📸</span><label data-i18n="galleryShort">Gallery</label></button>
  <button data-page="audio"><span>🎧</span><label data-i18n="audioShort">Audio</label></button>
+ <button data-page="health"><span>🏥</span><label data-i18n="healthShort">Health</label></button>
  <button data-page="live"><span>📺</span><label data-i18n="live">Live TV</label></button>
  <button data-page="more"><span>☰</span><label data-i18n="more">More</label></button>
 </div>
 
-<div class="modal" id="articleModal">
- <div class="modal-card">
-  <button class="close" onclick="closeArticle()" aria-label="Close">×</button>
-  <div id="articleDetails"></div>
- </div>
-</div>
-
+<div class="modal" id="articleModal"><div class="modal-card"><button class="close" onclick="closeArticle()" aria-label="Close">×</button><div id="articleDetails"></div></div></div>
 <div class="gallery-view" id="galleryView" onclick="closeGalleryImage(event)">
  <button class="close" onclick="closeGalleryImage(event)" aria-label="Close">×</button>
- <img id="galleryFullImage" src="" alt="Gallery photo">
- <h3 id="galleryFullTitle"></h3>
- <p id="galleryFullDescription"></p>
- <div class="gallery-buttons">
-  <button onclick="shareGalleryPhoto(event)" id="shareGalleryButton">📤 Share Photo</button>
- </div>
+ <img id="galleryFullImage" src="" alt="Gallery photo"><h3 id="galleryFullTitle"></h3><p id="galleryFullDescription"></p>
+ <div class="gallery-buttons"><button onclick="shareGalleryPhoto(event)" id="shareGalleryButton">📤 Share Photo</button></div>
 </div>
 
 <script>
 const SUPABASE_URL="https://latxtetkscajmbqppnad.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhdHh0ZXRrc2Nham1icXBwbmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2MTE5MDAsImV4cCI6MjExMDE4NzkwMH0.hE2PTt-ccIDlWmBhxlkQq2rT6CfA_J7V4XXvmN8EYHU";const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-let posts=[],galleryPhotos=[],currentCategory="all";
-let currentLanguage=localStorage.getItem("usman_yobe_language")||"en";
-let deepLinkHandled=false;
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhdHh0ZXRrc2Nham1icXBwbmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2MTE5MDAsImV4cCI6MjExMDE4NzkwMH0.hE2PTt-ccIDlWmBhxlkQq2rT6CfA_J7V4XXvmN8EYHU";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let posts=[],galleryPhotos=[],currentCategory="all",activeGalleryPhoto=null;
+let currentLanguage=localStorage.getItem("usman_yobe_language")||"en",deepLinkHandled=false;
 
 const translations={
 en:{
- all:"All",News:"News",Politics:"Politics",Entertainment:"Entertainment",Business:"Business",Youth:"Youth",Sports:"Sports",Education:"Education",
- home:"Home",opportunities:"Opportunities",videos:"Videos",gallery:"Photo Gallery",galleryShort:"Gallery",audioNews:"Audio News",audioShort:"Audio",live:"Live TV",more:"More",
- welcome:"Welcome to USMAN YOBE TALK SHOW",intro:"Get news, videos, audio and important updates from Yobe and around the world.",latest:"Latest News",search:"Search news...",
- read:"Read Story",share:"Share",loading:"Loading news...",loadingPhotos:"Loading photos...",
- oppIntro:"Find jobs, scholarships, training, grants and other opportunities.",noOpp:"No opportunities published yet.",eligibility:"Eligibility:",deadline:"Application Deadline:",contact:"Contact:",apply:"Apply Now",details:"More Details",
- educationCentre:"🎓 Education Centre",educationIntro:"Access official examination websites, student services and scholarship opportunities.",jambDesc:"Official website and e-Facility",waecDesc:"Official website and online services",necoDesc:"Official website and examination information",scholarships:"Scholarships",scholarshipDesc:"Browse scholarship opportunities published in this app",browseScholarships:"Browse Scholarships",
- videosIntro:"Watch videos published on USMAN YOBE TALK SHOW.",noVideos:"No videos available right now.",galleryIntro:"Photos of events, activities and important moments.",refresh:"↻ Refresh Photos",noPhotos:"No photos in the gallery yet.",galleryError:"Could not load photos. Please check your internet connection and gallery permissions.",
- audioIntro:"Listen to news stories on your phone.",noAudio:"No audio news available right now.",listen:"🎧 Listen to Story",listenFull:"🎧 Listen to Full Story",fullDetails:"Full Story",
- liveIntro:"Watch our channel live.",liveLink:"Open ASAWWARA TV on YouTube",about:"About Us",aboutText:"Our mission is to provide news, education and useful information to the community.",aboutGallery:"Photo Gallery: View photos of our activities.",openGallery:"Open Photo Gallery",breaking:"🔴 BREAKING NEWS",noNews:"No stories available right now.",copied:"Story link copied.",sharePhoto:"📤 Share Photo"
+all:"All",News:"News",Politics:"Politics",Entertainment:"Entertainment",Business:"Business",Youth:"Youth",Sports:"Sports",Education:"Education",
+home:"Home",opportunities:"Opportunities",videos:"Videos",gallery:"Photo Gallery",galleryShort:"Gallery",audioNews:"Audio News",audioShort:"Audio",health:"Health & Emergency",healthShort:"Health",live:"Live TV",more:"More",
+welcome:"Welcome to USMAN YOBE TALK SHOW",intro:"Get news, videos, audio and important updates from Yobe and around the world.",latest:"Latest News",search:"Search news...",
+read:"Read Story",share:"Share",loading:"Loading news...",loadingPhotos:"Loading photos...",
+oppIntro:"Find jobs, scholarships, training, grants and other opportunities.",noOpp:"No opportunities published yet.",eligibility:"Eligibility:",deadline:"Application Deadline:",contact:"Contact:",apply:"Apply Now",details:"More Details",
+educationCentre:"🎓 Education Centre",educationIntro:"Access official examination websites, student services and scholarship opportunities.",jambDesc:"Official website and e-Facility",waecDesc:"Official website and online services",necoDesc:"Official website and examination information",scholarships:"Scholarships",scholarshipDesc:"Browse scholarship opportunities published in this app",browseScholarships:"Browse Scholarships",
+videosIntro:"Watch videos published on USMAN YOBE TALK SHOW.",noVideos:"No videos available right now.",galleryIntro:"Photos of events, activities and important moments.",refresh:"↻ Refresh Photos",noPhotos:"No photos in the gallery yet.",galleryError:"Could not load photos. Please check your internet connection and gallery permissions.",
+audioIntro:"Listen to news stories on your phone.",noAudio:"No audio news available right now.",listen:"🎧 Listen to Story",listenFull:"🎧 Listen to Full Story",fullDetails:"Full Story",
+liveIntro:"Watch our channel live.",liveLink:"Open ASAWWARA TV on YouTube",about:"About Us",aboutText:"Our mission is to provide news, education and useful information to the community.",aboutGallery:"Photo Gallery: View photos of our activities.",openGallery:"Open Photo Gallery",breaking:"🔴 BREAKING NEWS",noNews:"No stories available right now.",copied:"Story link copied.",sharePhoto:"📤 Share Photo",
+healthIntro:"Trusted health information, emergency guidance and official health resources.",emergencyTitle:"🚨 National Emergency Number",emergencyNote:"Tap to call for urgent emergencies in Nigeria. If the call does not connect, go to the nearest hospital or contact local emergency responders.",firstAidTitle:"🩹 First Aid Basics",firstAidList:["Keep yourself and the injured person away from danger.","Call 112 for a life-threatening emergency.","For heavy bleeding, apply firm direct pressure with a clean cloth.","Do not move someone with a possible neck or back injury unless there is immediate danger.","Do not give food, drink or medicine to an unconscious person."],urgentTitle:"⚠️ When to seek urgent help",urgentText:"Seek emergency help for difficulty breathing, severe bleeding, chest pain, stroke signs, seizures, unconsciousness, serious burns or major injuries.",preventionTitle:"🧼 Everyday Prevention",preventionText:"Wash hands with soap, drink safe water, use mosquito nets, keep vaccinations up to date and seek advice from a qualified health worker when unwell.",resourcesTitle:"🌍 Official Health Resources",healthDisclaimer:"This page provides general information only. It is not a hospital, ambulance service or substitute for professional medical care. In an emergency, call 112 or go to the nearest hospital."
 },
 ha:{
- all:"Duka",News:"Labarai",Politics:"Siyasa",Entertainment:"Nishaɗi",Business:"Kasuwanci",Youth:"Matasa",Sports:"Wasanni",Education:"Ilimi",
- home:"Gida",opportunities:"Damarmaki",videos:"Bidiyo",gallery:"Hotunan Ajiya",galleryShort:"Hotuna",audioNews:"Audio News",audioShort:"Sauti",live:"Live TV",more:"Ƙari",
- welcome:"Barka da zuwa USMAN YOBE TALK SHOW",intro:"Samu sahihan labarai, bidiyo, sauti da muhimman bayanai daga Yobe da sauran duniya.",latest:"Sabbin Labarai",search:"Nemi labarai...",
- read:"Karanta Labari",share:"Raba",loading:"Ana ɗauko labarai...",loadingPhotos:"Ana ɗauko hotuna...",
- oppIntro:"Nemi guraben aiki, tallafin karatu, horo, tallafi da sauran damammaki.",noOpp:"Babu damar da aka wallafa yanzu.",eligibility:"Sharudda:",deadline:"Ranar ƙarshe:",contact:"Tuntuɓa:",apply:"Yi Neman Wannan Dama",details:"Ƙarin Bayani",
- educationCentre:"🎓 Cibiyar Ilimi",educationIntro:"Shiga shafukan jarrabawa na hukuma da damar tallafin karatu.",jambDesc:"Shafin hukuma da e-Facility",waecDesc:"Shafin hukuma da ayyukan yanar gizo",necoDesc:"Shafin hukuma da bayanan jarrabawa",scholarships:"Tallafin Karatu",scholarshipDesc:"Duba tallafin karatu da aka wallafa a manhajar",browseScholarships:"Duba Tallafin Karatu",
- videosIntro:"Kalli bidiyoyin da aka wallafa a USMAN YOBE TALK SHOW.",noVideos:"Babu bidiyo a yanzu.",galleryIntro:"Hotunan abubuwan da suka faru, ayyuka da muhimman lokuta.",refresh:"↻ Sabunta Hotuna",noPhotos:"Babu hotuna a Gallery yanzu.",galleryError:"An samu matsala wajen ɗauko hotuna. Duba internet da izinin Gallery.",
- audioIntro:"Saurari cikakkun labarai ta wayarka.",noAudio:"Babu audio news a yanzu.",listen:"🎧 Saurari Labari",listenFull:"🎧 Saurari Cikakken Labari",fullDetails:"Cikakken Labari",
- liveIntro:"Kallon tasharmu kai tsaye.",liveLink:"Buɗe ASAWWARA TV a YouTube",about:"Game da Mu",aboutText:"Manufarmu ita ce isar da labarai, ilimi da bayanai ga al'umma.",aboutGallery:"Photo Gallery: Duba hotunan ayyukanmu.",openGallery:"Buɗe Photo Gallery",breaking:"🔴 LABARI MAI ZAFI",noNews:"Babu labari a nan yanzu.",copied:"An kwafi mahadar labarin.",sharePhoto:"📤 Raba Hoto"
+all:"Duka",News:"Labarai",Politics:"Siyasa",Entertainment:"Nishaɗi",Business:"Kasuwanci",Youth:"Matasa",Sports:"Wasanni",Education:"Ilimi",
+home:"Gida",opportunities:"Damarmaki",videos:"Bidiyo",gallery:"Hotunan Ajiya",galleryShort:"Hotuna",audioNews:"Audio News",audioShort:"Sauti",health:"Lafiya da Gaggawa",healthShort:"Lafiya",live:"Live TV",more:"Ƙari",
+welcome:"Barka da zuwa USMAN YOBE TALK SHOW",intro:"Samu sahihan labarai, bidiyo, sauti da muhimman bayanai daga Yobe da sauran duniya.",latest:"Sabbin Labarai",search:"Nemi labarai...",
+read:"Karanta Labari",share:"Raba",loading:"Ana ɗauko labarai...",loadingPhotos:"Ana ɗauko hotuna...",
+oppIntro:"Nemi guraben aiki, tallafin karatu, horo, tallafi da sauran damammaki.",noOpp:"Babu damar da aka wallafa yanzu.",eligibility:"Sharudda:",deadline:"Ranar ƙarshe:",contact:"Tuntuɓa:",apply:"Yi Neman Wannan Dama",details:"Ƙarin Bayani",
+educationCentre:"🎓 Cibiyar Ilimi",educationIntro:"Shiga shafukan jarrabawa na hukuma da damar tallafin karatu.",jambDesc:"Shafin hukuma da e-Facility",waecDesc:"Shafin hukuma da ayyukan yanar gizo",necoDesc:"Shafin hukuma da bayanan jarrabawa",scholarships:"Tallafin Karatu",scholarshipDesc:"Duba tallafin karatu da aka wallafa a manhajar",browseScholarships:"Duba Tallafin Karatu",
+videosIntro:"Kalli bidiyoyin da aka wallafa a USMAN YOBE TALK SHOW.",noVideos:"Babu bidiyo a yanzu.",galleryIntro:"Hotunan abubuwan da suka faru, ayyuka da muhimman lokuta.",refresh:"↻ Sabunta Hotuna",noPhotos:"Babu hotuna a Gallery yanzu.",galleryError:"An samu matsala wajen ɗauko hotuna. Duba internet da izinin Gallery.",
+audioIntro:"Saurari cikakkun labarai ta wayarka.",noAudio:"Babu audio news a yanzu.",listen:"🎧 Saurari Labari",listenFull:"🎧 Saurari Cikakken Labari",fullDetails:"Cikakken Labari",
+liveIntro:"Kallon tasharmu kai tsaye.",liveLink:"Buɗe ASAWWARA TV a YouTube",about:"Game da Mu",aboutText:"Manufarmu ita ce isar da labarai, ilimi da bayanai ga al'umma.",aboutGallery:"Photo Gallery: Duba hotunan ayyukanmu.",openGallery:"Buɗe Photo Gallery",breaking:"🔴 LABARI MAI ZAFI",noNews:"Babu labari a nan yanzu.",copied:"An kwafi mahadar labarin.",sharePhoto:"📤 Raba Hoto",
+healthIntro:"Amintattun bayanan lafiya, taimakon gaggawa da shafukan hukumomin lafiya.",emergencyTitle:"🚨 Lambar Kiran Gaggawa",emergencyNote:"Danna domin kira a lokacin gaggawa a Najeriya. Idan kira bai shiga ba, je asibiti mafi kusa ko tuntubi masu aikin agajin gaggawa.",firstAidTitle:"🩹 Taimakon Farko",firstAidList:["Kare kanka da wanda ya ji rauni daga duk wani hadari.","Kira 112 idan rayuwa na cikin hatsari.","Idan jini na zuba sosai, matsa wurin da kyalle mai tsafta.","Kada ka motsa wanda ake zargin ya ji raunin wuya ko baya sai idan akwai hatsari kai tsaye.","Kada a ba wanda ya suma abinci, ruwa ko magani."],urgentTitle:"⚠️ Lokacin neman agajin gaggawa",urgentText:"Nemi taimako cikin gaggawa idan numfashi ya wahala, jini na zuba sosai, ciwon kirji, alamun shanyewar jiki, farfadiya, suma, kuna mai tsanani ko babban rauni.",preventionTitle:"🧼 Rigakafin yau da kullum",preventionText:"Wanke hannu da sabulu, sha ruwa mai tsafta, amfani da gidan sauro, sabunta alluran rigakafi da tuntubar ma'aikacin lafiya idan ba ka da lafiya.",resourcesTitle:"🌍 Shafukan Hukumomin Lafiya",healthDisclaimer:"Wannan shafi na bayar da bayanai ne kawai. Ba asibiti ko motar asibiti ba ne, kuma ba ya maye gurbin likita. A lokacin gaggawa, kira 112 ko je asibiti mafi kusa."
 },
 ar:{
- all:"الكل",News:"الأخبار",Politics:"السياسة",Entertainment:"الترفيه",Business:"الأعمال",Youth:"الشباب",Sports:"الرياضة",Education:"التعليم",
- home:"الرئيسية",opportunities:"الفرص",videos:"الفيديو",gallery:"معرض الصور",galleryShort:"الصور",audioNews:"الأخبار الصوتية",audioShort:"الصوت",live:"بث مباشر",more:"المزيد",
- welcome:"مرحباً بكم في USMAN YOBE TALK SHOW",intro:"تابع الأخبار والفيديو والصوت من ولاية يوبي وحول العالم.",latest:"آخر الأخبار",search:"ابحث عن الأخبار...",
- read:"اقرأ الخبر",share:"مشاركة",loading:"جارٍ تحميل الأخبار...",loadingPhotos:"جارٍ تحميل الصور...",
- oppIntro:"ابحث عن الوظائف والمنح الدراسية والتدريب والمنح والفرص الأخرى.",noOpp:"لا توجد فرص منشورة حالياً.",eligibility:"شروط الأهلية:",deadline:"آخر موعد للتقديم:",contact:"اتصال:",apply:"قدم الآن",details:"مزيد من التفاصيل",
- educationCentre:"🎓 مركز التعليم",educationIntro:"ادخل إلى مواقع الامتحانات الرسمية وخدمات الطلاب وفرص المنح الدراسية.",jambDesc:"الموقع الرسمي والخدمات الإلكترونية",waecDesc:"الموقع الرسمي والخدمات عبر الإنترنت",necoDesc:"الموقع الرسمي ومعلومات الامتحانات",scholarships:"المنح الدراسية",scholarshipDesc:"تصفح فرص المنح المنشورة في التطبيق",browseScholarships:"تصفح المنح الدراسية",
- videosIntro:"شاهد الفيديوهات المنشورة على USMAN YOBE TALK SHOW.",noVideos:"لا توجد فيديوهات حالياً.",galleryIntro:"صور الفعاليات والأنشطة واللحظات المهمة.",refresh:"↻ تحديث الصور",noPhotos:"لا توجد صور في المعرض حالياً.",galleryError:"تعذر تحميل الصور. تحقق من الإنترنت وأذونات المعرض.",
- audioIntro:"استمع إلى الأخبار على هاتفك.",noAudio:"لا توجد أخبار صوتية حالياً.",listen:"🎧 استمع إلى الخبر",listenFull:"🎧 استمع إلى الخبر كاملاً",fullDetails:"تفاصيل الخبر",
- liveIntro:"شاهد قناتنا مباشرة.",liveLink:"افتح ASAWWARA TV على يوتيوب",about:"من نحن",aboutText:"مهمتنا هي تقديم الأخبار والتعليم والمعلومات المفيدة للمجتمع.",aboutGallery:"معرض الصور: شاهد صور أنشطتنا.",openGallery:"افتح معرض الصور",breaking:"🔴 خبر عاجل",noNews:"لا توجد أخبار حالياً.",copied:"تم نسخ رابط الخبر.",sharePhoto:"📤 مشاركة الصورة"
+all:"الكل",News:"الأخبار",Politics:"السياسة",Entertainment:"الترفيه",Business:"الأعمال",Youth:"الشباب",Sports:"الرياضة",Education:"التعليم",
+home:"الرئيسية",opportunities:"الفرص",videos:"الفيديو",gallery:"معرض الصور",galleryShort:"الصور",audioNews:"الأخبار الصوتية",audioShort:"الصوت",health:"الصحة والطوارئ",healthShort:"الصحة",live:"بث مباشر",more:"المزيد",
+welcome:"مرحباً بكم في USMAN YOBE TALK SHOW",intro:"تابع الأخبار والفيديو والصوت من ولاية يوبي وحول العالم.",latest:"آخر الأخبار",search:"ابحث عن الأخبار...",
+read:"اقرأ الخبر",share:"مشاركة",loading:"جارٍ تحميل الأخبار...",loadingPhotos:"جارٍ تحميل الصور...",
+oppIntro:"ابحث عن الوظائف والمنح الدراسية والتدريب والمنح والفرص الأخرى.",noOpp:"لا توجد فرص منشورة حالياً.",eligibility:"شروط الأهلية:",deadline:"آخر موعد للتقديم:",contact:"اتصال:",apply:"قدم الآن",details:"مزيد من التفاصيل",
+educationCentre:"🎓 مركز التعليم",educationIntro:"ادخل إلى مواقع الامتحانات الرسمية وخدمات الطلاب وفرص المنح الدراسية.",jambDesc:"الموقع الرسمي والخدمات الإلكترونية",waecDesc:"الموقع الرسمي والخدمات عبر الإنترنت",necoDesc:"الموقع الرسمي ومعلومات الامتحانات",scholarships:"المنح الدراسية",scholarshipDesc:"تصفح فرص المنح المنشورة في التطبيق",browseScholarships:"تصفح المنح الدراسية",
+videosIntro:"شاهد الفيديوهات المنشورة على USMAN YOBE TALK SHOW.",noVideos:"لا توجد فيديوهات حالياً.",galleryIntro:"صور الفعاليات والأنشطة واللحظات المهمة.",refresh:"↻ تحديث الصور",noPhotos:"لا توجد صور في المعرض حالياً.",galleryError:"تعذر تحميل الصور. تحقق من الإنترنت وأذونات المعرض.",
+audioIntro:"استمع إلى الأخبار على هاتفك.",noAudio:"لا توجد أخبار صوتية حالياً.",listen:"🎧 استمع إلى الخبر",listenFull:"🎧 استمع إلى الخبر كاملاً",fullDetails:"تفاصيل الخبر",
+liveIntro:"شاهد قناتنا مباشرة.",liveLink:"افتح ASAWWARA TV على يوتيوب",about:"من نحن",aboutText:"مهمتنا هي تقديم الأخبار والتعليم والمعلومات المفيدة للمجتمع.",aboutGallery:"معرض الصور: شاهد صور أنشطتنا.",openGallery:"افتح معرض الصور",breaking:"🔴 خبر عاجل",noNews:"لا توجد أخبار حالياً.",copied:"تم نسخ رابط الخبر.",sharePhoto:"📤 مشاركة الصورة",
+healthIntro:"معلومات صحية موثوقة وإرشادات الطوارئ ومصادر صحية رسمية.",emergencyTitle:"🚨 رقم الطوارئ الوطني",emergencyNote:"اضغط للاتصال في حالات الطوارئ في نيجيريا. إذا لم يتم الاتصال، فتوجه إلى أقرب مستشفى أو اتصل بفرق الطوارئ المحلية.",firstAidTitle:"🩹 الإسعافات الأولية",firstAidList:["أبعد نفسك والمصاب عن مصدر الخطر.","اتصل بالرقم 112 في الحالات المهددة للحياة.","عند النزيف الشديد، اضغط مباشرة بقطعة قماش نظيفة.","لا تحرك شخصاً يُحتمل أن تكون لديه إصابة في الرقبة أو الظهر إلا عند وجود خطر مباشر.","لا تعط الطعام أو الشراب أو الدواء لشخص فاقد الوعي."],urgentTitle:"⚠️ متى تطلب المساعدة العاجلة",urgentText:"اطلب المساعدة فوراً عند صعوبة التنفس أو النزيف الشديد أو ألم الصدر أو علامات السكتة أو التشنجات أو فقدان الوعي أو الحروق الخطيرة أو الإصابات الكبيرة.",preventionTitle:"🧼 الوقاية اليومية",preventionText:"اغسل يديك بالصابون، واشرب ماءً آمناً، واستخدم الناموسية، وحافظ على التطعيمات، واستشر عاملاً صحياً مؤهلاً عند المرض.",resourcesTitle:"🌍 مصادر صحية رسمية",healthDisclaimer:"هذه الصفحة للمعلومات العامة فقط، وليست مستشفى أو خدمة إسعاف ولا تغني عن الرعاية الطبية المهنية. في الطوارئ اتصل بالرقم 112 أو اذهب إلى أقرب مستشفى."
 }
 };
 
 function tr(key){return translations[currentLanguage]?.[key]??translations.en[key]??key}
-function safeURL(value){
- if(!value)return"";
- try{const u=new URL(value,location.href);return["http:","https:"].includes(u.protocol)?u.href:""}catch(e){return""}
-}
-function esc(value){
- return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))
-}
-function formatDate(value){
- if(!value)return"";
- const d=new Date(value);if(isNaN(d))return"";
- return d.toLocaleDateString(currentLanguage==="ar"?"ar":currentLanguage==="ha"?"ha":"en",{year:"numeric",month:"short",day:"numeric"})
-}
+function safeURL(value){if(!value)return"";try{const u=new URL(value,location.href);return["http:","https:"].includes(u.protocol)?u.href:""}catch(e){return""}}
+function esc(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function formatDate(value){if(!value)return"";const d=new Date(value);if(isNaN(d))return"";return d.toLocaleDateString(currentLanguage==="ar"?"ar":currentLanguage==="ha"?"ha":"en",{year:"numeric",month:"short",day:"numeric"})}
 function categoryName(category){return translations[currentLanguage]?.[category]||category||tr("News")}
 
 async function loadNews(){
- const grid=document.getElementById("newsGrid");
- grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
- const {data,error}=await db.from("news_posts")
- .select("id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info")
- .eq("status","published").order("published_at",{ascending:false});
-if(error){
- console.error("News error:",error);
- grid.innerHTML='<div class="empty">Database Error: '+esc(error.message)+'</div>';
- return;
-} posts=data||[];
- renderAll();
- openArticleFromURL();
+ const grid=document.getElementById("newsGrid");grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
+ const {data,error}=await db.from("news_posts").select("id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info").eq("status","published").order("published_at",{ascending:false});
+ if(error){console.error(error);grid.innerHTML='<div class="empty">Database Error: '+esc(error.message)+'</div>';return}
+ posts=data||[];renderAll();openArticleFromURL();
 }
-
 async function loadGallery(){
- const grid=document.getElementById("galleryGrid");
- grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;
- const {data,error}=await db.from("gallery_photos")
- .select("id,title,description,image_url,created_at").order("created_at",{ascending:false});
- if(error){console.error("Gallery error:",error);grid.innerHTML=`<div class="empty">${tr("galleryError")}</div>`;return}
- galleryPhotos=data||[];
- renderGallery();
+ const grid=document.getElementById("galleryGrid");grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;
+ const {data,error}=await db.from("gallery_photos").select("id,title,description,image_url,created_at").order("created_at",{ascending:false});
+ if(error){console.error(error);grid.innerHTML=`<div class="empty">${tr("galleryError")}</div>`;return}
+ galleryPhotos=data||[];renderGallery();
 }
-
 function renderGallery(){
  const grid=document.getElementById("galleryGrid");
  if(!galleryPhotos.length){grid.innerHTML=`<div class="empty">${tr("noPhotos")}</div>`;return}
- grid.innerHTML=galleryPhotos.map(photo=>{
-  const image=safeURL(photo.image_url);
-  if(!image)return"";
-  return `<article class="gallery-card" onclick="openGalleryImage('${esc(photo.id)}')">
-   <img src="${esc(image)}" alt="${esc(photo.title)}" loading="lazy">
-   <div class="gallery-caption"><strong>${esc(photo.title)}</strong><small>${formatDate(photo.created_at)}</small></div>
-  </article>`
- }).join("");
+ grid.innerHTML=galleryPhotos.map(p=>{const image=safeURL(p.image_url);if(!image)return"";return `<article class="gallery-card" onclick="openGalleryImage('${esc(p.id)}')"><img src="${esc(image)}" alt="${esc(p.title)}" loading="lazy"><div class="gallery-caption"><strong>${esc(p.title)}</strong><small>${formatDate(p.created_at)}</small></div></article>`}).join("");
 }
-
-let activeGalleryPhoto=null;
 function openGalleryImage(id){
- const photo=galleryPhotos.find(p=>String(p.id)===String(id));
- if(!photo)return;
- const image=safeURL(photo.image_url);if(!image)return;
- activeGalleryPhoto=photo;
- document.getElementById("galleryFullImage").src=image;
- document.getElementById("galleryFullTitle").textContent=photo.title||"";
- document.getElementById("galleryFullDescription").textContent=photo.description||"";
- document.getElementById("galleryView").classList.add("open");
+ const p=galleryPhotos.find(x=>String(x.id)===String(id));if(!p)return;
+ const image=safeURL(p.image_url);if(!image)return;activeGalleryPhoto=p;
+ document.getElementById("galleryFullImage").src=image;document.getElementById("galleryFullTitle").textContent=p.title||"";document.getElementById("galleryFullDescription").textContent=p.description||"";document.getElementById("galleryView").classList.add("open");
 }
-function closeGalleryImage(event){
- if(event&&event.target.id!=="galleryView"&&!event.target.classList.contains("close"))return;
- document.getElementById("galleryView").classList.remove("open");
- document.getElementById("galleryFullImage").src="";
- activeGalleryPhoto=null;
-}
+function closeGalleryImage(event){if(event&&event.target.id!=="galleryView"&&!event.target.classList.contains("close"))return;document.getElementById("galleryView").classList.remove("open");document.getElementById("galleryFullImage").src="";activeGalleryPhoto=null}
 async function shareGalleryPhoto(event){
- if(event)event.stopPropagation();
- if(!activeGalleryPhoto)return;
- const photo=activeGalleryPhoto,image=safeURL(photo.image_url);
- if(!image)return;
- try{
-  if(navigator.share){
-   try{
-    const response=await fetch(image);
-    const blob=await response.blob();
-    const ext=(blob.type.split("/")[1]||"jpg").replace("jpeg","jpg");
-    const file=new File([blob],`usman-yobe-photo.${ext}`,{type:blob.type||"image/jpeg"});
-    if(navigator.canShare&&navigator.canShare({files:[file]})){
-     await navigator.share({title:photo.title||"USMAN YOBE TALK SHOW",text:photo.description||photo.title||"",files:[file]});
-     return;
-    }
-   }catch(fileError){console.log("Image file share fallback:",fileError)}
-   await navigator.share({title:photo.title||"USMAN YOBE TALK SHOW",text:(photo.description||photo.title||"Photo from USMAN YOBE TALK SHOW")+"\n"+image,url:image});
-  }else{
-   const wa="https://wa.me/?text="+encodeURIComponent((photo.title||"USMAN YOBE TALK SHOW")+"\n"+image);
-   window.open(wa,"_blank","noopener");
-  }
- }catch(error){console.log("Share cancelled or unavailable:",error)}
+ if(event)event.stopPropagation();if(!activeGalleryPhoto)return;const p=activeGalleryPhoto,image=safeURL(p.image_url);if(!image)return;
+ try{if(navigator.share){await navigator.share({title:p.title||"USMAN YOBE TALK SHOW",text:p.description||p.title||"",url:image})}else{window.open("https://wa.me/?text="+encodeURIComponent((p.title||"USMAN YOBE TALK SHOW")+"\n"+image),"_blank","noopener")}}catch(e){console.log(e)}
 }
-
 function filteredPosts(){
  const query=(document.getElementById("searchInput").value||"").toLowerCase().trim();
- return posts.filter(p=>{
-  const categoryOK=currentCategory==="all"||p.category===currentCategory;
-  const text=[p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();
-  return categoryOK&&(!query||text.includes(query));
- });
+ return posts.filter(p=>{const categoryOK=currentCategory==="all"||p.category===currentCategory;const text=[p.title,p.excerpt,p.content,p.category].join(" ").toLowerCase();return categoryOK&&(!query||text.includes(query))});
 }
-function audioPlayer(p,full=false){
- const audio=safeURL(p.audio_url);if(!audio)return"";
- return `<div class="audio-box"><strong>${full?tr("listenFull"):tr("listen")}</strong><audio controls preload="none"><source src="${esc(audio)}">Your browser does not support audio.</audio></div>`;
-}
+function audioPlayer(p,full=false){const audio=safeURL(p.audio_url);if(!audio)return"";return `<div class="audio-box"><strong>${full?tr("listenFull"):tr("listen")}</strong><audio controls preload="none"><source src="${esc(audio)}">Your browser does not support audio.</audio></div>`}
 function renderCard(p){
  const image=safeURL(p.image_url),video=safeURL(p.video_url);
- return `<article class="post">
- ${image?`<img class="post-image" src="${esc(image)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="post-placeholder">📰</div>'}
- <div class="post-content">
- <span class="tag">${esc(categoryName(p.category))}</span>
- ${p.is_breaking_news?'<span class="tag" style="background:#ffe5e5;color:#c00">🔴 BREAKING</span>':""}
- <h3>${esc(p.title)}</h3><p>${esc(p.excerpt||p.content||"")}</p>${audioPlayer(p)}
- ${video?`<div class="video-box" style="margin-top:10px"><video controls playsinline preload="metadata"><source src="${esc(video)}"></video></div>`:""}
- <div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div>
- <div class="post-actions">
- <button onclick="openArticleById('${esc(p.id)}')">${tr("read")}</button>
- <button onclick="sharePost('${esc(p.id)}')">${tr("share")}</button>
- </div></div></article>`;
+ return `<article class="post">${image?`<img class="post-image" src="${esc(image)}" alt="${esc(p.title)}" loading="lazy">`:'<div class="post-placeholder">📰</div>'}<div class="post-content"><span class="tag">${esc(categoryName(p.category))}</span>${p.is_breaking_news?'<span class="tag" style="background:#ffe5e5;color:#c00">🔴 BREAKING</span>':""}<h3>${esc(p.title)}</h3><p>${esc(p.excerpt||p.content||"")}</p>${audioPlayer(p)}${video?`<div class="video-box" style="margin-top:10px"><video controls playsinline preload="metadata"><source src="${esc(video)}"></video></div>`:""}<div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div><div class="post-actions"><button onclick="openArticleById('${esc(p.id)}')">${tr("read")}</button><button onclick="sharePost('${esc(p.id)}')">${tr("share")}</button></div></div></article>`;
 }
-function renderPosts(){
- const items=filteredPosts();
- document.getElementById("newsGrid").innerHTML=items.length?items.map(renderCard).join(""):`<div class="empty">${tr("noNews")}</div>`;
-}
+function renderPosts(){const items=filteredPosts();document.getElementById("newsGrid").innerHTML=items.length?items.map(renderCard).join(""):`<div class="empty">${tr("noNews")}</div>`}
 function renderBreakingAlert(){
- const breaking=posts.filter(p=>p.is_breaking_news);
- const box=document.getElementById("breakingBox");
- const items=document.getElementById("breakingItems");
- if(!breaking.length){box.style.display="none";return}
- box.style.display="block";
- document.getElementById("breakingTitle").textContent=tr("breaking");
- items.innerHTML=breaking.slice(0,4).map(p=>`<p style="margin:7px 0"><button onclick="openArticleById('${esc(p.id)}')">🔴 ${esc(p.title)}</button></p>`).join("");
+ const items=posts.filter(p=>p.is_breaking_news),box=document.getElementById("breakingBox");
+ if(!items.length){box.style.display="none";return}box.style.display="block";document.getElementById("breakingTitle").textContent=tr("breaking");
+ document.getElementById("breakingItems").innerHTML=items.slice(0,4).map(p=>`<p style="margin:7px 0"><button onclick="openArticleById('${esc(p.id)}')">🔴 ${esc(p.title)}</button></p>`).join("");
 }
-
 function opportunityInfo(type){
  const t=String(type||"").toLowerCase();
  if(t.includes("job")||t.includes("aiki")||t.includes("vacanc"))return{icon:"💼",en:"Jobs / Vacancies",ha:"Guraben Aiki",ar:"وظائف"};
@@ -484,217 +354,96 @@ function opportunityInfo(type){
  if(t.includes("jamb")||t.includes("waec")||t.includes("neco"))return{icon:"📚",en:"JAMB / WAEC / NECO",ha:"JAMB / WAEC / NECO",ar:"JAMB / WAEC / NECO"};
  return{icon:"📌",en:"Other",ha:"Sauran Damammaki",ar:"أخرى"};
 }
-
 let selectedOpportunityCategory="all";
 const opportunityCategories=[
- {id:"job",icon:"💼",en:"Jobs",ha:"Ayyuka",ar:"وظائف",match:["job","aiki","vacanc"]},
- {id:"scholarship",icon:"🎓",en:"Scholarships",ha:"Tallafin Karatu",ar:"منح دراسية",match:["scholar","karatu"]},
- {id:"training",icon:"🛠️",en:"Training",ha:"Horo",ar:"التدريب",match:["training","horo"]},
- {id:"business",icon:"🏢",en:"Business Grants",ha:"Tallafin Kasuwanci",ar:"منح الأعمال",match:["grant","business","kasuwanci"]},
- {id:"exam",icon:"📚",en:"JAMB / WAEC / NECO",ha:"JAMB / WAEC / NECO",ar:"JAMB / WAEC / NECO",match:["jamb","waec","neco"]},
- {id:"other",icon:"📌",en:"Other",ha:"Sauran Damammaki",ar:"أخرى",match:[]}
+{id:"job",icon:"💼",en:"Jobs",ha:"Ayyuka",ar:"وظائف",match:["job","aiki","vacanc"]},
+{id:"scholarship",icon:"🎓",en:"Scholarships",ha:"Tallafin Karatu",ar:"منح دراسية",match:["scholar","karatu"]},
+{id:"training",icon:"🛠️",en:"Training",ha:"Horo",ar:"التدريب",match:["training","horo"]},
+{id:"business",icon:"🏢",en:"Business Grants",ha:"Tallafin Kasuwanci",ar:"منح الأعمال",match:["grant","business","kasuwanci"]},
+{id:"exam",icon:"📚",en:"JAMB / WAEC / NECO",ha:"JAMB / WAEC / NECO",ar:"JAMB / WAEC / NECO",match:["jamb","waec","neco"]},
+{id:"other",icon:"📌",en:"Other",ha:"Sauran Damammaki",ar:"أخرى",match:[]}
 ];
-
 function renderOpportunityCategories(){
- const holder=document.getElementById("opportunityCategories");
- holder.innerHTML=opportunityCategories.map(c=>{
-  const label=c[currentLanguage]||c.en;
-  return `<button class="opportunity-category ${selectedOpportunityCategory===c.id?"active":""}" onclick="selectOpportunityCategory('${c.id}')">
-   <span class="opp-icon">${c.icon}</span><span>${esc(label)}</span>
-   <small>${currentLanguage==="ha"?"Duba damarmaki":currentLanguage==="ar"?"عرض الفرص":"Browse opportunities"}</small>
-  </button>`;
- }).join("");
+ document.getElementById("opportunityCategories").innerHTML=opportunityCategories.map(c=>`<button class="opportunity-category ${selectedOpportunityCategory===c.id?"active":""}" onclick="selectOpportunityCategory('${c.id}')"><span class="opp-icon">${c.icon}</span><span>${esc(c[currentLanguage]||c.en)}</span><small>${currentLanguage==="ha"?"Duba damarmaki":currentLanguage==="ar"?"عرض الفرص":"Browse opportunities"}</small></button>`).join("");
 }
-function selectOpportunityCategory(id){
- selectedOpportunityCategory=id;
- renderOpportunities();
-}
-function showScholarshipOpportunities(){
- selectedOpportunityCategory="scholarship";
- renderOpportunities();
- document.getElementById("opportunitiesGrid").scrollIntoView({behavior:"smooth",block:"start"});
-}
+function selectOpportunityCategory(id){selectedOpportunityCategory=id;renderOpportunities()}
+function showScholarshipOpportunities(){selectedOpportunityCategory="scholarship";renderOpportunities();document.getElementById("opportunitiesGrid").scrollIntoView({behavior:"smooth",block:"start"})}
 function renderOpportunities(){
- renderOpportunityCategories();
- const items=posts.filter(p=>p.opportunity_type);
- const grid=document.getElementById("opportunitiesGrid");
- const category=opportunityCategories.find(c=>c.id===selectedOpportunityCategory);
- const shown=selectedOpportunityCategory==="all"?items:items.filter(p=>{
-  const value=String(p.opportunity_type||"").toLowerCase();
-  return category.id==="other"
-   ?!opportunityCategories.slice(0,5).some(c=>c.match.some(k=>value.includes(k)))
-   :category.match.some(k=>value.includes(k));
- });
+ renderOpportunityCategories();const items=posts.filter(p=>p.opportunity_type),grid=document.getElementById("opportunitiesGrid"),category=opportunityCategories.find(c=>c.id===selectedOpportunityCategory);
+ const shown=selectedOpportunityCategory==="all"?items:items.filter(p=>{const value=String(p.opportunity_type||"").toLowerCase();return category.id==="other"?!opportunityCategories.slice(0,5).some(c=>c.match.some(k=>value.includes(k))):category.match.some(k=>value.includes(k))});
  if(!shown.length){grid.innerHTML=`<div class="empty">${tr("noOpp")}</div>`;return}
- grid.innerHTML=shown.map(p=>{
-  const info=opportunityInfo(p.opportunity_type);
-  const name=info[currentLanguage]||info.en;
-  const application=safeURL(p.application_url);
-  return `<article class="post"><div class="post-content">
-   <span class="tag" style="font-size:13px;padding:8px 11px">${info.icon} ${esc(name)}</span>
-   <h3>${esc(p.title)}</h3><p>${esc(p.excerpt||"")}</p>
-   ${p.eligibility?`<p><b>${tr("eligibility")}</b> ${esc(p.eligibility)}</p>`:""}
-   ${p.application_deadline?`<p><b>${tr("deadline")}</b> ${esc(p.application_deadline)}</p>`:""}
-   ${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}
-   ${application?`<p><a href="${esc(application)}" target="_blank" rel="noopener">${tr("apply")}</a></p>`:""}
-   ${p.contact_info?`<p><b>${tr("contact")}</b> ${esc(p.contact_info)}</p>`:""}
-   <button class="primary" onclick="openArticleById('${esc(p.id)}')">${tr("details")}</button>
-  </div></article>`;
- }).join("");
+ grid.innerHTML=shown.map(p=>{const info=opportunityInfo(p.opportunity_type),application=safeURL(p.application_url);return `<article class="post"><div class="post-content"><span class="tag" style="font-size:13px;padding:8px 11px">${info.icon} ${esc(info[currentLanguage]||info.en)}</span><h3>${esc(p.title)}</h3><p>${esc(p.excerpt||"")}</p>${p.eligibility?`<p><b>${tr("eligibility")}</b> ${esc(p.eligibility)}</p>`:""}${p.application_deadline?`<p><b>${tr("deadline")}</b> ${esc(p.application_deadline)}</p>`:""}${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}${application?`<p><a href="${esc(application)}" target="_blank" rel="noopener">${tr("apply")}</a></p>`:""}${p.contact_info?`<p><b>${tr("contact")}</b> ${esc(p.contact_info)}</p>`:""}<button class="primary" onclick="openArticleById('${esc(p.id)}')">${tr("details")}</button></div></article>`}).join("");
 }
-
 function renderVideos(){
- const items=posts.filter(p=>safeURL(p.video_url));
- const grid=document.getElementById("videosGrid");
- grid.innerHTML=items.length?items.map(p=>`<article class="post"><div class="post-content">
- <h3>${esc(p.title)}</h3>
- <div class="video-box"><video controls playsinline preload="metadata"><source src="${esc(safeURL(p.video_url))}"></video></div>
- <p>${esc(p.excerpt||"")}</p>
- <button class="primary" onclick="openArticleById('${esc(p.id)}')">${tr("fullDetails")}</button>
- </div></article>`).join(""):`<div class="empty">${tr("noVideos")}</div>`;
+ const items=posts.filter(p=>safeURL(p.video_url)),grid=document.getElementById("videosGrid");
+ grid.innerHTML=items.length?items.map(p=>`<article class="post"><div class="post-content"><h3>${esc(p.title)}</h3><div class="video-box"><video controls playsinline preload="metadata"><source src="${esc(safeURL(p.video_url))}"></video></div><p>${esc(p.excerpt||"")}</p><button class="primary" onclick="openArticleById('${esc(p.id)}')">${tr("fullDetails")}</button></div></article>`).join(""):`<div class="empty">${tr("noVideos")}</div>`;
 }
 function renderAudio(){
- const items=posts.filter(p=>safeURL(p.audio_url));
- const grid=document.getElementById("audioGrid");
- grid.innerHTML=items.length?items.map(p=>`<article class="post"><div class="post-content">
- <span class="tag">🎧 AUDIO NEWS</span><h3>${esc(p.title)}</h3><p>${esc(p.excerpt||"")}</p>
- ${audioPlayer(p,true)}
- <div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div>
- <button class="primary" style="margin-top:12px" onclick="openArticleById('${esc(p.id)}')">${tr("fullDetails")}</button>
- </div></article>`).join(""):`<div class="empty">${tr("noAudio")}</div>`;
+ const items=posts.filter(p=>safeURL(p.audio_url)),grid=document.getElementById("audioGrid");
+ grid.innerHTML=items.length?items.map(p=>`<article class="post"><div class="post-content"><span class="tag">🎧 AUDIO NEWS</span><h3>${esc(p.title)}</h3><p>${esc(p.excerpt||"")}</p>${audioPlayer(p,true)}<div class="post-meta"><span>${formatDate(p.published_at||p.created_at)}</span><span>Usman Yobe</span></div><button class="primary" style="margin-top:12px" onclick="openArticleById('${esc(p.id)}')">${tr("fullDetails")}</button></div></article>`).join(""):`<div class="empty">${tr("noAudio")}</div>`;
 }
-function renderAll(){
- renderPosts();renderBreakingAlert();renderOpportunities();renderVideos();renderAudio();
- document.getElementById("year").textContent=new Date().getFullYear();
-}
-
-function openArticleById(id){
- const index=posts.findIndex(p=>String(p.id)===String(id));
- if(index>=0)openArticle(index);
-}
+function renderAll(){renderPosts();renderBreakingAlert();renderOpportunities();renderVideos();renderAudio();document.getElementById("year").textContent=new Date().getFullYear()}
+function openArticleById(id){const i=posts.findIndex(p=>String(p.id)===String(id));if(i>=0)openArticle(i)}
 function openArticle(index){
- const p=posts[index];if(!p)return;
- const image=safeURL(p.image_url),video=safeURL(p.video_url),application=safeURL(p.application_url);
- document.getElementById("articleDetails").innerHTML=`
- <span class="tag">${esc(categoryName(p.category))}</span>
- <h2 style="color:#071b49;line-height:1.4">${esc(p.title)}</h2>
- <p style="color:#778">${formatDate(p.published_at||p.created_at)}</p>
- ${image?`<img class="article-image" src="${esc(image)}" alt="${esc(p.title)}">`:""}
- ${video?`<video class="article-video" controls playsinline preload="metadata"><source src="${esc(video)}">Your browser does not support HTML video.</video>`:""}
- ${audioPlayer(p,true)}
- <div class="article-body">${esc(p.content||p.excerpt||"")}</div>
- ${p.opportunity_type?`<hr><h3>${opportunityInfo(p.opportunity_type).icon} ${esc(opportunityInfo(p.opportunity_type)[currentLanguage]||opportunityInfo(p.opportunity_type).en)}</h3>`:""}
- ${p.eligibility?`<p><b>${tr("eligibility")}</b> ${esc(p.eligibility)}</p>`:""}
- ${p.application_deadline?`<p><b>${tr("deadline")}</b> ${esc(p.application_deadline)}</p>`:""}
- ${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}
- ${application?`<p><a class="primary" style="display:inline-block;text-decoration:none" href="${esc(application)}" target="_blank" rel="noopener">${tr("apply")}</a></p>`:""}
- ${p.contact_info?`<p><b>${tr("contact")}</b> ${esc(p.contact_info)}</p>`:""}
- <button class="primary" onclick="sharePost('${esc(p.id)}')">${tr("share")}</button>`;
- document.getElementById("articleModal").style.display="block";
- const url=new URL(location.href);
- url.searchParams.set("article",p.id);
- history.replaceState({},"",url.pathname+url.search+url.hash);
+ const p=posts[index];if(!p)return;const image=safeURL(p.image_url),video=safeURL(p.video_url),application=safeURL(p.application_url);
+ document.getElementById("articleDetails").innerHTML=`<span class="tag">${esc(categoryName(p.category))}</span><h2 style="color:#071b49;line-height:1.4">${esc(p.title)}</h2><p style="color:#778">${formatDate(p.published_at||p.created_at)}</p>${image?`<img class="article-image" src="${esc(image)}" alt="${esc(p.title)}">`:""}${video?`<video class="article-video" controls playsinline preload="metadata"><source src="${esc(video)}"></video>`:""}${audioPlayer(p,true)}<div class="article-body">${esc(p.content||p.excerpt||"")}</div>${p.opportunity_type?`<hr><h3>${opportunityInfo(p.opportunity_type).icon} ${esc(opportunityInfo(p.opportunity_type)[currentLanguage]||opportunityInfo(p.opportunity_type).en)}</h3>`:""}${p.eligibility?`<p><b>${tr("eligibility")}</b> ${esc(p.eligibility)}</p>`:""}${p.application_deadline?`<p><b>${tr("deadline")}</b> ${esc(p.application_deadline)}</p>`:""}${p.how_to_apply?`<p>${esc(p.how_to_apply)}</p>`:""}${application?`<p><a class="primary" style="display:inline-block;text-decoration:none" href="${esc(application)}" target="_blank" rel="noopener">${tr("apply")}</a></p>`:""}${p.contact_info?`<p><b>${tr("contact")}</b> ${esc(p.contact_info)}</p>`:""}<button class="primary" onclick="sharePost('${esc(p.id)}')">${tr("share")}</button>`;
+ document.getElementById("articleModal").style.display="block";const url=new URL(location.href);url.searchParams.set("article",p.id);history.replaceState({},"",url.pathname+url.search+url.hash);
 }
 function closeArticle(){
- const modal=document.getElementById("articleModal");
- modal.querySelectorAll("video").forEach(v=>v.pause());
- modal.querySelectorAll("audio").forEach(a=>a.pause());
- modal.style.display="none";
- const url=new URL(location.href);
- url.searchParams.delete("article");
- history.replaceState({},"",url.pathname+url.search+url.hash);
- deepLinkHandled=false;
+ const modal=document.getElementById("articleModal");modal.querySelectorAll("video,audio").forEach(v=>v.pause());modal.style.display="none";
+ const url=new URL(location.href);url.searchParams.delete("article");history.replaceState({},"",url.pathname+url.search+url.hash);deepLinkHandled=false;
 }
-function openArticleFromURL(){
- if(deepLinkHandled)return;
- const id=new URL(location.href).searchParams.get("article");
- if(!id)return;
- const post=posts.find(p=>String(p.id)===String(id));
- if(post){deepLinkHandled=true;openArticle(posts.indexOf(post))}
-}
+function openArticleFromURL(){if(deepLinkHandled)return;const id=new URL(location.href).searchParams.get("article");if(!id)return;const p=posts.find(x=>String(x.id)===String(id));if(p){deepLinkHandled=true;openArticle(posts.indexOf(p))}}
 async function sharePost(id){
- const p=posts.find(x=>String(x.id)===String(id));if(!p)return;
- const url=new URL(location.href);
- url.searchParams.set("article",p.id);
- const shareData={title:p.title,text:p.excerpt||p.title,url:url.href};
- try{
-  if(navigator.share)await navigator.share(shareData);
-  else if(navigator.clipboard){await navigator.clipboard.writeText(url.href);alert(tr("copied"))}
-  else prompt("Copy this link:",url.href);
- }catch(e){console.log(e)}
+ const p=posts.find(x=>String(x.id)===String(id));if(!p)return;const url=new URL(location.href);url.searchParams.set("article",p.id);
+ try{if(navigator.share)await navigator.share({title:p.title,text:p.excerpt||p.title,url:url.href});else if(navigator.clipboard){await navigator.clipboard.writeText(url.href);alert(tr("copied"))}else prompt("Copy this link:",url.href)}catch(e){console.log(e)}
 }
-
 function showPage(page){
  document.querySelectorAll(".page").forEach(el=>el.classList.remove("active"));
  document.getElementById(page+"Page")?.classList.add("active");
  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
  window.scrollTo({top:0,behavior:"smooth"});
 }
-document.querySelectorAll(".bottom-nav button").forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.page)));
-document.querySelectorAll("#categoryNav button").forEach(button=>button.addEventListener("click",()=>{
- document.querySelectorAll("#categoryNav button").forEach(b=>b.classList.remove("active"));
- button.classList.add("active");
- currentCategory=button.dataset.category;
- renderPosts();
- showPage("home");
+document.querySelectorAll(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+document.querySelectorAll("#categoryNav button").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("#categoryNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentCategory=b.dataset.category;renderPosts();showPage("home");
 }));
 document.getElementById("searchInput").addEventListener("input",renderPosts);
 
 function setLanguage(lang){
- currentLanguage=translations[lang]?lang:"en";
- localStorage.setItem("usman_yobe_language",currentLanguage);
- document.documentElement.lang=currentLanguage;
- document.documentElement.dir=currentLanguage==="ar"?"rtl":"ltr";
- document.getElementById("languageSelect").value=currentLanguage;
- const t=translations[currentLanguage];
-
- document.getElementById("welcomeTitle").textContent=t.welcome;
- document.getElementById("welcomeText").textContent=t.intro;
- document.getElementById("latestHeading").textContent=t.latest;
- document.getElementById("searchInput").placeholder=t.search;
- document.getElementById("opportunitiesHeading").textContent="🎓 "+t.opportunities;
- document.getElementById("opportunitiesIntro").textContent=t.oppIntro;
+ currentLanguage=translations[lang]?lang:"en";localStorage.setItem("usman_yobe_language",currentLanguage);
+ document.documentElement.lang=currentLanguage;document.documentElement.dir=currentLanguage==="ar"?"rtl":"ltr";
+ document.getElementById("languageSelect").value=currentLanguage;const t=translations[currentLanguage];
+ document.getElementById("welcomeTitle").textContent=t.welcome;document.getElementById("welcomeText").textContent=t.intro;
+ document.getElementById("latestHeading").textContent=t.latest;document.getElementById("searchInput").placeholder=t.search;
+ document.getElementById("opportunitiesHeading").textContent="🎓 "+t.opportunities;document.getElementById("opportunitiesIntro").textContent=t.oppIntro;
  document.getElementById("educationCentreIntro").textContent=t.educationIntro;
- document.getElementById("videosHeading").textContent="📹 "+t.videos;
- document.getElementById("videosIntro").textContent=t.videosIntro;
- document.getElementById("galleryHeading").textContent="📸 "+t.gallery;
- document.getElementById("galleryIntro").textContent=t.galleryIntro;
- document.getElementById("galleryRefresh").textContent=t.refresh;
- document.getElementById("audioHeading").textContent="🎧 "+t.audioNews;
- document.getElementById("audioIntro").textContent=t.audioIntro;
- document.getElementById("liveIntro").textContent=t.liveIntro;
- document.getElementById("liveLink").textContent=t.liveLink;
- document.getElementById("aboutHeading").textContent=t.about;
- document.getElementById("aboutText").textContent=t.aboutText;
- document.getElementById("aboutGalleryText").textContent=t.aboutGallery;
- document.getElementById("openGalleryButton").textContent=t.openGallery;
+ document.getElementById("videosHeading").textContent="📹 "+t.videos;document.getElementById("videosIntro").textContent=t.videosIntro;
+ document.getElementById("galleryHeading").textContent="📸 "+t.gallery;document.getElementById("galleryIntro").textContent=t.galleryIntro;document.getElementById("galleryRefresh").textContent=t.refresh;
+ document.getElementById("audioHeading").textContent="🎧 "+t.audioNews;document.getElementById("audioIntro").textContent=t.audioIntro;
+ document.getElementById("liveIntro").textContent=t.liveIntro;document.getElementById("liveLink").textContent=t.liveLink;
+ document.getElementById("aboutHeading").textContent=t.about;document.getElementById("aboutText").textContent=t.aboutText;
+ document.getElementById("aboutGalleryText").textContent=t.aboutGallery;document.getElementById("openGalleryButton").textContent=t.openGallery;
  document.getElementById("shareGalleryButton").textContent=t.sharePhoto;
-
- document.querySelectorAll("[data-i18n]").forEach(el=>{
-  const key=el.dataset.i18n;
-  if(t[key])el.textContent=t[key];
- });
+ document.getElementById("healthHeading").textContent="🏥 "+t.health;document.getElementById("healthIntro").textContent=t.healthIntro;
+ document.getElementById("emergencyTitle").textContent=t.emergencyTitle;document.getElementById("emergencyNote").textContent=t.emergencyNote;
+ document.getElementById("firstAidTitle").textContent=t.firstAidTitle;
+ document.getElementById("firstAidList").innerHTML=t.firstAidList.map(x=>"<li>"+esc(x)+"</li>").join("");
+ document.getElementById("urgentTitle").textContent=t.urgentTitle;document.getElementById("urgentText").textContent=t.urgentText;
+ document.getElementById("preventionTitle").textContent=t.preventionTitle;document.getElementById("preventionText").textContent=t.preventionText;
+ document.getElementById("resourcesTitle").textContent=t.resourcesTitle;document.getElementById("healthDisclaimer").textContent=t.healthDisclaimer;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(t[key])el.textContent=t[key]});
  document.querySelectorAll("#categoryNav button").forEach(b=>b.textContent=t[b.dataset.category]||b.dataset.category);
- renderAll();
- renderGallery();
+ renderAll();renderGallery();
 }
 document.getElementById("languageSelect").addEventListener("change",e=>setLanguage(e.target.value));
 document.getElementById("articleModal").addEventListener("click",e=>{if(e.target.id==="articleModal")closeArticle()});
-document.addEventListener("visibilitychange",()=>{
- if(document.hidden)document.querySelectorAll("audio,video").forEach(media=>{if(!media.paused)media.pause()});
-});
-
+document.addEventListener("visibilitychange",()=>{if(document.hidden)document.querySelectorAll("audio,video").forEach(m=>{if(!m.paused)m.pause()})});
 async function registerServiceWorker(){
  if(!("serviceWorker"in navigator))return;
- try{
-  await navigator.serviceWorker.register("./service-worker.js");
-  console.log("Service worker registered");
- }catch(error){console.error("Service worker registration failed:",error)}
+ try{await navigator.serviceWorker.register("./service-worker.js");console.log("Service worker registered")}catch(e){console.error("Service worker registration failed:",e)}
 }
-registerServiceWorker();
-setLanguage(currentLanguage);
-loadNews();
-loadGallery();
+registerServiceWorker();setLanguage(currentLanguage);loadNews();loadGallery();
 </script>
 </body>
 </html>
