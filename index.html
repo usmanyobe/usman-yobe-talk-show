@@ -195,7 +195,19 @@ communitySection.innerHTML=`<h2 class="section-title">👥 Community Forum</h2><
 document.querySelector('main').insertBefore(communitySection,document.querySelector('main footer'));
 const communityNav=document.createElement('button');communityNav.dataset.page='community';communityNav.innerHTML='<span>👥</span><label>Community</label>';
 document.querySelector('.bottom-nav').appendChild(communityNav);
-let communityUser=null;
+
+// Make Community button work
+communityNav.addEventListener('click',()=>showPage('community'));
+
+// Also add Community shortcut inside More page
+const communityMoreButton=document.createElement('button');
+communityMoreButton.className='primary';
+communityMoreButton.textContent='👥 Open Community Forum';
+communityMoreButton.style.marginTop='12px';
+communityMoreButton.onclick=()=>showPage('community');
+
+const moreContent=document.querySelector('#morePage .post');
+if(moreContent) moreContent.appendChild(communityMoreButton);let communityUser=null;
 function communityMessage(msg,isError=false){let el=document.getElementById('communityNotice');if(el){el.textContent=msg;el.style.color=isError?'#c62828':'#087443';}}
 function renderCommunityAccount(){const box=document.getElementById('communityAccount');if(!box)return;
 if(communityUser){let name=communityUser.user_metadata?.full_name||communityUser.email||'Member';box.innerHTML=`<div class="community-panel"><div class="community-row"><strong>Welcome, ${esc(name)}</strong><button class="community-btn secondary" onclick="communityLogout()">Log out</button></div><p class="community-muted">You are signed in. You can publish posts and comments directly.</p><div id="communityNotice" class="community-muted"></div></div><div class="community-panel"><h3>📝 Share a post</h3><textarea id="communityPostText" class="community-input" rows="4" maxlength="3000" placeholder="Write something for the community..."></textarea><button class="community-btn" onclick="communityCreatePost()">Publish Post</button></div>`;
