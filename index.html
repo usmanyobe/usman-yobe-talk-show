@@ -203,12 +203,80 @@ async function sharePost(id){let p=posts.find(x=>String(x.id)===String(id));if(!
 
 
 function communityNavSetActive(btn){document.querySelectorAll('.community-facebook-nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
-function communityNavHome(btn){communityNavSetActive(btn);document.getElementById('communityStoriesPanel')?.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('communityFeed')?.scrollIntoView({behavior:'smooth',block:'start'});}
-function communityNavStories(btn){communityNavSetActive(btn);document.getElementById('communityStoriesPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}
-function communityNavFriends(btn){communityNavSetActive(btn);toggleFriendRequests(true);document.getElementById('communityFriendRequestsPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}
-function communityNavNotifications(btn){communityNavSetActive(btn);const panel=document.getElementById('communityNotificationsPanel');if(panel&&panel.style.display==='none')toggleCommunityNotifications();document.getElementById('communityNotificationsToggle')?.scrollIntoView({behavior:'smooth',block:'center'});}
-function communityNavProfile(btn){communityNavSetActive(btn);const current=history.state||{};history.pushState({uyView:'own-profile',uyPage:current.uyPage||'community'},'',location.href);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});}
-function communityNavSettings(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},250);}
+function communitySetView(view,options={}){
+ const page=document.getElementById('communityPage');if(!page)return;
+ const allowed={
+  home:['communityStoriesPanel','communitySearchPanel','communityFeed'],
+  reels:['socialPlatformHub'],
+  friends:['memberDirectoryPanel'],
+  messenger:['messengerPanel'],
+  notifications:['communityTopActions'],
+  profile:['communityAccount'],
+  groups:['socialPlatformHub'],
+  marketplace:['socialPlatformHub'],
+  live:['socialPlatformHub'],
+  creator:['socialPlatformHub'],
+  memberProfile:['memberDirectoryPanel']
+ };
+ const ids=allowed[view]||allowed.home;
+ Array.from(page.children).forEach(el=>{
+  if(el.classList.contains('community-facebook-nav')){el.style.display='';return;}
+  el.style.display=ids.includes(el.id)?(el.id==='messengerPanel'?'block':''):'none';
+ });
+ const top=document.getElementById('communityTopActions');
+ if(top){
+  const notificationView=view==='notifications';
+  top.style.display=notificationView?'':'none';
+  const row=top.querySelector('.community-row');if(row)row.style.display=notificationView?'none':'';
+  const panel=document.getElementById('communityNotificationsPanel');if(panel)panel.style.display=notificationView?'block':'none';
+ }
+ const directory=document.getElementById('memberDirectoryPanel');
+ if(directory){
+  const list=document.getElementById('memberDirectoryList'),search=document.getElementById('memberDirectorySearch');
+  const header=directory.querySelector('.community-row');
+  const privacy=directory.querySelector(':scope > p.community-muted');
+  const friend=document.getElementById('friendRequestsPanel'),profile=document.getElementById('memberProfileCard'),follow=document.getElementById('memberFollowListPanel');
+  if(view==='friends'){
+   if(header)header.style.display='none';if(search)search.style.display='none';if(list)list.style.display='none';if(privacy)privacy.style.display='none';
+   if(friend)friend.style.display='block';if(profile)profile.style.display='none';if(follow)follow.style.display='none';
+  }else if(view==='memberProfile'){
+   if(header)header.style.display='none';if(search)search.style.display='none';if(list)list.style.display='none';if(privacy)privacy.style.display='none';
+   if(friend)friend.style.display='none';if(profile)profile.style.display='block';
+  }else{
+   if(header)header.style.display='';if(search)search.style.display='';if(list)list.style.display='';if(privacy)privacy.style.display='';
+   if(friend)friend.style.display='none';if(profile)profile.style.display='none';if(follow)follow.style.display='none';
+  }
+ }
+ const hub=document.getElementById('socialPlatformHub');
+ if(hub){
+  const target={reels:'socialReelsPanel',groups:'socialGroupsPanel',marketplace:'socialMarketPanel',live:'socialLivePanel',creator:'socialCreatorPanel'}[view];
+  hub.querySelectorAll('.social-hub-section').forEach(x=>x.style.display=x.id===target?'':'none');
+  const tabs=hub.querySelector('.social-hub-tabs');if(tabs)tabs.style.display=view==='reels'?'':'none';
+  const heading=hub.querySelector('h2');if(heading)heading.style.display=view==='reels'?'':'none';
+  const intro=hub.querySelector(':scope > p.community-muted');if(intro)intro.style.display=view==='reels'?'':'none';
+ }
+ page.dataset.communityView=view;
+ if(options.history!==false){
+  const current=history.state||{};
+  if(current.uyView!=='community-view'||current.communityView!==view)
+   history.pushState({uyView:'community-view',uyPage:'community',communityView:view},'',location.href);
+ }
+ const navMap={home:0,reels:1,friends:2,messenger:3,notifications:4,profile:5,memberProfile:2};
+ const buttons=page.querySelectorAll('.community-facebook-nav button');
+ buttons.forEach((b,i)=>b.classList.toggle('active',i===navMap[view]));
+ if(view==='friends'&&typeof toggleFriendRequests==='function')toggleFriendRequests(true);
+ if(view==='notifications'&&typeof refreshCommunityNotifications==='function')refreshCommunityNotifications();
+ if(view==='messenger'&&typeof toggleMessenger==='function')toggleMessenger(true,{history:false});
+ if(view==='reels'&&typeof socialLoadReels==='function')socialLoadReels();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function communityNavHome(){communitySetView('home');}
+function communityNavStories(){communitySetView('reels');}
+function communityNavFriends(){communitySetView('friends');}
+function communityNavMessenger(){communitySetView('messenger');}
+function communityNavNotifications(){communitySetView('notifications');}
+function communityNavProfile(){communitySetView('profile');}
+function communityNavSettings(){communitySetView('profile');setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},150);}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
   if(!allowedPages.includes(page))page="home";
@@ -246,29 +314,37 @@ window.addEventListener("popstate",async(event)=>{
   const messengerPanel=document.getElementById("messengerPanel");
   if(state.uyView==="member-profile"&&state.memberId){
     if(messengerPanel)messengerPanel.style.display="none";
-    if(profileBox)profileBox.style.display="block";
     await showPage(state.uyPage||"community",{history:false});
+    communitySetView("memberProfile",{history:false});
     await showMemberProfile(state.memberId,{history:false});
     return;
   }
   if(state.uyView==="messenger"&&state.peerId){
     if(profileBox)profileBox.style.display="none";
     await showPage(state.uyPage||"community",{history:false});
+    communitySetView("messenger",{history:false});
     await openMessengerWith(state.peerId,{history:false});
     return;
   }
   if(state.uyView==="messenger-list"){
     if(profileBox)profileBox.style.display="none";
     await showPage(state.uyPage||"community",{history:false});
+    communitySetView("messenger",{history:false});
     if(messengerPanel)messengerPanel.style.display="block";
     messengerOpen=true;
     await toggleMessenger(true,{history:false});
     return;
   }
+  if(state.uyView==="community-view"){
+    if(messengerPanel&&state.communityView!=="messenger")messengerPanel.style.display="none";
+    await showPage(state.uyPage||"community",{history:false});
+    communitySetView(state.communityView||"home",{history:false});
+    return;
+  }
   if(state.uyView==="own-profile"){
     if(messengerPanel)messengerPanel.style.display="none";
     await showPage(state.uyPage||"community",{history:false});
-    document.getElementById("communityAccount")?.scrollIntoView({behavior:"smooth",block:"start"});
+    communitySetView("profile",{history:false});
     return;
   }
   if(messengerPanel)messengerPanel.style.display="none";
@@ -371,8 +447,9 @@ communitySection.insertAdjacentHTML('beforeend',`
 </div>`);
 const communityFacebookNav=document.createElement('div');
 communityFacebookNav.className='community-facebook-nav';
-communityFacebookNav.innerHTML='<button class="active" onclick="communityNavHome(this)"><span>⌂</span><small>Home</small></button><button onclick="communityNavStories(this)"><span>▣</span><small>Video</small></button><button onclick="communityNavFriends(this)"><span>♧</span><small>Friends</small></button><button onclick="communityNavNotifications(this)"><span>♧<i id="communityNavNotificationDot"></i></span><small>Notifications</small></button><button onclick="communityNavProfile(this)"><span>◉</span><small>Profile</small></button><button onclick="communityNavSettings(this)"><span>•••</span><small>Settings</small></button>';
+communityFacebookNav.innerHTML='<button class="active" onclick="communityNavHome(this)"><span>⌂</span><small>Home</small></button><button onclick="communityNavStories(this)"><span>▣</span><small>Reels</small></button><button onclick="communityNavFriends(this)"><span>♧</span><small>Friends</small></button><button onclick="communityNavMessenger(this)"><span>✉</span><small>Messenger</small></button><button onclick="communityNavNotifications(this)"><span>♧<i id="communityNavNotificationDot"></i></span><small>Alerts</small></button><button onclick="communityNavProfile(this)"><span>◉</span><small>Profile</small></button>';
 communitySection.appendChild(communityFacebookNav);
+communitySetView('home',{history:false});
 const communityFacebookNavStyle=document.createElement('style');
 communityFacebookNavStyle.textContent='.community-facebook-nav{display:none}#communityPage.active .community-facebook-nav{display:flex;position:fixed;z-index:999;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e1e5eb;box-shadow:0 -2px 12px #00000012;padding:7px 3px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}.community-facebook-nav button{flex:1;min-width:0;border:0;background:transparent;color:#242a32;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;font-size:10px;font-weight:600}.community-facebook-nav button span{font-size:27px;line-height:29px;position:relative}.community-facebook-nav button small{font-size:10px}.community-facebook-nav button.active{color:#0866ff}.community-facebook-nav #communityNavNotificationDot{display:none;position:absolute;right:-4px;top:0;width:8px;height:8px;border-radius:50%;background:#e41e3f;border:1px solid #fff}#communityPage.active{padding-bottom:82px!important}#communityPage #communityStoriesPanel{background:transparent;border:0;box-shadow:none;padding:8px 0}#communityPage #communityStoriesList>div{flex:0 0 116px!important;width:116px!important;height:190px;max-width:116px!important;position:relative;overflow:hidden;padding:0!important;border-radius:13px!important;background:#dce8f6}#communityPage #communityStoriesList>div img,#communityPage #communityStoriesList>div video{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important}#communityPage #communityStoriesList>div p{position:absolute;bottom:22px;left:7px;right:7px;color:white;font-weight:700;text-shadow:0 1px 4px #000;margin:0}#communityPage #communityStoriesList>div small{position:absolute;bottom:5px;left:7px;color:white;text-shadow:0 1px 4px #000}';
 document.head.appendChild(communityFacebookNavStyle);
