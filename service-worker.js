@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "usman-yobe-talk-show-v39";
+const CACHE_NAME = "usman-yobe-talk-show-v40";
 
 const FILES_TO_CACHE = [
   "./",
