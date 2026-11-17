@@ -304,11 +304,12 @@ communitySection.insertAdjacentHTML('beforeend',`
 <button onclick="socialHubOpen('reels')">🎬 Reels</button><button onclick="socialHubOpen('groups')">👥 Groups</button><button onclick="socialHubOpen('market')">🛍️ Marketplace</button><button onclick="socialHubOpen('live')">🔴 Live</button><button onclick="socialHubOpen('creator')">📊 Creator Studio</button>
 </div>
 <section id="socialReelsPanel" class="social-hub-section">
-<h3>🎬 Reels</h3><p class="community-muted">Share short videos using a public video URL. Upload hosting can be connected next.</p>
-<input id="socialReelTitle" class="community-input" maxlength="100" placeholder="Video title">
-<input id="socialReelUrl" class="community-input" type="url" placeholder="MP4 video URL (https://...)">
-<textarea id="socialReelCaption" class="community-input" maxlength="500" placeholder="Write a caption"></textarea>
-<button class="community-btn" onclick="socialPublishReel()">＋ Publish Reel</button><div id="socialReelsList" class="community-muted">Loading Reels...</div>
+<h3>🎬 Reels</h3><p class="community-muted">Zaɓi bidiyo daga wayarka ka wallafa shi a matsayin Reel.</p>
+<input id="socialReelTitle" class="community-input" maxlength="100" placeholder="Sunan bidiyo">
+<label class="community-muted" for="socialReelFile">🎥 Zaɓi bidiyo daga wayarka (MP4, WebM, MOV — har zuwa 50 MB)</label><input id="socialReelFile" class="community-input" type="file" accept="video/mp4,video/webm,video/quicktime" capture="environment">
+<input id="socialReelUrl" class="community-input" type="url" placeholder="Ko saka public video URL (optional)">
+<textarea id="socialReelCaption" class="community-input" maxlength="500" placeholder="Rubuta bayani game da bidiyon"></textarea>
+<button class="community-btn" id="socialReelPublishButton" onclick="socialPublishReel()">＋ Sa Reel</button><div id="socialReelsList" class="community-muted">Loading Reels...</div>
 </section>
 <section id="socialGroupsPanel" class="social-hub-section" style="display:none">
 <h3>👥 Groups</h3><input id="socialGroupName" class="community-input" maxlength="80" placeholder="Group name"><textarea id="socialGroupAbout" class="community-input" maxlength="400" placeholder="What is this group about?"></textarea><select id="socialGroupPrivacy" class="community-input"><option value="public">Public group</option><option value="private">Private group</option></select><button class="community-btn" onclick="socialCreateGroup()">＋ Create Group</button><div id="socialGroupsList" class="community-muted">Loading groups...</div>
@@ -808,7 +809,30 @@ function socialHubStatus(message,isError=false){const el=document.getElementById
 function socialHubOpen(which){const ids={reels:'socialReelsPanel',groups:'socialGroupsPanel',market:'socialMarketPanel',live:'socialLivePanel',creator:'socialCreatorPanel'};Object.values(ids).forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none'});const target=document.getElementById(ids[which]);if(target)target.style.display='block';if(which==='reels')socialLoadReels();if(which==='groups')socialLoadGroups();if(which==='market')socialLoadMarket();if(which==='live')socialLoadLive();if(which==='creator')socialLoadCreator();target?.scrollIntoView({behavior:'smooth',block:'start'});}
 function socialEsc(v){return typeof esc==='function'?esc(String(v??'')):String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function socialRequireUser(){if(!communityUser){socialHubStatus('Please sign in before publishing.',true);return false;}return true;}
-async function socialPublishReel(){if(!socialRequireUser())return;const title=document.getElementById('socialReelTitle').value.trim(),url=document.getElementById('socialReelUrl').value.trim(),caption=document.getElementById('socialReelCaption').value.trim();if(!title||!url){socialHubStatus('Enter a title and video URL.',true);return;}try{new URL(url);if(!/^https?:$/.test(new URL(url).protocol))throw 0;}catch(e){socialHubStatus('Enter a valid https video URL.',true);return;}const {error}=await db.from('social_reels').insert({user_id:communityUser.id,title,video_url:url,caption});if(error){socialHubStatus('Could not publish Reel. Run social-platform-setup.sql in Supabase first. '+error.message,true);return;}['socialReelTitle','socialReelUrl','socialReelCaption'].forEach(id=>document.getElementById(id).value='');socialHubStatus('Reel published successfully.');socialLoadReels();}
+async function socialPublishReel(){
+if(!socialRequireUser())return;
+const title=document.getElementById('socialReelTitle').value.trim(),urlInput=document.getElementById('socialReelUrl').value.trim(),caption=document.getElementById('socialReelCaption').value.trim(),fileInput=document.getElementById('socialReelFile'),file=fileInput?.files?.[0],button=document.getElementById('socialReelPublishButton');
+if(!title||(!file&&!urlInput)){socialHubStatus('Shigar da sunan Reel sannan ka zabi bidiyo ko saka URL.',true);return;}
+if(file&&(!file.type.startsWith('video/')||file.size>50*1024*1024)){socialHubStatus('Bidiyon ya zama video kuma bai wuce 50 MB ba.',true);return;}
+if(!file&&urlInput){try{const u=new URL(urlInput);if(!/^https?:$/.test(u.protocol))throw 0;}catch(e){socialHubStatus('Saka ingantaccen video URL.',true);return;}}
+if(button){button.disabled=true;button.textContent=file?'Ana loda bidiyo...':'Ana wallafawa...';}
+try{
+let videoUrl=urlInput;
+if(file){
+const ext=(file.name.split('.').pop()||'mp4').replace(/[^a-z0-9]/gi,'').toLowerCase()||'mp4';
+const path='community/'+communityUser.id+'/reels/'+Date.now()+'.'+ext;
+const {error:uploadError}=await db.storage.from('news-images').upload(path,file,{upsert:false,contentType:file.type});
+if(uploadError)throw uploadError;
+const {data:publicData}=db.storage.from('news-images').getPublicUrl(path);
+videoUrl=publicData.publicUrl;
+}
+const {error}=await db.from('social_reels').insert({user_id:communityUser.id,title,video_url:videoUrl,caption});
+if(error)throw error;
+['socialReelTitle','socialReelUrl','socialReelCaption'].forEach(id=>document.getElementById(id).value='');if(fileInput)fileInput.value='';
+socialHubStatus('An wallafa Reel ɗinka cikin nasara.');await socialLoadReels();
+}catch(e){socialHubStatus('Ba a wallafa Reel ba: '+(e.message||String(e)),true);}
+finally{if(button){button.disabled=false;button.textContent='＋ Sa Reel';}}
+}
 async function socialLoadReels(){const box=document.getElementById('socialReelsList');if(!box)return;const {data,error}=await db.from('social_reels').select('id,user_id,title,video_url,caption,created_at').order('created_at',{ascending:false}).limit(30);if(error){box.textContent='Reels database is not ready. Run social-platform-setup.sql. '+error.message;return;}box.innerHTML=(data||[]).map(x=>'<article class="social-hub-card"><strong>'+socialEsc(x.title)+'</strong><p>'+socialEsc(x.caption||'')+'</p><video controls playsinline preload="metadata" src="'+socialEsc(x.video_url)+'"></video><small class="community-muted">'+socialEsc(new Date(x.created_at).toLocaleString())+'</small></article>').join('')||'<p class="community-muted">No Reels yet. Be the first to publish.</p>';}
 async function socialCreateGroup(){if(!socialRequireUser())return;const name=document.getElementById('socialGroupName').value.trim(),about=document.getElementById('socialGroupAbout').value.trim(),privacy=document.getElementById('socialGroupPrivacy').value;if(!name){socialHubStatus('Enter a group name.',true);return;}const {data,error}=await db.from('social_groups').insert({owner_id:communityUser.id,name,about,privacy}).select().single();if(error){socialHubStatus('Could not create group. Run the setup SQL. '+error.message,true);return;}await db.from('social_group_members').upsert({group_id:data.id,user_id:communityUser.id,role:'admin'});document.getElementById('socialGroupName').value='';document.getElementById('socialGroupAbout').value='';socialHubStatus('Group created.');socialLoadGroups();}
 async function socialLoadGroups(){const box=document.getElementById('socialGroupsList');if(!box)return;const {data,error}=await db.from('social_groups').select('id,owner_id,name,about,privacy,created_at').order('created_at',{ascending:false}).limit(50);if(error){box.textContent='Groups database is not ready. '+error.message;return;}box.innerHTML=(data||[]).map(x=>'<article class="social-hub-card"><strong>'+socialEsc(x.name)+'</strong><p>'+socialEsc(x.about||'')+'</p><small>'+socialEsc(x.privacy)+' group</small><div><button class="community-btn secondary" onclick="socialJoinGroup('+JSON.stringify(x.id)+')">Join Group</button></div></article>').join('')||'<p>No groups yet.</p>';}
