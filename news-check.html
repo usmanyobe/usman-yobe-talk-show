@@ -11,7 +11,7 @@ async function test(){
   const html=await page.text();
   const u=html.match(/SUPABASE_URL\s*=\s*["']([^"']+)["']/),k=html.match(/SUPABASE_KEY\s*=\s*["']([^"']+)["']/);
   if(!u||!k)throw new Error("Ba a gano Supabase URL/anon key a index.html ba.");
-  const endpoint=u[1]+"/rest/v1/news_posts?select=id,title,status&status=eq.published&order=published_at.desc";
+  const endpoint=u[1]+"/rest/v1/news_posts?select=id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info,status&status=eq.published&order=published_at.desc";
   const res=await fetch(endpoint,{headers:{apikey:k[1],Authorization:"Bearer "+k[1],Accept:"application/json"},cache:"no-store"});
   const body=await res.text();
   if(!res.ok){out.textContent="AN SAMU KUSKUREN API\nHTTP: "+res.status+" "+res.statusText+"\n\n"+body;return;}
