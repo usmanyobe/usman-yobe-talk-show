@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ha"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>USMAN YOBE — Gwajin Labarai</title>
+<style>body{font-family:system-ui,Arial;background:#071b49;color:white;margin:0;padding:22px}main{max-width:650px;margin:25px auto;background:#10295f;padding:22px;border-radius:16px}h1{font-size:23px}p{line-height:1.6;color:#dbe7ff}#result{background:#061438;padding:16px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere}button{background:white;color:#071b49;border:0;padding:12px 18px;border-radius:9px;font-weight:bold}li{margin:10px 0;line-height:1.5}</style></head>
+<body><main><h1>USMAN YOBE TALK SHOW</h1><p>Wannan shafin gwaji ne kawai. Zai duba ko API na Supabase na iya dawo da labaran da aka wallafa. Ba zai canza ko goge komai ba.</p><button id="retry">Sake gwadawa</button><p id="result">Ana gwadawa...</p><ol id="stories"></ol></main>
+<script>
+async function test(){
+ const out=document.getElementById("result"),list=document.getElementById("stories");out.textContent="Ana gwadawa...";list.innerHTML="";
+ try{
+  const page=await fetch("./index.html?diagnostic="+Date.now(),{cache:"no-store"});
+  if(!page.ok)throw new Error("Ba a iya karanta index.html ba: HTTP "+page.status);
+  const html=await page.text();
+  const u=html.match(/SUPABASE_URL\s*=\s*["']([^"']+)["']/),k=html.match(/SUPABASE_KEY\s*=\s*["']([^"']+)["']/);
+  if(!u||!k)throw new Error("Ba a gano Supabase URL/anon key a index.html ba.");
+  const endpoint=u[1]+"/rest/v1/news_posts?select=id,title,status&status=eq.published&order=published_at.desc";
+  const res=await fetch(endpoint,{headers:{apikey:k[1],Authorization:"Bearer "+k[1],Accept:"application/json"},cache:"no-store"});
+  const body=await res.text();
+  if(!res.ok){out.textContent="AN SAMU KUSKUREN API\nHTTP: "+res.status+" "+res.statusText+"\n\n"+body;return;}
+  const rows=JSON.parse(body);
+  if(!Array.isArray(rows)){out.textContent="Amsa ba jerin labarai ba ce:\n"+body;return;}
+  out.textContent="NASARA — API ya amsa. An samo labarai "+rows.length+".";
+  rows.forEach(x=>{const li=document.createElement("li");li.textContent=(x.title||"(babu take)")+" — "+(x.status||"");list.appendChild(li)});
+  if(rows.length===0)out.textContent+="\nAmma babu labarin published da API ya dawo da shi.";
+ }catch(e){out.textContent="KUSKURE:\n"+(e.message||String(e));}
+}
+document.getElementById("retry").addEventListener("click",test);test();
+</script></body></html>
