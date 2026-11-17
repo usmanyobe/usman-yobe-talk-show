@@ -15,8 +15,10 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const vapidPublic = Deno.env.get("VAPID_PUBLIC_KEY")!;
-    const vapidPrivate = Deno.env.get("VAPID_PRIVATE_KEY")!;
+    const cleanSecret = (value: string | undefined) =>
+      String(value || "").trim().replace(/^["']|["']$/g, "").replace(/\\s/g, "");
+    const vapidPublic = cleanSecret(Deno.env.get("VAPID_PUBLIC_KEY"));
+    const vapidPrivate = cleanSecret(Deno.env.get("VAPID_PRIVATE_KEY"));
     const vapidSubject = Deno.env.get("VAPID_SUBJECT") || "https://usmanyobe.github.io/usman-yobe-talk-show/";
 
     if (!supabaseUrl || !anonKey || !serviceKey || !vapidPublic || !vapidPrivate) {
@@ -37,6 +39,13 @@ Deno.serve(async (req) => {
     const title = String(payload.title || "USMAN YOBE TALK SHOW").slice(0, 80);
     const body = String(payload.body || "Akwai sabon bayani a tasharmu.").slice(0, 220);
     const url = String(payload.url || "./");
+    const publicBytes = Uint8Array.from(
+      atob(vapidPublic.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(vapidPublic.length / 4) * 4, "=")),
+      (char) => char.charCodeAt(0)
+    );
+    if (publicBytes.length !== 65) {
+      throw new Error(`VAPID_PUBLIC_KEY is invalid: decoded to ${publicBytes.length} bytes; expected 65. Recheck the Supabase VAPID_PUBLIC_KEY secret.`);
+    }
     webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate);
 
     const adminClient = createClient(supabaseUrl, serviceKey);
