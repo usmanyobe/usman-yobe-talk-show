@@ -128,7 +128,35 @@ function safeURL(v){if(!v)return"";try{let u=new URL(v,location.href);return["ht
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function formatDate(v){if(!v)return"";let d=new Date(v);if(isNaN(d))return"";return d.toLocaleDateString(currentLanguage==="ar"?"ar":currentLanguage==="ha"?"ha":"en",{year:"numeric",month:"short",day:"numeric"})}
 function categoryName(c){return translations[currentLanguage]?.[c]||c||tr("News")}
-async function loadNews(){let grid=document.getElementById("newsGrid");grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;let {data,error}=await db.from("news_posts").select("id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info").eq("status","published").order("published_at",{ascending:false});if(error){console.error(error);grid.innerHTML='<div class="empty">Database Error: '+esc(error.message)+'</div>';return}posts=data||[];renderAll();openArticleFromURL()}
+async function loadNews(){
+  const grid=document.getElementById("newsGrid");
+  grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
+  const columns="id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info";
+  try{
+    let {data,error}=await db.from("news_posts").select(columns).eq("status","published").order("published_at",{ascending:false});
+    if(error) console.error("Supabase news query:",error);
+    if(!error&&Array.isArray(data)&&data.length){
+      posts=data;
+    }else{
+      // Retry directly against PostgREST without browser/service-worker caching.
+      const params=new URLSearchParams({select:columns,status:"eq.published",order:"published_at.desc"});
+      const response=await fetch(SUPABASE_URL+"/rest/v1/news_posts?"+params.toString(),{
+        method:"GET",
+        headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Accept:"application/json"},
+        cache:"no-store"
+      });
+      if(!response.ok) throw new Error("News API "+response.status+": "+(await response.text()).slice(0,240));
+      const retryData=await response.json();
+      posts=Array.isArray(retryData)?retryData:(data||[]);
+      console.log("News refresh result:",posts.length,"published stories");
+    }
+    renderAll();
+    openArticleFromURL();
+  }catch(error){
+    console.error("Could not load published news:",error);
+    grid.innerHTML='<div class="empty">Could not load news. Please check your internet connection and tap refresh. Details: '+esc(error.message||String(error))+'</div>';
+  }
+}
 async function loadGallery(){let grid=document.getElementById("galleryGrid");grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;let {data,error}=await db.from("gallery_photos").select("id,title,description,image_url,created_at").order("created_at",{ascending:false});if(error){console.error(error);grid.innerHTML=`<div class="empty">${tr("galleryError")}</div>`;return}galleryPhotos=data||[];renderGallery()}
 function renderGallery(){let grid=document.getElementById("galleryGrid");if(!galleryPhotos.length){grid.innerHTML=`<div class="empty">${tr("noPhotos")}</div>`;return}grid.innerHTML=galleryPhotos.map(p=>{let image=safeURL(p.image_url);return image?`<article class="gallery-card" onclick="openGalleryImage('${esc(p.id)}')"><img src="${esc(image)}" alt="${esc(p.title)}" loading="lazy"><div class="gallery-caption"><strong>${esc(p.title)}</strong><small>${formatDate(p.created_at)}</small></div></article>`:""}).join("")}
 function openGalleryImage(id){let p=galleryPhotos.find(x=>String(x.id)===String(id));if(!p)return;let image=safeURL(p.image_url);if(!image)return;activeGalleryPhoto=p;document.getElementById("galleryFullImage").src=image;document.getElementById("galleryFullTitle").textContent=p.title||"";document.getElementById("galleryFullDescription").textContent=p.description||"";document.getElementById("galleryView").classList.add("open")}
