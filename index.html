@@ -711,7 +711,9 @@ if(current.uyView!=='messenger-list')history.pushState({uyView:'messenger-list',
 }
 messengerOpen=nextOpen;
 panel.style.display=messengerOpen?'block':'none';
-if(messengerOpen){await loadMessengerConversations();await refreshMessengerBadge();panel.scrollIntoView({behavior:'smooth',block:'start'});}
+const sidebar=panel.querySelector('.messenger-sidebar'),chat=panel.querySelector('.messenger-chat');
+if(messengerOpen){if(sidebar)sidebar.style.display='block';if(chat)chat.style.display='none';messengerActiveUserId=null;await loadMessengerConversations();await refreshMessengerBadge();panel.scrollIntoView({behavior:'smooth',block:'start'});}
+else{if(sidebar)sidebar.style.display='block';if(chat)chat.style.display='none';messengerActiveUserId=null;}
 }
 async function refreshMessengerBadge(){
 if(!communityUser)return;
@@ -771,6 +773,9 @@ const header=document.getElementById('messengerChatHeader');
 if(!panel||!header)return;
 messengerOpen=true;
 panel.style.display='block';
+const sidebar=panel.querySelector('.messenger-sidebar'),chat=panel.querySelector('.messenger-chat');
+if(sidebar)sidebar.style.display='none';
+if(chat)chat.style.display='block';
 messengerActiveUserId=String(id);
 header.textContent='Loading member...';
 const cached=memberDirectoryCache.find(m=>String(m.id)===String(id));
