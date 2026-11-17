@@ -378,7 +378,7 @@ async function sendPushAnnouncement(){
   const body=document.getElementById('pushAnnouncementBody')?.value.trim()||'Akwai sabon bayani a tasharmu.';
   const status=document.getElementById('pushAnnouncementStatus');
   if(status)status.textContent='Sending...';
-  const {data,error}=await db.functions.invoke('send-push',{body:{title,body,url:'./'}});
+  const {data,error}=await db.functions.invoke('send-push-notification',{body:{title,body,url:'./'}});
   if(error){if(status)status.textContent='Could not send: '+error.message;return;}
   if(status)status.textContent='Sent to '+(data?.sent??0)+' device(s).';
 }
