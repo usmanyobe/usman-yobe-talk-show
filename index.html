@@ -130,43 +130,46 @@ function formatDate(v){if(!v)return"";let d=new Date(v);if(isNaN(d))return"";ret
 function categoryName(c){return translations[currentLanguage]?.[c]||c||tr("News")}
 async function loadNews(){
   const grid=document.getElementById("newsGrid");
-  grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
-  const columns="id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info";
+  const status=document.getElementById("newsLoadStatus");
+  if(grid) grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
+  const columns="id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info,status";
   try{
-    let {data,error}=await db.from("news_posts").select(columns).eq("status","published").order("published_at",{ascending:false});
-    if(error) console.error("Supabase news query:",error);
-    if(!error&&Array.isArray(data)&&data.length){
-      posts=data;
-    }else{
-      // Retry directly against PostgREST without browser/service-worker caching.
-      const params=new URLSearchParams({select:columns,status:"eq.published",order:"published_at.desc"});
-      const response=await fetch(SUPABASE_URL+"/rest/v1/news_posts?"+params.toString(),{
-        method:"GET",
-        headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Accept:"application/json"},
-        cache:"no-store"
-      });
-      if(!response.ok) throw new Error("News API "+response.status+": "+(await response.text()).slice(0,240));
-      const retryData=await response.json();
-      posts=Array.isArray(retryData)?retryData:(data||[]);
-      console.log("News refresh result:",posts.length,"published stories");
-    }
-    const status=document.getElementById("newsLoadStatus");
-    if(status) status.textContent="News loaded from Supabase: "+posts.length+" published stories.";
-    // Render news first; isolate other sections so they cannot interrupt it.
-    try{renderPosts();}catch(renderError){
-      console.error("News card rendering failed:",renderError);
-      grid.innerHTML='<div class="empty">News was received ('+posts.length+') but could not be displayed: '+esc(renderError.message||String(renderError))+'</div>';
-    }
-    try{renderBreakingAlert();}catch(e){console.error("Breaking news display:",e);}
-    try{renderOpportunities();}catch(e){console.error("Opportunities display:",e);}
-    try{renderEvents();}catch(e){console.error("Events display:",e);}
-    try{renderVideos();}catch(e){console.error("Videos display:",e);}
-    try{renderAudio();}catch(e){console.error("Audio display:",e);}
+    // Use the same direct REST route verified by news-check.html.
+    const params=new URLSearchParams({select:columns,status:"eq.published",order:"published_at.desc"});
+    const response=await fetch(SUPABASE_URL+"/rest/v1/news_posts?"+params.toString(),{
+      method:"GET",
+      headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Accept:"application/json"},
+      cache:"no-store"
+    });
+    if(!response.ok) throw new Error("News API "+response.status+": "+(await response.text()).slice(0,240));
+    const data=await response.json();
+    if(!Array.isArray(data)) throw new Error("Amsar labarai ba jerin bayanai ba ce.");
+    posts=data;
+    const opportunityCount=posts.filter(p=>p.opportunity_type&&String(p.opportunity_type).trim()).length;
+    if(status) status.textContent="An samo labarai "+posts.length+"; damammaki "+opportunityCount+".";
+    try{renderPosts();}catch(e){console.error("News cards:",e);if(grid)grid.innerHTML='<div class="empty">An karɓi labarai '+posts.length+' amma an samu matsalar nuna su: '+esc(e.message||String(e))+'</div>';}
+    try{renderBreakingAlert();}catch(e){console.error("Breaking news:",e);}
+    try{renderOpportunities();}catch(e){console.error("Opportunities:",e);const og=document.getElementById("opportunitiesGrid");if(og)og.innerHTML='<div class="empty">An samu matsalar nuna damammaki: '+esc(e.message||String(e))+'</div>';}
+    try{renderEvents();}catch(e){console.error("Events:",e);}
+    try{renderVideos();}catch(e){console.error("Videos:",e);}
+    try{renderAudio();}catch(e){console.error("Audio:",e);}
     const year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear();
     openArticleFromURL();
   }catch(error){
-    console.error("Could not load published news:",error);
-    grid.innerHTML='<div class="empty">Could not load news. Please check your internet connection and tap refresh. Details: '+esc(error.message||String(error))+'</div>';
+    console.error("Direct news request failed:",error);
+    // Keep a second route available if direct REST is temporarily unavailable.
+    try{
+      const result=await db.from("news_posts").select(columns).eq("status","published").order("published_at",{ascending:false});
+      if(result.error) throw result.error;
+      posts=result.data||[];
+      if(status)status.textContent="An samo labarai "+posts.length+".";
+      renderPosts();renderBreakingAlert();renderOpportunities();renderEvents();renderVideos();renderAudio();openArticleFromURL();
+    }catch(fallbackError){
+      console.error("Could not load published news:",fallbackError);
+      if(status)status.textContent="An kasa ɗauko labarai: "+(fallbackError.message||String(fallbackError));
+      if(grid)grid.innerHTML='<div class="empty">Ba a iya ɗauko labarai ba. '+esc(fallbackError.message||String(fallbackError))+'</div>';
+      const og=document.getElementById("opportunitiesGrid");if(og)og.innerHTML='<div class="empty">Ba a iya ɗauko damammaki ba.</div>';
+    }
   }
 }
 async function loadGallery(){let grid=document.getElementById("galleryGrid");grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;let {data,error}=await db.from("gallery_photos").select("id,title,description,image_url,created_at").order("created_at",{ascending:false});if(error){console.error(error);grid.innerHTML=`<div class="empty">${tr("galleryError")}</div>`;return}galleryPhotos=data||[];renderGallery()}
@@ -284,7 +287,7 @@ let html=[];for(const p of postsData){let [{data:likes},{data:comments}]=await P
 feed.innerHTML=html.join('');let shared=new URLSearchParams(location.search).get('communityPost');if(shared){let target=document.getElementById('communityPost_'+CSS.escape(shared));if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.outline='3px solid #0759c7';setTimeout(()=>target.style.outline='',3500);}}}
 async function communityInit(){let {data}=await db.auth.getSession();communityUser=data?.session?.user||null;await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();await refreshCommunityNotifications();await loadCommunityPosts();db.auth.onAuthStateChange((_event,session)=>{communityUser=session?.user||null;setTimeout(async()=>{await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();await refreshCommunityNotifications();loadCommunityPosts();},0);});}
 communityInit();
-registerServiceWorker();setLanguage(currentLanguage);loadNews();loadGallery();
+registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories();loadNews();loadGallery();
 </script>
 </body>
 </html>
