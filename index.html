@@ -251,28 +251,41 @@ function communitySetView(view,options={}){
  if(hub){
   const target={reels:'socialReelsPanel',groups:'socialGroupsPanel',marketplace:'socialMarketPanel',live:'socialLivePanel',creator:'socialCreatorPanel'}[view];
   hub.querySelectorAll('.social-hub-section').forEach(x=>x.style.display=x.id===target?'':'none');
-  const tabs=hub.querySelector('.social-hub-tabs');if(tabs)tabs.style.display=view==='reels'?'':'none';
-  const heading=hub.querySelector('h2');if(heading)heading.style.display=view==='reels'?'':'none';
-  const intro=hub.querySelector(':scope > p.community-muted');if(intro)intro.style.display=view==='reels'?'':'none';
+  const tabs=hub.querySelector('.social-hub-tabs');if(tabs)tabs.style.display='none';
+  const heading=hub.querySelector('h2');if(heading)heading.style.display='none';
+  const intro=hub.querySelector(':scope > p.community-muted');if(intro)intro.style.display='none';
+  const status=hub.querySelector('#socialHubStatus');if(status)status.style.display=view==='reels'?'':'none';
  }
  page.dataset.communityView=view;
+ // Keep the same post composer available on Home and in the member's Profile.
+ const account=document.getElementById('communityAccount');
+ const composer=account&&Array.from(account.querySelectorAll(':scope > .community-panel')).find(el=>el.querySelector('h3')?.textContent?.includes('Create a post'));
+ const feed=document.getElementById('communityFeed');
+ if(composer&&feed){
+  if(view==='home'&&composer.parentElement!==page)page.insertBefore(composer,feed);
+  else if(view==='profile'&&composer.parentElement!==account)account.appendChild(composer);
+ }
  if(options.history!==false){
   const current=history.state||{};
   if(current.uyView!=='community-view'||current.communityView!==view)
    history.pushState({uyView:'community-view',uyPage:'community',communityView:view},'',location.href);
  }
- const navMap={home:0,reels:1,friends:2,messenger:3,notifications:4,profile:5,memberProfile:2};
+ const navMap={home:0,reels:1,groups:2,marketplace:3,messenger:4,notifications:5,profile:6,friends:2,memberProfile:2,live:2,creator:6};
  const buttons=page.querySelectorAll('.community-facebook-nav button');
  buttons.forEach((b,i)=>b.classList.toggle('active',i===navMap[view]));
  if(view==='friends'&&typeof toggleFriendRequests==='function')toggleFriendRequests(true);
  if(view==='notifications'&&typeof refreshCommunityNotifications==='function')refreshCommunityNotifications();
  if(view==='messenger'&&typeof toggleMessenger==='function')toggleMessenger(true,{history:false});
  if(view==='reels'&&typeof socialLoadReels==='function')socialLoadReels();
+ if(view==='groups'&&typeof socialLoadGroups==='function')socialLoadGroups();
+ if(view==='marketplace'&&typeof socialLoadMarket==='function')socialLoadMarket();
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function communityNavHome(){communitySetView('home');}
 function communityNavStories(){communitySetView('reels');}
 function communityNavFriends(){communitySetView('friends');}
+function communityNavGroups(){communitySetView('groups');}
+function communityNavMarket(){communitySetView('marketplace');}
 function communityNavMessenger(){communitySetView('messenger');}
 function communityNavNotifications(){communitySetView('notifications');}
 function communityNavProfile(){communitySetView('profile');}
@@ -447,7 +460,7 @@ communitySection.insertAdjacentHTML('beforeend',`
 </div>`);
 const communityFacebookNav=document.createElement('div');
 communityFacebookNav.className='community-facebook-nav';
-communityFacebookNav.innerHTML='<button class="active" onclick="communityNavHome(this)"><span>⌂</span><small>Home</small></button><button onclick="communityNavStories(this)"><span>▣</span><small>Reels</small></button><button onclick="communityNavFriends(this)"><span>♧</span><small>Friends</small></button><button onclick="communityNavMessenger(this)"><span>✉</span><small>Messenger</small></button><button onclick="communityNavNotifications(this)"><span>♧<i id="communityNavNotificationDot"></i></span><small>Alerts</small></button><button onclick="communityNavProfile(this)"><span>◉</span><small>Profile</small></button>';
+communityFacebookNav.innerHTML='<button class="active" onclick="communityNavHome(this)"><span>⌂</span><small>Home</small></button><button onclick="communityNavStories(this)"><span>▣</span><small>Reels</small></button><button onclick="communityNavGroups(this)"><span>♧</span><small>Groups</small></button><button onclick="communityNavMarket(this)"><span>🛍</span><small>Market</small></button><button onclick="communityNavMessenger(this)"><span>✉</span><small>Messenger</small></button><button onclick="communityNavNotifications(this)"><span>♧<i id="communityNavNotificationDot"></i></span><small>Alerts</small></button><button onclick="communityNavProfile(this)"><span>◉</span><small>Profile</small></button>';
 communitySection.appendChild(communityFacebookNav);
 communitySetView('home',{history:false});
 const communityFacebookNavStyle=document.createElement('style');
