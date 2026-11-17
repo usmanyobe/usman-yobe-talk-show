@@ -275,7 +275,7 @@ function communitySetView(view,options={}){
  const buttons=page.querySelectorAll('.community-facebook-nav button');
  buttons.forEach((b,i)=>b.classList.toggle('active',i===navMap[view]));
  if(view==='friends'&&typeof toggleFriendRequests==='function')toggleFriendRequests(true);
- if(view==='notifications'&&typeof refreshCommunityNotifications==='function')refreshCommunityNotifications();
+ if(view==='notifications'&&typeof refreshCommunityNotifications==='function'){communityNotificationOpen=true;refreshCommunityNotifications();}
  if(view==='messenger'&&typeof toggleMessenger==='function')toggleMessenger(true,{history:false});
  if(view==='reels'&&typeof socialLoadReels==='function')socialLoadReels();
  if(view==='groups'&&typeof socialLoadGroups==='function')socialLoadGroups();
