@@ -235,11 +235,30 @@ body.auth-locked nav,body.auth-locked .bottom-nav,body.auth-locked #breakingBox,
 #communityPage .community-reply{margin-left:18px;border-left:3px solid #b8cbea;padding-left:9px}
 #communityPage .community-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}#communityPage .community-badge{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:12px;background:#d93025;color:#fff;font-size:11px;margin-left:5px}#communityPage #communityNotificationsPanel{border-top:1px solid #e6ebf3;padding-top:10px}#communityPage #communityNotificationList{max-height:55vh;overflow-y:auto}#communityPage .community-media{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:12px;margin:10px 0;background:#071b49}#communityPage .community-post-media-preview img,#communityPage .community-post-media-preview video{width:100%;max-height:260px;object-fit:contain;border-radius:10px;margin-top:8px}
 #communityPage #communityAvatarPreview{display:block}
+#communityPage .messenger-layout{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(0,1.4fr);gap:12px;margin-top:12px}
+#communityPage .messenger-sidebar,#communityPage .messenger-chat{min-width:0;border:1px solid #e6ebf3;border-radius:11px;padding:10px;background:#fff}
+#communityPage .messenger-list{max-height:340px;overflow-y:auto}
+#communityPage .messenger-person{display:flex;width:100%;align-items:center;gap:9px;border:0;border-bottom:1px solid #edf0f5;background:#fff;text-align:left;padding:10px 5px;cursor:pointer;color:#182235}
+#communityPage .messenger-person img{width:40px;height:40px;border-radius:50%;object-fit:cover;background:#eaf0fa}
+#communityPage .messenger-person span{min-width:0;flex:1}
+#communityPage .messenger-person small{display:block;color:#738096;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+#communityPage .messenger-unread{background:#d93025;color:#fff;border-radius:12px;padding:2px 7px;font-size:11px}
+#communityPage .messenger-chat{display:flex;flex-direction:column;min-height:390px}
+#communityPage .messenger-messages{flex:1;min-height:260px;max-height:430px;overflow-y:auto;padding:8px;background:#f5f7fb;border-radius:9px}
+#communityPage .messenger-message{display:flex;margin:8px 0}
+#communityPage .messenger-message.mine{justify-content:flex-end}
+#communityPage .messenger-bubble{max-width:85%;padding:9px 12px;border-radius:14px;background:#fff;box-shadow:0 1px 3px #071b4912;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}
+#communityPage .messenger-message.mine .messenger-bubble{background:#dceaff;border-bottom-right-radius:4px}
+#communityPage .messenger-message.theirs .messenger-bubble{border-bottom-left-radius:4px}
+#communityPage .messenger-bubble small{display:block;color:#738096;font-size:10px;text-align:right;margin-top:4px}
+#communityPage .messenger-composer{display:flex;gap:7px;align-items:flex-end;margin-top:10px}
+#communityPage .messenger-composer textarea{flex:1;min-width:0;resize:vertical;border:1px solid #d9e1ed;border-radius:9px;padding:10px;font:14px Arial}
+@media(max-width:650px){#communityPage .messenger-layout{grid-template-columns:1fr}#communityPage .messenger-list{max-height:210px}#communityPage .messenger-chat{min-height:350px}}
 `;
 document.head.appendChild(communityStyle);
 const communitySection=document.createElement('section');
 communitySection.id='communityPage';communitySection.className='page';
-communitySection.innerHTML=`<h2 class="section-title">👥 Community Forum</h2><p class="page-intro">Join the conversation. Read public posts, share your thoughts and comment with the community.</p><div class="community-panel community-top-actions"><div class="community-row"><button id="communityNotificationsToggle" class="community-btn secondary" onclick="toggleCommunityNotifications()">🔔 Notifications <span id="communityNotificationBadge" class="community-badge">0</span></button><button id="communityFriendRequestsToggle" class="community-btn secondary" onclick="toggleFriendRequests()">🤝 Friend Requests <span id="friendRequestBadge" class="community-badge">0</span></button></div><div id="communityNotificationsPanel" style="display:none;margin-top:12px"><div class="community-row"><h3 style="margin:0">🔔 Notifications</h3><button class="community-btn secondary" onclick="refreshCommunityNotifications()">↻ Refresh</button><button class="community-btn secondary" onclick="communityMarkAllNotificationsRead()">Mark all read</button></div><div id="communityNotificationList" class="community-muted">Open notifications to view updates.</div></div></div><div class="community-panel" id="memberDirectoryPanel"><div class="community-row"><div><h3 style="margin:0">👥 Member Directory</h3><p class="community-muted" style="margin:5px 0">Find people and connect with the USMAN YOBE TALK SHOW community.</p></div><button class="community-btn secondary" onclick="loadMemberDirectory()">↻ Refresh</button></div><input id="memberDirectorySearch" class="community-input" placeholder="🔎 Find a friend: search by name or Member ID..." oninput="filterMemberDirectory()" autocomplete="off"><div id="memberDirectoryList"><p class="community-muted">Loading members...</p></div><div id="memberProfileCard" class="community-panel" style="display:none"></div><div id="memberFollowListPanel" class="community-panel" style="display:none"></div><div id="friendRequestsPanel" class="community-panel" style="display:none"><div class="community-row"><h3 style="margin:0">🤝 Friend Requests</h3><button class="community-btn secondary" onclick="loadFriendRequests()">↻ Refresh</button></div><div id="friendRequestsList" class="community-muted">Open friend requests to view.</div></div><p class="community-muted">Only member names and profile photos are shown. Email addresses and phone numbers are private.</p></div><div id="communityAccount"></div><div id="communityFeed"><div class="empty">Loading community...</div></div>`;
+communitySection.innerHTML=`<h2 class="section-title">👥 Community Forum</h2><p class="page-intro">Join the conversation. Read public posts, share your thoughts and comment with the community.</p><div class="community-panel community-top-actions"><div class="community-row"><button id="communityNotificationsToggle" class="community-btn secondary" onclick="toggleCommunityNotifications()">🔔 Notifications <span id="communityNotificationBadge" class="community-badge">0</span></button><button id="communityFriendRequestsToggle" class="community-btn secondary" onclick="toggleFriendRequests()">🤝 Friend Requests <span id="friendRequestBadge" class="community-badge">0</span></button><button id="communityMessengerToggle" class="community-btn secondary" onclick="toggleMessenger()">💬 Messenger <span id="messengerUnreadBadge" class="community-badge">0</span></button></div><div id="communityNotificationsPanel" style="display:none;margin-top:12px"><div class="community-row"><h3 style="margin:0">🔔 Notifications</h3><button class="community-btn secondary" onclick="refreshCommunityNotifications()">↻ Refresh</button><button class="community-btn secondary" onclick="communityMarkAllNotificationsRead()">Mark all read</button></div><div id="communityNotificationList" class="community-muted">Open notifications to view updates.</div></div></div><div id="messengerPanel" class="community-panel" style="display:none"><div class="community-row" style="justify-content:space-between"><h3 style="margin:0">💬 Messenger</h3><div><button class="community-btn secondary" onclick="loadMessengerConversations()">↻ Refresh</button><button class="community-btn secondary" onclick="toggleMessenger(false)">Close ✕</button></div></div><div class="messenger-layout"><div class="messenger-sidebar"><input id="messengerSearch" class="community-input" placeholder="🔎 Search members to message..." oninput="searchMessengerMembers()" autocomplete="off"><div id="messengerMemberResults" class="messenger-list"></div><h4 style="margin:12px 0 5px">Recent messages</h4><div id="messengerConversations" class="messenger-list"><p class="community-muted">Loading conversations...</p></div></div><div class="messenger-chat"><div id="messengerChatHeader" style="font-weight:700;padding:5px 4px 12px">Choose a member to start a conversation</div><div id="messengerMessages" class="messenger-messages"><p class="community-muted">Your private messages will appear here.</p></div><div class="messenger-composer"><textarea id="messengerMessageInput" rows="2" maxlength="5000" placeholder="Write a private message..."></textarea><button class="community-btn" id="messengerSendButton" onclick="sendMessengerMessage()">Send</button></div><div id="messengerStatus" class="community-muted" style="margin-top:5px"></div></div></div><p class="community-muted">Private messages are visible only to the sender and recipient. Please be respectful and never share your password.</p></div><div class="community-panel" id="memberDirectoryPanel"><div class="community-row"><div><h3 style="margin:0">👥 Member Directory</h3><p class="community-muted" style="margin:5px 0">Find people and connect with the USMAN YOBE TALK SHOW community.</p></div><button class="community-btn secondary" onclick="loadMemberDirectory()">↻ Refresh</button></div><input id="memberDirectorySearch" class="community-input" placeholder="🔎 Find a friend: search by name or Member ID..." oninput="filterMemberDirectory()" autocomplete="off"><div id="memberDirectoryList"><p class="community-muted">Loading members...</p></div><div id="memberProfileCard" class="community-panel" style="display:none"></div><div id="memberFollowListPanel" class="community-panel" style="display:none"></div><div id="friendRequestsPanel" class="community-panel" style="display:none"><div class="community-row"><h3 style="margin:0">🤝 Friend Requests</h3><button class="community-btn secondary" onclick="loadFriendRequests()">↻ Refresh</button></div><div id="friendRequestsList" class="community-muted">Open friend requests to view.</div></div><p class="community-muted">Only member names and profile photos are shown. Email addresses and phone numbers are private.</p></div><div id="communityAccount"></div><div id="communityFeed"><div class="empty">Loading community...</div></div>`;
 document.querySelector('main').insertBefore(communitySection,document.querySelector('main footer'));
 const communityNav=document.createElement('button');communityNav.dataset.page='community';communityNav.innerHTML='<span>👥</span><label>Community</label>';
 const bottomNavigation=document.querySelector('.bottom-nav');bottomNavigation.insertBefore(communityNav,bottomNavigation.children[2]||null);
@@ -255,7 +274,7 @@ communityMoreButton.style.marginTop='12px';
 communityMoreButton.onclick=()=>showPage('community');
 
 const moreContent=document.querySelector('#morePage .post');
-if(moreContent) moreContent.appendChild(communityMoreButton);let communityPostSubmitting=false;let communityUser=null;let communityIsAdmin=false;let communityIsBanned=false;let communityNotificationOpen=false;let communityFriendRequestsOpen=false;
+if(moreContent) moreContent.appendChild(communityMoreButton);let communityPostSubmitting=false;let communityUser=null;let communityIsAdmin=false;let communityIsBanned=false;let communityNotificationOpen=false;let communityFriendRequestsOpen=false;let messengerOpen=false;let messengerActiveUserId=null;let messengerActiveUser=null;let messengerSending=false;
 function communityMessage(msg,isError=false){let el=document.getElementById('communityNotice');if(el){el.textContent=msg;el.style.color=isError?'#c62828':'#087443';}}
 async function communityCheckAdmin(){if(!communityUser){communityIsAdmin=false;communityIsBanned=false;return;}const {data,error}=await db.rpc('is_forum_admin');communityIsAdmin=!error&&data===true;const ban=await db.rpc('is_forum_banned');communityIsBanned=!ban.error&&ban.data===true;}
 function renderCommunityAccount(){const box=document.getElementById('communityAccount');if(!box)return;
@@ -295,6 +314,7 @@ const own=String(m.id)===String(communityUser?.id);
 const avatar=m.avatar_url?'<img src="'+esc(m.avatar_url)+'" alt="Profile photo" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid white;box-shadow:0 2px 12px #0002">':'<div style="width:104px;height:104px;border-radius:50%;background:#e8eef8;border:4px solid white;display:grid;place-items:center;font-size:42px">👤</div>';
 box.style.display='block';
 box.innerHTML='<div style="height:105px;background:linear-gradient(120deg,#071b49,#1769c2);border-radius:14px 14px 0 0"></div><div style="padding:0 15px 16px;margin-top:-54px;position:relative">'+avatar+'<div style="margin-top:10px"><h2 style="margin:0 0 4px;font-size:22px">'+name+'</h2><strong>'+esc(code)+'</strong><p class="community-muted" style="margin:5px 0 12px">Member since '+esc(formatDate(m.created_at)||'Date unavailable')+'</p></div><div id="memberFollowStats" style="display:flex;gap:0;justify-content:flex-start;border-top:1px solid #e6ebf3;border-bottom:1px solid #e6ebf3;padding:13px 0;margin:10px 0"><span>Loading...</span></div><div id="memberFollowAction" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+(own?'<span class="community-muted">This is your profile.</span>':'<button id="memberFollowBtn" class="community-btn" onclick="toggleMemberFollow(\''+esc(m.id)+'\')">＋ Follow</button><button id="sendFriendRequestBtn" class="community-btn secondary" onclick="sendFriendRequest(\''+esc(m.id)+'\')">🤝 Add Friend</button>')+'</div><p class="community-muted">Email address and phone number are private.</p><div class="community-panel" style="margin:16px -15px 0;padding:14px 12px"><h3 style="margin:0 0 10px">📰 Posts by '+name+'</h3><div id="memberProfilePosts"><p class="community-muted">Loading this member’s posts...</p></div></div><button type="button" class="community-btn secondary" onclick="activeMemberProfileId=null;document.getElementById(\'memberProfileCard\').style.display=\'none\'">Close profile ✕</button></div>';
+if(!own){const actions=document.getElementById('memberFollowAction');if(actions){const messageButton=document.createElement('button');messageButton.type='button';messageButton.className='community-btn secondary';messageButton.textContent='💬 Message';messageButton.onclick=()=>openMessengerWith(m.id);actions.appendChild(messageButton);}}
 box.scrollIntoView({behavior:'smooth',block:'start'});
 activeMemberProfileId=String(m.id);
 loadMemberFollowStats(m.id);
@@ -362,6 +382,131 @@ async function respondFriendRequest(id,status){if(!communityUser||!['accepted','
 function communityShowLogin(){let f=document.getElementById('communityAuthForm');if(!f)return;f.innerHTML=`<h4>Login to your account</h4><input id="communityEmail" class="community-input" type="email" autocomplete="email" placeholder="Email address"><input id="communityPassword" class="community-input" type="password" autocomplete="current-password" placeholder="Password"><button class="community-btn" onclick="communityLogin()">Login</button>`;}
 async function communityRegister(){let full_name=document.getElementById('communityFullName')?.value.trim(),phone=document.getElementById('communityPhone')?.value.trim(),email=document.getElementById('communityEmail')?.value.trim(),password=document.getElementById('communityPassword')?.value||'';if(!full_name||!email||password.length<6){communityMessage('Enter your full name, valid email and a password of at least 6 characters.',true);return;}communityMessage('Creating your account...');let {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:'https://usmanyobe.github.io/usman-yobe-talk-show/',data:{full_name,phone}}});if(error){communityMessage(error.message,true);return;}if(data.session){communityUser=data.user;await communityCheckAdmin();renderCommunityAccount();await loadCommunityPosts();setMemberAccess(true);await loadNews();await loadGallery();showPage('home');communityMessage('Account created successfully.');}else{communityMessage('Registration submitted. Check your email and confirm it, then return here to login.');communityShowLogin();}}
 async function communityLogin(){let email=document.getElementById('communityEmail')?.value.trim(),password=document.getElementById('communityPassword')?.value||'';if(!email||!password){communityMessage('Enter your email and password.',true);return;}communityMessage('Signing in...');let {data,error}=await db.auth.signInWithPassword({email,password});if(error){communityMessage(error.message,true);return;}communityUser=data.user;await communityCheckAdmin();renderCommunityAccount();await loadCommunityPosts();setMemberAccess(true);await loadNews();await loadGallery();showPage('home');}
+
+async function toggleMessenger(force){
+const panel=document.getElementById('messengerPanel');
+if(!panel||!communityUser)return;
+messengerOpen=typeof force==='boolean'?force:panel.style.display==='none';
+panel.style.display=messengerOpen?'block':'none';
+if(messengerOpen){await loadMessengerConversations();await refreshMessengerBadge();panel.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+async function refreshMessengerBadge(){
+if(!communityUser)return;
+const {count,error}=await db.from('community_messages').select('id',{count:'exact',head:true}).eq('receiver_id',communityUser.id).is('read_at',null);
+if(error){console.warn('Messenger unread count:',error.message);return;}
+communitySetBadge('messengerUnreadBadge',count||0);
+}
+async function loadMessengerConversations(silent){
+const box=document.getElementById('messengerConversations');
+if(!box||!communityUser)return;
+if(!silent)box.innerHTML='<p class="community-muted">Loading conversations...</p>';
+const {data,error}=await db.from('community_messages').select('id,sender_id,receiver_id,body,created_at,read_at').order('created_at',{ascending:false}).limit(500);
+if(error){box.innerHTML='<p class="community-muted">Messenger database is not ready yet. Please run the Messenger SQL setup. Details: '+esc(error.message)+'</p>';return;}
+const latest=new Map(),unread=new Map();
+(data||[]).forEach(row=>{
+const peer=String(row.sender_id)===String(communityUser.id)?row.receiver_id:row.sender_id;
+if(!latest.has(peer))latest.set(peer,row);
+if(String(row.receiver_id)===String(communityUser.id)&&!row.read_at)unread.set(peer,(unread.get(peer)||0)+1);
+});
+const ids=Array.from(latest.keys());
+if(!ids.length){box.innerHTML='<p class="community-muted">No messages yet. Search for a member above or open a member profile and tap Message.</p>';await refreshMessengerBadge();return;}
+const profiles=await db.from('community_profiles').select('id,full_name,avatar_url').in('id',ids);
+const profileMap=new Map((profiles.data||[]).map(p=>[String(p.id),p]));
+box.innerHTML=ids.map(id=>{
+const p=profileMap.get(String(id))||{};
+const row=latest.get(id);
+const name=esc(p.full_name||'Member');
+const avatar=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':'<span style="width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#eaf0fa">👤</span>';
+const count=unread.get(id)||0;
+return '<button type="button" class="messenger-person" onclick="openMessengerWith(\''+esc(id)+'\')">'+avatar+'<span><strong>'+name+'</strong><small>'+esc(row.body||'Message')+'</small></span>'+(count?'<b class="messenger-unread">'+count+'</b>':'')+'</button>';
+}).join('');
+await refreshMessengerBadge();
+}
+async function searchMessengerMembers(){
+const input=document.getElementById('messengerSearch');
+const box=document.getElementById('messengerMemberResults');
+if(!input||!box||!communityUser)return;
+const q=input.value.trim();
+if(q.length<2){box.innerHTML='';return;}
+box.innerHTML='<p class="community-muted">Searching members...</p>';
+const {data,error}=await db.from('community_profiles').select('id,full_name,avatar_url').ilike('full_name','%'+q+'%').neq('id',communityUser.id).order('full_name').limit(20);
+if(error){box.innerHTML='<p class="community-muted">Could not search members: '+esc(error.message)+'</p>';return;}
+if(!data?.length){box.innerHTML='<p class="community-muted">No member found.</p>';return;}
+box.innerHTML='<p class="community-muted">Members</p>'+data.map(p=>{
+const avatar=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':'<span style="width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#eaf0fa">👤</span>';
+return '<button type="button" class="messenger-person" onclick="openMessengerWith(\''+esc(p.id)+'\')">'+avatar+'<span><strong>'+esc(p.full_name||'Member')+'</strong><small>Tap to send a private message</small></span></button>';
+}).join('');
+}
+async function openMessengerWith(id){
+if(!communityUser||!id||String(id)===String(communityUser.id))return;
+const panel=document.getElementById('messengerPanel');
+const header=document.getElementById('messengerChatHeader');
+if(!panel||!header)return;
+messengerOpen=true;
+panel.style.display='block';
+messengerActiveUserId=String(id);
+header.textContent='Loading member...';
+const cached=memberDirectoryCache.find(m=>String(m.id)===String(id));
+let profile=cached;
+if(!profile){
+const result=await db.from('community_profiles').select('id,full_name,avatar_url').eq('id',id).maybeSingle();
+if(result.error){header.textContent='Could not load this member: '+result.error.message;return;}
+profile=result.data;
+}
+if(!profile){header.textContent='Member not found.';return;}
+messengerActiveUser=profile;
+header.innerHTML=(profile.avatar_url?'<img src="'+esc(profile.avatar_url)+'" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px">':'👤 ')+esc(profile.full_name||'Member')+' <span class="community-muted">· Private chat</span>';
+const input=document.getElementById('messengerMessageInput');
+if(input)input.value='';
+await loadMessengerMessages(false);
+await loadMessengerConversations(true);
+panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function loadMessengerMessages(silent){
+const box=document.getElementById('messengerMessages');
+if(!box||!communityUser||!messengerActiveUserId)return;
+if(!silent)box.innerHTML='<p class="community-muted">Loading messages...</p>';
+const me=communityUser.id,peer=messengerActiveUserId;
+const filter='and(sender_id.eq.'+me+',receiver_id.eq.'+peer+'),and(sender_id.eq.'+peer+',receiver_id.eq.'+me+')';
+const {data,error}=await db.from('community_messages').select('id,sender_id,receiver_id,body,created_at,read_at').or(filter).order('created_at',{ascending:true}).limit(200);
+if(error){box.innerHTML='<p class="community-muted">Could not load messages: '+esc(error.message)+'</p>';return;}
+const rows=data||[];
+if(!rows.length){box.innerHTML='<p class="community-muted">This is the beginning of your conversation. Send a respectful message.</p>';}
+else{
+box.innerHTML=rows.map(row=>{
+const mine=String(row.sender_id)===String(me);
+return '<div class="messenger-message '+(mine?'mine':'theirs')+'"><div class="messenger-bubble">'+esc(row.body||'')+'<small>'+esc(formatDate(row.created_at))+'</small></div></div>';
+}).join('');
+}
+const unread=rows.filter(row=>String(row.receiver_id)===String(me)&&!row.read_at).map(row=>row.id);
+if(unread.length){
+const {error:readError}=await db.from('community_messages').update({read_at:new Date().toISOString()}).in('id',unread).eq('receiver_id',me);
+if(readError)console.warn('Could not mark messages read:',readError.message);
+}
+box.scrollTop=box.scrollHeight;
+await refreshMessengerBadge();
+}
+async function sendMessengerMessage(){
+if(messengerSending||!communityUser||!messengerActiveUserId)return;
+const input=document.getElementById('messengerMessageInput');
+const button=document.getElementById('messengerSendButton');
+const status=document.getElementById('messengerStatus');
+const body=(input?.value||'').trim();
+if(!body){if(status)status.textContent='Write a message first.';return;}
+if(body.length>5000){if(status)status.textContent='Message is too long. Maximum 5,000 characters.';return;}
+messengerSending=true;
+if(button){button.disabled=true;button.textContent='Sending...';}
+if(status)status.textContent='';
+const {error}=await db.from('community_messages').insert({sender_id:communityUser.id,receiver_id:messengerActiveUserId,body});
+messengerSending=false;
+if(button){button.disabled=false;button.textContent='Send';}
+if(error){if(status)status.textContent='Message not sent: '+error.message;return;}
+if(input)input.value='';
+await loadMessengerMessages(true);
+await loadMessengerConversations(true);
+if(status)status.textContent='Message sent.';
+}
+
 function communitySetBadge(id,count){const badge=document.getElementById(id);if(!badge)return;const n=Number(count)||0;badge.textContent=n>99?'99+':String(n);badge.style.display=n?'inline-grid':'none';}
 function communityRenderNotifications(rows){const box=document.getElementById('communityNotificationList');if(!box)return;if(!rows.length){box.innerHTML='<p class="community-muted">No notifications yet. New friend requests, comments, replies and updates will appear here.</p>';return;}box.innerHTML=rows.map(n=>{const mark=!n.is_read?'<button class="community-btn secondary" data-id="'+esc(n.id)+'" onclick="communityMarkNotificationRead(this.dataset.id)">Mark read</button>':'';const open=n.link?'<button class="community-btn secondary" data-id="'+esc(n.id)+'" onclick="communityOpenNotification(this.dataset.id)">Open</button>':'';return '<div class="community-comment" style="'+(n.is_read?'opacity:.72':'border-left:4px solid #0759c7')+'"><strong>'+(n.is_read?'':'🔵 ')+esc(String(n.type||'update').replaceAll('_',' '))+'</strong><p>'+esc(n.message||'You have a new update.')+'</p><small>'+esc(formatDate(n.created_at))+'</small><div class="community-row">'+mark+open+'</div></div>';}).join('');}
 async function toggleCommunityNotifications(){const panel=document.getElementById('communityNotificationsPanel');if(!panel)return;communityNotificationOpen=panel.style.display==='none';panel.style.display=communityNotificationOpen?'block':'none';if(communityNotificationOpen){await refreshCommunityNotifications();panel.scrollIntoView({behavior:'smooth',block:'nearest'});}}
@@ -456,7 +601,7 @@ if(relation?.status==='accepted')friendButton='<button type="button" class="comm
 else if(relation?.status==='pending'&&relation.sender_id===communityUser.id)friendButton='<button type="button" class="community-btn secondary" disabled>⌛ Request Sent</button>';
 else if(relation?.status==='pending'&&relation.receiver_id===communityUser.id)friendButton='<button type="button" class="community-btn secondary" onclick="toggleFriendRequests()">🤝 Respond to Request</button>';
 else friendButton='<button type="button" class="community-btn secondary" onclick="sendFriendRequest(\''+id+'\',this)">🤝 Add Friend</button>';
-return '<div class="community-post-member-actions"><button type="button" class="community-btn secondary" data-following="'+(following?'yes':'no')+'" onclick="toggleMemberFollow(\''+id+'\',this)">'+(following?'✓ Following':'＋ Follow')+'</button>'+friendButton+'</div>';
+return '<div class="community-post-member-actions"><button type="button" class="community-btn secondary" data-following="'+(following?'yes':'no')+'" onclick="toggleMemberFollow(\''+id+'\',this)">'+(following?'✓ Following':'＋ Follow')+'</button><button type="button" class="community-btn secondary" onclick="openMessengerWith(\''+id+'\')">💬 Message</button>'+friendButton+'</div>';
 }
 async function loadCommunityPosts(){
 const feed=document.getElementById('communityFeed');
