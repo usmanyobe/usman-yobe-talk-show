@@ -207,7 +207,7 @@ function communityNavHome(btn){communityNavSetActive(btn);document.getElementByI
 function communityNavStories(btn){communityNavSetActive(btn);document.getElementById('communityStoriesPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function communityNavFriends(btn){communityNavSetActive(btn);toggleFriendRequests(true);document.getElementById('communityFriendRequestsPanel')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function communityNavNotifications(btn){communityNavSetActive(btn);const panel=document.getElementById('communityNotificationsPanel');if(panel&&panel.style.display==='none')toggleCommunityNotifications();document.getElementById('communityNotificationsToggle')?.scrollIntoView({behavior:'smooth',block:'center'});}
-function communityNavProfile(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});}
+function communityNavProfile(btn){communityNavSetActive(btn);const current=history.state||{};history.pushState({uyView:'own-profile',uyPage:current.uyPage||'community'},'',location.href);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function communityNavSettings(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},250);}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
@@ -255,6 +255,20 @@ window.addEventListener("popstate",async(event)=>{
     if(profileBox)profileBox.style.display="none";
     await showPage(state.uyPage||"community",{history:false});
     await openMessengerWith(state.peerId,{history:false});
+    return;
+  }
+  if(state.uyView==="messenger-list"){
+    if(profileBox)profileBox.style.display="none";
+    await showPage(state.uyPage||"community",{history:false});
+    if(messengerPanel)messengerPanel.style.display="block";
+    messengerOpen=true;
+    await toggleMessenger(true,{history:false});
+    return;
+  }
+  if(state.uyView==="own-profile"){
+    if(messengerPanel)messengerPanel.style.display="none";
+    await showPage(state.uyPage||"community",{history:false});
+    document.getElementById("communityAccount")?.scrollIntoView({behavior:"smooth",block:"start"});
     return;
   }
   if(messengerPanel)messengerPanel.style.display="none";
@@ -595,10 +609,15 @@ function communityShowLogin(){let f=document.getElementById('communityAuthForm')
 async function communityRegister(){let full_name=document.getElementById('communityFullName')?.value.trim(),phone=document.getElementById('communityPhone')?.value.trim(),email=document.getElementById('communityEmail')?.value.trim(),password=document.getElementById('communityPassword')?.value||'';if(!full_name||!email||password.length<6){communityMessage('Enter your full name, valid email and a password of at least 6 characters.',true);return;}communityMessage('Creating your account...');let {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:'https://usmanyobe.github.io/usman-yobe-talk-show/',data:{full_name,phone}}});if(error){communityMessage(error.message,true);return;}if(data.session){communityUser=data.user;await communityCheckAdmin();renderCommunityAccount();await loadCommunityPosts();setMemberAccess(true);await loadNews();await loadGallery();showPage('home');communityMessage('Account created successfully.');}else{communityMessage('Registration submitted. Check your email and confirm it, then return here to login.');communityShowLogin();}}
 async function communityLogin(){let email=document.getElementById('communityEmail')?.value.trim(),password=document.getElementById('communityPassword')?.value||'';if(!email||!password){communityMessage('Enter your email and password.',true);return;}communityMessage('Signing in...');let {data,error}=await db.auth.signInWithPassword({email,password});if(error){communityMessage(error.message,true);return;}communityUser=data.user;await communityCheckAdmin();renderCommunityAccount();await loadCommunityPosts();setMemberAccess(true);await loadNews();await loadGallery();showPage('home');}
 
-async function toggleMessenger(force){
+async function toggleMessenger(force, options={}){
 const panel=document.getElementById('messengerPanel');
 if(!panel||!communityUser)return;
-messengerOpen=typeof force==='boolean'?force:panel.style.display==='none';
+const nextOpen=typeof force==='boolean'?force:panel.style.display==='none';
+if(nextOpen&&options.history!==false){
+const current=history.state||{};
+if(current.uyView!=='messenger-list')history.pushState({uyView:'messenger-list',uyPage:current.uyPage||'community'},'',location.href);
+}
+messengerOpen=nextOpen;
 panel.style.display=messengerOpen?'block':'none';
 if(messengerOpen){await loadMessengerConversations();await refreshMessengerBadge();panel.scrollIntoView({behavior:'smooth',block:'start'});}
 }
