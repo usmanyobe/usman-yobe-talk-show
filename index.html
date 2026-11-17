@@ -228,6 +228,7 @@ body.auth-locked nav,body.auth-locked .bottom-nav,body.auth-locked #breakingBox,
 #communityPage .community-btn.secondary{background:#eaf0fa;color:#071b49}
 #communityPage .community-muted{color:#738096;font-size:13px;line-height:1.6}
 #communityPage .community-post{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:14px;margin:12px 0;box-shadow:0 5px 20px #071b4910;overflow-wrap:anywhere}
+#communityPage .community-post-author{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;padding:0;margin:0 0 9px;text-align:left;color:#071b49;cursor:pointer;font:inherit}#communityPage .community-post-author img,#communityPage .community-post-author .community-avatar-placeholder{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover;background:#eaf0fa}#communityPage .community-post-author .community-avatar-placeholder{display:grid;place-items:center;font-size:22px}#communityPage .community-post-author small{display:block;color:#738096;font-size:11px;margin-top:2px}
 #communityPage .community-post p{white-space:pre-wrap;line-height:1.7}
 #communityPage .community-comment{background:#f5f7fb;border-radius:9px;padding:9px;margin:7px 0;font-size:13px;overflow-wrap:anywhere}
 #communityPage .community-reply{margin-left:18px;border-left:3px solid #b8cbea;padding-left:9px}
@@ -253,7 +254,7 @@ communityMoreButton.style.marginTop='12px';
 communityMoreButton.onclick=()=>showPage('community');
 
 const moreContent=document.querySelector('#morePage .post');
-if(moreContent) moreContent.appendChild(communityMoreButton);let communityUser=null;let communityIsAdmin=false;let communityIsBanned=false;let communityNotificationOpen=false;let communityFriendRequestsOpen=false;
+if(moreContent) moreContent.appendChild(communityMoreButton);let communityPostSubmitting=false;let communityUser=null;let communityIsAdmin=false;let communityIsBanned=false;let communityNotificationOpen=false;let communityFriendRequestsOpen=false;
 function communityMessage(msg,isError=false){let el=document.getElementById('communityNotice');if(el){el.textContent=msg;el.style.color=isError?'#c62828':'#087443';}}
 async function communityCheckAdmin(){if(!communityUser){communityIsAdmin=false;communityIsBanned=false;return;}const {data,error}=await db.rpc('is_forum_admin');communityIsAdmin=!error&&data===true;const ban=await db.rpc('is_forum_banned');communityIsBanned=!ban.error&&ban.data===true;}
 function renderCommunityAccount(){const box=document.getElementById('communityAccount');if(!box)return;
@@ -266,7 +267,34 @@ async function loadMyAccountPosts(){const list=document.getElementById('communit
 let memberDirectoryCache=[];
  async function loadMemberDirectory(){const list=document.getElementById('memberDirectoryList');if(!list||!communityUser)return;list.innerHTML='<p class="community-muted">Loading members...</p>';try{const result=await Promise.race([db.from('community_profiles').select('id,full_name,avatar_url,created_at').order('created_at',{ascending:false}).limit(200),new Promise(resolve=>setTimeout(()=>resolve({error:{message:'The request timed out after 15 seconds. Check your internet connection and Supabase API status.'}}),15000))]);if(result.error){list.innerHTML='<p class="community-muted">Could not load members: '+esc(result.error.message)+' </p><button class="community-btn secondary" onclick="loadMemberDirectory()">Try again</button>';console.error('Member directory:',result.error.message);return;}memberDirectoryCache=result.data||[];filterMemberDirectory();}catch(error){const message=error?.message||String(error);list.innerHTML='<p class="community-muted">Member directory error: '+esc(message)+'</p><button class="community-btn secondary" onclick="loadMemberDirectory()">Try again</button>';console.error('Member directory exception:',error);}}
  function filterMemberDirectory(){const list=document.getElementById('memberDirectoryList');if(!list)return;const q=(document.getElementById('memberDirectorySearch')?.value||'').trim().toLowerCase();const profile=document.getElementById('memberProfileCard');if(profile)profile.style.display='none';if(q.length<2){list.innerHTML='<div class="community-muted" style="padding:16px 8px;text-align:center">🔎 Start typing at least 2 letters to find your friend. Search by name or Member ID.</div>';return;}const rows=memberDirectoryCache.filter(m=>{const name=(m.full_name||'Member').toLowerCase();const code='uy-'+String(m.id||'').slice(0,8).toLowerCase();return name.includes(q)||code.includes(q)||String(m.id||'').toLowerCase().includes(q);});if(!rows.length){list.innerHTML='<p class="community-muted" style="padding:12px">No account found. Check the spelling and try again.</p>';return;}list.innerHTML='<p class="community-muted">Found '+rows.length+' member(s)</p>'+rows.map(m=>{const name=esc(m.full_name||'Member');const avatar=m.avatar_url?'<img src="'+esc(m.avatar_url)+'" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover">':'<div style="width:48px;height:48px;border-radius:50%;background:#e8eef8;display:grid;place-items:center;font-size:22px">👤</div>';const code='UY-'+String(m.id||'').slice(0,8).toUpperCase();return '<button type="button" class="community-btn secondary" onclick="showMemberProfile(\''+esc(m.id)+'\')" style="display:flex;width:100%;justify-content:flex-start;align-items:center;gap:12px;text-align:left;margin:7px 0;padding:10px">'+avatar+'<span style="flex:1;min-width:0"><strong>'+name+'</strong><span class="community-muted" style="display:block">'+esc(code)+' · View profile</span></span>›</button>';}).join('');}
-function showMemberProfile(id){const box=document.getElementById('memberProfileCard');if(!box)return;const m=memberDirectoryCache.find(x=>String(x.id)===String(id));if(!m){box.style.display='block';box.innerHTML='<p class="community-muted">Member profile not found. Refresh the directory and try again.</p>';return;}const name=esc(m.full_name||'Member');const code='UY-'+String(m.id||'').slice(0,8).toUpperCase();const own=String(m.id)===String(communityUser?.id);const avatar=m.avatar_url?'<img src="'+esc(m.avatar_url)+'" alt="Profile photo" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid white;box-shadow:0 2px 12px #0002">':'<div style="width:104px;height:104px;border-radius:50%;background:#e8eef8;border:4px solid white;display:grid;place-items:center;font-size:42px">👤</div>';box.style.display='block';box.innerHTML='<div style="height:105px;background:linear-gradient(120deg,#071b49,#1769c2);border-radius:14px 14px 0 0"></div><div style="padding:0 15px 16px;margin-top:-54px;position:relative">'+avatar+'<div style="margin-top:10px"><h2 style="margin:0 0 4px;font-size:22px">'+name+'</h2><strong>'+esc(code)+'</strong><p class="community-muted" style="margin:5px 0 12px">Member since '+esc(formatDate(m.created_at)||'Date unavailable')+'</p></div><div id="memberFollowStats" style="display:flex;gap:0;justify-content:flex-start;border-top:1px solid #e6ebf3;border-bottom:1px solid #e6ebf3;padding:13px 0;margin:10px 0"><span>Loading...</span></div><div id="memberFollowAction" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+(own?'<span class="community-muted">This is your profile.</span>':'<button id="memberFollowBtn" class="community-btn" onclick="toggleMemberFollow(\''+esc(m.id)+'\')">＋ Follow</button><button id="sendFriendRequestBtn" class="community-btn secondary" onclick="sendFriendRequest(\''+esc(m.id)+'\')">🤝 Add Friend</button>')+'</div><p class="community-muted">Email address and phone number are private.</p><button type="button" class="community-btn secondary" onclick="document.getElementById(\'memberProfileCard\').style.display=\'none\'">Close profile ✕</button></div>';loadMemberFollowStats(m.id);}
+async function showMemberProfile(id){
+const box=document.getElementById('memberProfileCard');
+if(!box)return;
+let m=memberDirectoryCache.find(x=>String(x.id)===String(id));
+if(!m&&communityUser&&id){
+box.style.display='block';
+box.innerHTML='<p class="community-muted">Loading member profile...</p>';
+const result=await db.from('community_profiles').select('id,full_name,avatar_url,created_at').eq('id',id).maybeSingle();
+if(!result.error&&result.data){
+m=result.data;
+memberDirectoryCache=memberDirectoryCache.filter(x=>String(x.id)!==String(m.id)).concat([m]);
+}
+}
+if(!m){
+box.style.display='block';
+box.innerHTML='<p class="community-muted">Member profile not found. Refresh the directory and try again.</p>';
+box.scrollIntoView({behavior:'smooth',block:'start'});
+return;
+}
+const name=esc(m.full_name||'Member');
+const code='UY-'+String(m.id||'').slice(0,8).toUpperCase();
+const own=String(m.id)===String(communityUser?.id);
+const avatar=m.avatar_url?'<img src="'+esc(m.avatar_url)+'" alt="Profile photo" style="width:104px;height:104px;border-radius:50%;object-fit:cover;border:4px solid white;box-shadow:0 2px 12px #0002">':'<div style="width:104px;height:104px;border-radius:50%;background:#e8eef8;border:4px solid white;display:grid;place-items:center;font-size:42px">👤</div>';
+box.style.display='block';
+box.innerHTML='<div style="height:105px;background:linear-gradient(120deg,#071b49,#1769c2);border-radius:14px 14px 0 0"></div><div style="padding:0 15px 16px;margin-top:-54px;position:relative">'+avatar+'<div style="margin-top:10px"><h2 style="margin:0 0 4px;font-size:22px">'+name+'</h2><strong>'+esc(code)+'</strong><p class="community-muted" style="margin:5px 0 12px">Member since '+esc(formatDate(m.created_at)||'Date unavailable')+'</p></div><div id="memberFollowStats" style="display:flex;gap:0;justify-content:flex-start;border-top:1px solid #e6ebf3;border-bottom:1px solid #e6ebf3;padding:13px 0;margin:10px 0"><span>Loading...</span></div><div id="memberFollowAction" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+(own?'<span class="community-muted">This is your profile.</span>':'<button id="memberFollowBtn" class="community-btn" onclick="toggleMemberFollow(\''+esc(m.id)+'\')">＋ Follow</button><button id="sendFriendRequestBtn" class="community-btn secondary" onclick="sendFriendRequest(\''+esc(m.id)+'\')">🤝 Add Friend</button>')+'</div><p class="community-muted">Email address and phone number are private.</p><button type="button" class="community-btn secondary" onclick="document.getElementById(\'memberProfileCard\').style.display=\'none\'">Close profile ✕</button></div>';
+box.scrollIntoView({behavior:'smooth',block:'start'});
+loadMemberFollowStats(m.id);
+}
 
 
 async function loadMemberFollowStats(id){const stats=document.getElementById('memberFollowStats');if(!stats||!communityUser)return;try{const [followers,following,relation]=await Promise.all([db.from('member_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id),db.from('member_follows').select('following_id',{count:'exact',head:true}).eq('follower_id',id),db.from('member_follows').select('follower_id').eq('follower_id',communityUser.id).eq('following_id',id).maybeSingle()]);if(followers.error)throw followers.error;if(following.error)throw following.error;if(relation.error)throw relation.error;stats.innerHTML='<button type="button" onclick="openMemberFollowList(\''+esc(id)+'\',\'followers\')" style="border:0;background:transparent;text-align:left;padding:4px 12px 4px 0;cursor:pointer"><strong style="font-size:19px">'+Number(followers.count||0)+'</strong><br><span class="community-muted">Followers</span></button><button type="button" onclick="openMemberFollowList(\''+esc(id)+'\',\'following\')" style="border:0;background:transparent;text-align:left;padding:4px 12px;cursor:pointer"><strong style="font-size:19px">'+Number(following.count||0)+'</strong><br><span class="community-muted">Following</span></button>';const btn=document.getElementById('memberFollowBtn');if(btn){btn.textContent=relation.data?'✓ Following':'＋ Follow';btn.dataset.following=relation.data?'yes':'no';}}catch(e){stats.innerHTML='<span class="community-muted">Could not load followers/following: '+esc(e.message||String(e))+'</span>';console.error('Follow stats:',e);}}
@@ -293,7 +321,49 @@ async function communityUploadAvatar(){if(!communityUser){communityMessage('Plea
 async function communityUpdateProfile(){if(!communityUser){communityMessage('Please login first.',true);return;}const full_name=document.getElementById('communityProfileName')?.value.trim()||'',phone=document.getElementById('communityProfilePhone')?.value.trim()||'';if(!full_name){communityMessage('Please enter your full name.',true);return;}communityMessage('Saving profile...');const {data,error}=await db.auth.updateUser({data:{...communityUser.user_metadata,full_name,phone}});if(error){communityMessage('Could not save profile: '+error.message,true);return;}communityUser=data.user||communityUser;renderCommunityAccount();communityMessage('Your profile has been updated successfully.');}
 async function communityLogout(){let {error}=await db.auth.signOut();if(error){communityMessage(error.message,true);return;}communityUser=null;communityIsAdmin=false;setMemberAccess(false);renderCommunityAccount();await loadCommunityPosts();}
 function communityPreviewPostMedia(event){const file=event.target.files?.[0],preview=document.getElementById('communityPostMediaPreview');if(!file||!preview)return;const isVideo=file.type.startsWith('video/'),isImage=file.type.startsWith('image/');if(!isVideo&&!isImage){communityMessage('Choose an image or video file.',true);event.target.value='';preview.innerHTML='';return;}const max=isVideo?50*1024*1024:10*1024*1024;if(file.size>max){communityMessage(isVideo?'Video must be 50 MB or smaller.':'Photo must be 10 MB or smaller.',true);event.target.value='';preview.innerHTML='';return;}const url=URL.createObjectURL(file);preview.innerHTML=isVideo?'<video controls playsinline src="'+url+'" style="width:100%;max-height:260px;border-radius:10px"></video>':'<img src="'+url+'" alt="Post preview" style="width:100%;max-height:260px;object-fit:contain;border-radius:10px">';}
-async function communityCreatePost(){if(!communityUser){communityMessage('Please login first.',true);return;}if(communityIsBanned){communityMessage('Your account is suspended from community activity.',true);return;}const input=document.getElementById('communityPostText'),content=input?.value.trim()||'',mediaInput=document.getElementById('communityPostMedia'),file=mediaInput?.files?.[0];if(!content&&!file){communityMessage('Write something or choose a photo/video first.',true);return;}let media_url=null,media_type=null;if(file){const isVideo=file.type.startsWith('video/'),isImage=file.type.startsWith('image/');if(!isVideo&&!isImage){communityMessage('Choose an image or video.',true);return;}if(file.size>(isVideo?50:10)*1024*1024){communityMessage(isVideo?'Video must be 50 MB or smaller.':'Photo must be 10 MB or smaller.',true);return;}const ext=(file.name.split('.').pop()|| (isVideo?'mp4':'jpg')).toLowerCase().replace(/[^a-z0-9]/g,'')||(isVideo?'mp4':'jpg');const path='community/'+communityUser.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;communityMessage('Uploading your photo/video...');const {error:uploadError}=await db.storage.from('news-images').upload(path,file,{cacheControl:'3600',upsert:false});if(uploadError){communityMessage('Media upload failed: '+uploadError.message,true);return;}media_url=db.storage.from('news-images').getPublicUrl(path).data.publicUrl;media_type=isVideo?'video':'image';}const author_name=communityUser.user_metadata?.full_name||communityUser.email||'Member';const {error}=await db.from('forum_posts').insert({user_id:communityUser.id,author_name,content,media_url,media_type});if(error){communityMessage('Post could not be published: '+error.message,true);return;}if(input)input.value='';if(mediaInput)mediaInput.value='';const preview=document.getElementById('communityPostMediaPreview');if(preview)preview.innerHTML='';communityMessage('Your post has been published.');await loadCommunityPosts();await loadMyAccountPosts();}
+async function communityCreatePost(){
+if(communityPostSubmitting)return;
+if(!communityUser){communityMessage('Please login first.',true);return;}
+if(communityIsBanned){communityMessage('Your account is suspended from community activity.',true);return;}
+const input=document.getElementById('communityPostText');
+const content=input?.value.trim()||'';
+const mediaInput=document.getElementById('communityPostMedia');
+const file=mediaInput?.files?.[0];
+if(!content&&!file){communityMessage('Write something or choose a photo/video first.',true);return;}
+const button=document.querySelector('#communityAccount button[onclick="communityCreatePost()"]');
+communityPostSubmitting=true;
+if(button){button.disabled=true;button.textContent='Publishing...';button.style.opacity='.65';}
+try{
+let media_url=null,media_type=null;
+if(file){
+const isVideo=file.type.startsWith('video/'),isImage=file.type.startsWith('image/');
+if(!isVideo&&!isImage)throw new Error('Choose an image or video.');
+if(file.size>(isVideo?50:10)*1024*1024)throw new Error(isVideo?'Video must be 50 MB or smaller.':'Photo must be 10 MB or smaller.');
+const ext=(file.name.split('.').pop()||(isVideo?'mp4':'jpg')).toLowerCase().replace(/[^a-z0-9]/g,'')||(isVideo?'mp4':'jpg');
+const path='community/'+communityUser.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+communityMessage('Uploading your photo/video...');
+const {error:uploadError}=await db.storage.from('news-images').upload(path,file,{cacheControl:'3600',upsert:false});
+if(uploadError)throw new Error('Media upload failed: '+uploadError.message);
+media_url=db.storage.from('news-images').getPublicUrl(path).data.publicUrl;
+media_type=isVideo?'video':'image';
+}
+const author_name=communityUser.user_metadata?.full_name||communityUser.email||'Member';
+const {error}=await db.from('forum_posts').insert({user_id:communityUser.id,author_name,content,media_url,media_type});
+if(error)throw error;
+if(input)input.value='';
+if(mediaInput)mediaInput.value='';
+const preview=document.getElementById('communityPostMediaPreview');
+if(preview)preview.innerHTML='';
+communityMessage('Your post has been published.');
+await loadCommunityPosts();
+await loadMyAccountPosts();
+}catch(error){
+communityMessage('Post could not be published: '+(error?.message||String(error)),true);
+}finally{
+communityPostSubmitting=false;
+if(button){button.disabled=false;button.textContent='Publish Post';button.style.opacity='1';}
+}
+}
 function communityPostMediaHtml(p){if(!p.media_url)return '';if(p.media_type==='video')return '<video class="community-media" controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video>';return '<img class="community-media" src="'+esc(p.media_url)+'" alt="Community post photo" loading="lazy">';}
 async function communityToggleLike(postId,liked){if(!communityUser){alert('Please login to like a post.');return;}if(communityIsBanned){alert('Your account is suspended from community activity.');return;}let q=db.from('forum_likes');let result=liked?await q.delete().eq('post_id',postId).eq('user_id',communityUser.id):await q.insert({post_id:postId,user_id:communityUser.id});if(result.error){alert(result.error.message);return;}await loadCommunityPosts();}
 async function communityAddComment(postId){if(!communityUser){alert('Please login to comment.');return;}if(communityIsBanned){alert('Your account is suspended from community activity.');return;}let input=document.getElementById('communityComment_'+postId),content=input?.value.trim();if(!content)return;let author_name=communityUser.user_metadata?.full_name||communityUser.email||'Member';let {error}=await db.from('forum_comments').insert({post_id:postId,user_id:communityUser.id,author_name,content,parent_comment_id:null});if(error){alert(error.message);return;}await loadCommunityPosts();}
@@ -311,9 +381,55 @@ async function communityResolveReport(reportId){if(!communityIsAdmin)return;cons
 async function communityDeleteReportedContent(reportId){if(!communityIsAdmin||!confirm('Delete the reported content? This cannot be undone.'))return;const {data,error}=await db.from('forum_reports').select('target_type,target_id').eq('id',reportId).single();if(error){alert(error.message);return;}if(data.target_type==='post'){await communityDeletePost(data.target_id);}else{await communityDeleteComment(data.target_id);}const u=await db.from('forum_reports').update({status:'resolved'}).eq('id',reportId);if(u.error){alert('Content action completed, but report status could not be updated: '+u.error.message);return;}await refreshCommunityReports();}
 async function communityDeleteComment(commentId){if(!communityUser||!communityIsAdmin){alert('Admin access required.');return;}if(!confirm('Delete this comment or reply?'))return;const {error}=await db.from('forum_comments').delete().eq('id',commentId);if(error){alert(error.message);return;}await loadCommunityPosts();}
 async function communityDeletePost(postId){if(!communityUser||!communityIsAdmin){alert('Admin access required.');return;}if(!confirm('Delete this post and its comments and likes?'))return;let r=await db.from('forum_comments').delete().eq('post_id',postId);if(r.error){alert(r.error.message);return;}r=await db.from('forum_likes').delete().eq('post_id',postId);if(r.error){alert(r.error.message);return;}r=await db.from('forum_posts').delete().eq('id',postId);if(r.error){alert(r.error.message);return;}await loadCommunityPosts();}
-async function loadCommunityPosts(){let feed=document.getElementById('communityFeed');if(!feed)return;feed.innerHTML='<div class="empty">Loading community posts...</div>';let {data:postsData,error}=await db.from('forum_posts').select('id,user_id,author_name,content,media_url,media_type,created_at').order('created_at',{ascending:false}).limit(60);if(error&&/media_url|media_type|column/i.test(error.message||'')){const fallback=await db.from('forum_posts').select('id,user_id,author_name,content,created_at').order('created_at',{ascending:false}).limit(60);postsData=fallback.data;error=fallback.error;}if(error){feed.innerHTML=`<div class="empty">Could not load community: ${esc(error.message)}</div>`;return;}if(!postsData?.length){feed.innerHTML='<div class="empty">No community posts yet. Be the first to share something!</div>';return;}
-let html=[];for(const p of postsData){let [{data:likes},{data:comments}]=await Promise.all([db.from('forum_likes').select('user_id').eq('post_id',p.id),db.from('forum_comments').select('id,user_id,author_name,content,created_at,parent_comment_id').eq('post_id',p.id).order('created_at',{ascending:true}).limit(100)]);likes=likes||[];comments=comments||[];let liked=!!communityUser&&likes.some(x=>x.user_id===communityUser.id);let date=formatDate(p.created_at);let roots=comments.filter(c=>!c.parent_comment_id);let commentHtml=roots.map(c=>communityRenderComment(c,p.id,comments.filter(r=>r.parent_comment_id===c.id))).join('');html.push(`<article class="community-post" id="communityPost_${esc(p.id)}"><strong>${esc(p.author_name||'Member')}</strong>${communityIsAdmin&&p.user_id?` <button class="community-btn secondary" style="color:#c62828" onclick="communityBanMember('${esc(p.user_id)}','${esc(p.author_name||'Member')}')">Ban Member</button>`:''}<div class="community-muted">${esc(date)}</div><p>${esc(p.content)}</p>${communityPostMediaHtml(p)}<div class="community-row"><button class="community-btn secondary" onclick="communityToggleLike('${esc(p.id)}',${liked})">${liked?'❤️ Liked':'🤍 Like'} (${likes.length})</button><button class="community-btn secondary" onclick="communitySharePost('${esc(p.id)}')">Share Post</button>${communityUser?`<button class="community-btn secondary" onclick="communitySubmitReport('post','${esc(p.id)}')">Report</button>`:''}${communityIsAdmin?`<button class="community-btn secondary" style="color:#c62828" onclick="communityDeletePost('${esc(p.id)}')">Delete Post</button>`:''}<span class="community-muted">${comments.length} comments</span></div><div style="margin-top:10px">${commentHtml}</div>${communityUser?`<div class="community-row" style="margin-top:8px"><input id="communityComment_${esc(p.id)}" class="community-input" style="flex:1;min-width:150px;margin:0" maxlength="1000" placeholder="Write a comment..."><button class="community-btn" onclick="communityAddComment('${esc(p.id)}')">Send</button></div>`:'<p class="community-muted">Login to comment or reply.</p>'}</article>`);}
-feed.innerHTML=html.join('');let shared=new URLSearchParams(location.search).get('communityPost');if(shared){let target=document.getElementById('communityPost_'+CSS.escape(shared));if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.outline='3px solid #0759c7';setTimeout(()=>target.style.outline='',3500);}}}
+function communityPostAuthorHtml(p,profiles){
+const profile=p.user_id?profiles?.[p.user_id]:null;
+const name=profile?.full_name||p.author_name||'Member';
+const avatar=profile?.avatar_url?'<img src="'+esc(profile.avatar_url)+'" alt="">':'<span class="community-avatar-placeholder">👤</span>';
+if(!p.user_id)return '<div class="community-post-author">'+avatar+'<span><strong>'+esc(name)+'</strong></span></div>';
+return '<button type="button" class="community-post-author" onclick="showMemberProfile(\''+esc(p.user_id)+'\')">'+avatar+'<span><strong>'+esc(name)+'</strong><small>View profile</small></span></button>';
+}
+async function loadCommunityPosts(){
+const feed=document.getElementById('communityFeed');
+if(!feed)return;
+feed.innerHTML='<div class="empty">Loading community posts...</div>';
+let {data:postsData,error}=await db.from('forum_posts').select('id,user_id,author_name,content,media_url,media_type,created_at').order('created_at',{ascending:false}).limit(60);
+if(error&&/media_url|media_type|column/i.test(error.message||'')){
+const fallback=await db.from('forum_posts').select('id,user_id,author_name,content,created_at').order('created_at',{ascending:false}).limit(60);
+postsData=fallback.data;error=fallback.error;
+}
+if(error){feed.innerHTML='<div class="empty">Could not load community: '+esc(error.message)+'</div>';return;}
+if(!postsData?.length){feed.innerHTML='<div class="empty">No community posts yet. Be the first to share something!</div>';return;}
+const authorIds=[...new Set(postsData.map(p=>p.user_id).filter(Boolean))];
+const authorProfiles={};
+if(authorIds.length){
+const profilesResult=await db.from('community_profiles').select('id,full_name,avatar_url,created_at').in('id',authorIds);
+if(!profilesResult.error){
+(profilesResult.data||[]).forEach(profile=>{
+authorProfiles[profile.id]=profile;
+if(!memberDirectoryCache.some(m=>String(m.id)===String(profile.id)))memberDirectoryCache.push(profile);
+});
+}
+}
+let html=[];
+for(const p of postsData){
+let [{data:likes},{data:comments}]=await Promise.all([
+db.from('forum_likes').select('user_id').eq('post_id',p.id),
+db.from('forum_comments').select('id,user_id,author_name,content,created_at,parent_comment_id').eq('post_id',p.id).order('created_at',{ascending:true}).limit(100)
+]);
+likes=likes||[];comments=comments||[];
+const liked=!!communityUser&&likes.some(x=>x.user_id===communityUser.id);
+const date=formatDate(p.created_at);
+const roots=comments.filter(c=>!c.parent_comment_id);
+const commentHtml=roots.map(c=>communityRenderComment(c,p.id,comments.filter(r=>r.parent_comment_id===c.id))).join('');
+html.push('<article class="community-post" id="communityPost_'+esc(p.id)+'">'+communityPostAuthorHtml(p,authorProfiles)+(communityIsAdmin&&p.user_id?'<button class="community-btn secondary" style="color:#c62828" onclick="communityBanMember(\''+esc(p.user_id)+'\',\''+esc(p.author_name||'Member')+'\')">Ban Member</button>':'')+'<div class="community-muted">'+esc(date)+'</div><p>'+esc(p.content||'')+'</p>'+communityPostMediaHtml(p)+'<div class="community-row"><button class="community-btn secondary" onclick="communityToggleLike(\''+esc(p.id)+'\','+liked+')">'+(liked?'❤️ Liked':'🤍 Like')+' ('+likes.length+')</button><button class="community-btn secondary" onclick="communitySharePost(\''+esc(p.id)+'\')">Share Post</button>'+(communityUser?'<button class="community-btn secondary" onclick="communitySubmitReport(\'post\',\''+esc(p.id)+'\')">Report</button>':'')+(communityIsAdmin?'<button class="community-btn secondary" style="color:#c62828" onclick="communityDeletePost(\''+esc(p.id)+'\')">Delete Post</button>':'')+'<span class="community-muted">'+comments.length+' comments</span></div><div style="margin-top:10px">'+commentHtml+'</div>'+(communityUser?'<div class="community-row" style="margin-top:8px"><input id="communityComment_'+esc(p.id)+'" class="community-input" style="flex:1;min-width:150px;margin:0" maxlength="1000" placeholder="Write a comment..."><button class="community-btn" onclick="communityAddComment(\''+esc(p.id)+'\')">Send</button></div>':'<p class="community-muted">Login to comment or reply.</p>')+'</article>');
+}
+feed.innerHTML=html.join('');
+const shared=new URLSearchParams(location.search).get('communityPost');
+if(shared){
+const target=document.getElementById('communityPost_'+CSS.escape(shared));
+if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.outline='3px solid #0759c7';setTimeout(()=>target.style.outline='',3500);}
+}
+}
 function setMemberAccess(allowed){document.body.classList.toggle('auth-locked',!allowed);if(!allowed){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('communityPage')?.classList.add('active');const box=document.getElementById('communityAccount');if(box&&!communityUser)renderCommunityAccount();}else{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('homePage')?.classList.add('active');}}
 async function communityInit(){document.body.classList.add('auth-locked');let {data}=await db.auth.getSession();communityUser=data?.session?.user||null;await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();await refreshCommunityNotifications();await loadCommunityPosts();if(communityUser){await loadMemberDirectory();await loadFriendRequests();setMemberAccess(true);await loadNews();await loadGallery();}else{setMemberAccess(false);showPage('community');}db.auth.onAuthStateChange((_event,session)=>{communityUser=session?.user||null;setTimeout(async()=>{await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();await refreshCommunityNotifications();loadCommunityPosts();if(communityUser){loadMemberDirectory();loadFriendRequests();setMemberAccess(true);await loadNews();await loadGallery();}else{setMemberAccess(false);}},0);});}
 communityInit();
