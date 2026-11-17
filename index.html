@@ -83,7 +83,7 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 <main><div id="breakingBox" class="breaking"><strong id="breakingTitle">🔴 BREAKING NEWS</strong><div id="breakingItems"></div></div>
 <section id="homePage" class="page active"><div class="hero"><h2 id="welcomeTitle">Welcome to USMAN YOBE TALK SHOW</h2><p id="welcomeText">Get news, videos, audio and important updates from Yobe and around the world.</p><div class="hero-links">
 <button onclick="showPage('opportunities')">🎓 <span data-i18n="opportunities">Opportunities</span></button><button onclick="showPage('events')">📅 <span data-i18n="events">Events</span></button><button onclick="showPage('gallery')">📸 <span data-i18n="gallery">Photo Gallery</span></button><button onclick="showPage('audio')">🎧 <span data-i18n="audioNews">Audio News</span></button><button onclick="showPage('health')">🏥 <span data-i18n="health">Health</span></button></div></div>
-<h2 class="section-title" id="latestHeading">Latest News</h2><div id="newsGrid" class="grid"></div></section>
+<h2 class="section-title" id="latestHeading">Latest News</h2><p id="newsLoadStatus" style="font-size:13px;color:#738096;margin:0 0 10px"></p><div id="newsGrid" class="grid"></div></section>
 
 <section id="opportunitiesPage" class="page"><h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2><p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p><div id="opportunityCategories" class="opportunity-categories"></div>
 <section class="education-centre"><h3 data-i18n="educationCentre">🎓 Education Centre</h3><p id="educationCentreIntro">Access official examination websites, student services and scholarship opportunities.</p><div class="education-grid">
@@ -150,7 +150,19 @@ async function loadNews(){
       posts=Array.isArray(retryData)?retryData:(data||[]);
       console.log("News refresh result:",posts.length,"published stories");
     }
-    renderAll();
+    const status=document.getElementById("newsLoadStatus");
+    if(status) status.textContent="News loaded from Supabase: "+posts.length+" published stories.";
+    // Render news first; isolate other sections so they cannot interrupt it.
+    try{renderPosts();}catch(renderError){
+      console.error("News card rendering failed:",renderError);
+      grid.innerHTML='<div class="empty">News was received ('+posts.length+') but could not be displayed: '+esc(renderError.message||String(renderError))+'</div>';
+    }
+    try{renderBreakingAlert();}catch(e){console.error("Breaking news display:",e);}
+    try{renderOpportunities();}catch(e){console.error("Opportunities display:",e);}
+    try{renderEvents();}catch(e){console.error("Events display:",e);}
+    try{renderVideos();}catch(e){console.error("Videos display:",e);}
+    try{renderAudio();}catch(e){console.error("Audio display:",e);}
+    const year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear();
     openArticleFromURL();
   }catch(error){
     console.error("Could not load published news:",error);
