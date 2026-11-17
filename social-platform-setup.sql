@@ -23,8 +23,7 @@ create table if not exists public.social_groups (
  created_at timestamptz not null default now()
 );
 alter table public.social_groups enable row level security;
-drop policy if exists "Public groups readable" on public.social_groups;
-create policy "Public groups readable" on public.social_groups for select to authenticated using (privacy='public' or owner_id=auth.uid() or exists(select 1 from public.social_group_members m where m.group_id=id and m.user_id=auth.uid()));
+-- Group visibility policy is added after the membership table is created.
 drop policy if exists "Members create groups" on public.social_groups;
 create policy "Members create groups" on public.social_groups for insert to authenticated with check (auth.uid()=owner_id);
 drop policy if exists "Owners update groups" on public.social_groups;
@@ -47,6 +46,9 @@ create policy "Users join groups" on public.social_group_members for insert to a
 drop policy if exists "Users leave groups" on public.social_group_members;
 create policy "Users leave groups" on public.social_group_members for delete to authenticated using (auth.uid()=user_id);
 grant select,insert,delete on public.social_group_members to authenticated;
+
+drop policy if exists "Public groups readable" on public.social_groups;
+create policy "Public groups readable" on public.social_groups for select to authenticated using (privacy='public' or owner_id=auth.uid() or exists(select 1 from public.social_group_members m where m.group_id=id and m.user_id=auth.uid()));
 
 create table if not exists public.social_marketplace (
  id uuid primary key default gen_random_uuid(), seller_id uuid not null references auth.users(id) on delete cascade,
