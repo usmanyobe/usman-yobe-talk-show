@@ -209,7 +209,7 @@ function communityNavFriends(btn){communityNavSetActive(btn);toggleFriendRequest
 function communityNavNotifications(btn){communityNavSetActive(btn);const panel=document.getElementById('communityNotificationsPanel');if(panel&&panel.style.display==='none')toggleCommunityNotifications();document.getElementById('communityNotificationsToggle')?.scrollIntoView({behavior:'smooth',block:'center'});}
 function communityNavProfile(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function communityNavSettings(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},250);}
-async function showPage(page){
+async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
   if(!allowedPages.includes(page))page="home";
   // Re-check the persisted Supabase session so a slow app startup does not
@@ -219,6 +219,12 @@ async function showPage(page){
     catch(e){console.warn("Session refresh before navigation:",e);}
   }
   if(!communityUser&&page!=="community"){page="community";}
+  if(options.history!==false){
+    const current=history.state;
+    if(current?.uyView!=="page"||current?.uyPage!==page){
+      history.pushState({uyView:"page",uyPage:page},"",location.href);
+    }
+  }
   document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
   const target=document.getElementById(page+"Page");
   if(target)target.classList.add("active");
@@ -233,6 +239,29 @@ async function showPage(page){
   }
 }
 document.querySelectorAll(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+if(!history.state?.uyView)history.replaceState({uyView:"page",uyPage:document.querySelector(".page.active")?.id?.replace("Page","")||"home"},"",location.href);
+window.addEventListener("popstate",async(event)=>{
+  const state=event.state||{};
+  const profileBox=document.getElementById("memberProfileCard");
+  const messengerPanel=document.getElementById("messengerPanel");
+  if(state.uyView==="member-profile"&&state.memberId){
+    if(messengerPanel)messengerPanel.style.display="none";
+    if(profileBox)profileBox.style.display="block";
+    await showPage(state.uyPage||"community",{history:false});
+    await showMemberProfile(state.memberId,{history:false});
+    return;
+  }
+  if(state.uyView==="messenger"&&state.peerId){
+    if(profileBox)profileBox.style.display="none";
+    await showPage(state.uyPage||"community",{history:false});
+    await openMessengerWith(state.peerId,{history:false});
+    return;
+  }
+  if(messengerPanel)messengerPanel.style.display="none";
+  if(profileBox)profileBox.style.display="none";
+  messengerOpen=false;
+  await showPage(state.uyPage||"home",{history:false});
+});
 document.querySelectorAll("#categoryNav button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#categoryNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentCategory=b.dataset.category;renderPosts();showPage("home")}));
 document.getElementById("searchInput").addEventListener("input",renderPosts);
 function setLanguage(lang){currentLanguage=translations[lang]?lang:"en";localStorage.setItem("usman_yobe_language",currentLanguage);document.documentElement.lang=currentLanguage;document.documentElement.dir=currentLanguage==="ar"?"rtl":"ltr";document.getElementById("languageSelect").value=currentLanguage;let t=translations[currentLanguage];
@@ -412,7 +441,11 @@ async function loadMyAccountPosts(){const list=document.getElementById('communit
 let memberDirectoryCache=[];let activeMemberProfileId=null;let memberWallPosting=false;let communityBlockedIds=new Set();let communityRealtimeChannel=null;
  async function loadMemberDirectory(){const list=document.getElementById('memberDirectoryList');if(!list||!communityUser)return;list.innerHTML='<p class="community-muted">Loading members...</p>';try{const result=await Promise.race([db.from('community_profiles').select('id,full_name,avatar_url,created_at,is_verified').order('created_at',{ascending:false}).limit(200),new Promise(resolve=>setTimeout(()=>resolve({error:{message:'The request timed out after 15 seconds. Check your internet connection and Supabase API status.'}}),15000))]);if(result.error){list.innerHTML='<p class="community-muted">Could not load members: '+esc(result.error.message)+' </p><button class="community-btn secondary" onclick="loadMemberDirectory()">Try again</button>';console.error('Member directory:',result.error.message);return;}memberDirectoryCache=result.data||[];filterMemberDirectory();}catch(error){const message=error?.message||String(error);list.innerHTML='<p class="community-muted">Member directory error: '+esc(message)+'</p><button class="community-btn secondary" onclick="loadMemberDirectory()">Try again</button>';console.error('Member directory exception:',error);}}
  function filterMemberDirectory(){const list=document.getElementById('memberDirectoryList');if(!list)return;const q=(document.getElementById('memberDirectorySearch')?.value||'').trim().toLowerCase();const profile=document.getElementById('memberProfileCard');if(profile)profile.style.display='none';if(q.length<2){list.innerHTML='<div class="community-muted" style="padding:16px 8px;text-align:center">🔎 Start typing at least 2 letters to find your friend. Search by name or Member ID.</div>';return;}const rows=memberDirectoryCache.filter(m=>!communityBlockedIds.has(String(m.id))&&(()=>{const name=(m.full_name||'Member').toLowerCase();const code='uy-'+String(m.id||'').slice(0,8).toLowerCase();return name.includes(q)||code.includes(q)||String(m.id||'').toLowerCase().includes(q);})());if(!rows.length){list.innerHTML='<p class="community-muted" style="padding:12px">No account found. Check the spelling and try again.</p>';return;}list.innerHTML='<p class="community-muted">Found '+rows.length+' member(s)</p>'+rows.map(m=>{const name=esc(m.full_name||'Member');const avatar=m.avatar_url?'<img src="'+esc(m.avatar_url)+'" alt="" style="width:48px;height:48px;border-radius:50%;object-fit:cover">':'<div style="width:48px;height:48px;border-radius:50%;background:#e8eef8;display:grid;place-items:center;font-size:22px">👤</div>';const code='UY-'+String(m.id||'').slice(0,8).toUpperCase();return '<button type="button" class="community-btn secondary" onclick="showMemberProfile(\''+esc(m.id)+'\')" style="display:flex;width:100%;justify-content:flex-start;align-items:center;gap:12px;text-align:left;margin:7px 0;padding:10px">'+avatar+'<span style="flex:1;min-width:0"><strong>'+name+(m.is_verified?' <span title="Verified account" style="color:#1877f2">✔</span>':'')+'</strong><span class="community-muted" style="display:block">'+esc(code)+' · View profile</span></span>›</button>';}).join('');}
-async function showMemberProfile(id){
+async function showMemberProfile(id, options={}){
+if(options.history!==false){
+const current=history.state||{};
+history.pushState({uyView:'member-profile',uyPage:current.uyPage||'community',memberId:String(id)},'',location.href);
+}
 const box=document.getElementById('memberProfileCard');
 if(!box)return;
 let m=memberDirectoryCache.find(x=>String(x.id)===String(id));
@@ -616,8 +649,12 @@ const avatar=p.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':'<span styl
 return '<button type="button" class="messenger-person" onclick="openMessengerWith(\''+esc(p.id)+'\')">'+avatar+'<span><strong>'+esc(p.full_name||'Member')+'</strong><small>Tap to send a private message</small></span></button>';
 }).join('');
 }
-async function openMessengerWith(id){
+async function openMessengerWith(id, options={}){
 if(!communityUser||!id||String(id)===String(communityUser.id))return;if(communityBlockedIds.has(String(id))){alert('You have blocked this member. Unblock them before messaging.');return;}
+if(options.history!==false){
+const current=history.state||{};
+history.pushState({uyView:'messenger',uyPage:current.uyPage||'community',peerId:String(id)},'',location.href);
+}
 const panel=document.getElementById('messengerPanel');
 const header=document.getElementById('messengerChatHeader');
 if(!panel||!header)return;
