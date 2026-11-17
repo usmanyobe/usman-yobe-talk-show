@@ -208,7 +208,29 @@ function communityNavFriends(btn){communityNavSetActive(btn);toggleFriendRequest
 function communityNavNotifications(btn){communityNavSetActive(btn);const panel=document.getElementById('communityNotificationsPanel');if(panel&&panel.style.display==='none')toggleCommunityNotifications();document.getElementById('communityNotificationsToggle')?.scrollIntoView({behavior:'smooth',block:'center'});}
 function communityNavProfile(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});}
 function communityNavSettings(btn){communityNavSetActive(btn);document.getElementById('communityAccount')?.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},250);}
-function showPage(page){if(!communityUser&&page!=="community"){page="community";}document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(page+"Page")?.classList.add("active");document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));window.scrollTo({top:0,behavior:"smooth"})}
+async function showPage(page){
+  const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
+  if(!allowedPages.includes(page))page="home";
+  // Re-check the persisted Supabase session so a slow app startup does not
+  // incorrectly send a signed-in member back to the login/community screen.
+  if(!communityUser){
+    try{const sessionResult=await db.auth.getSession();communityUser=sessionResult.data?.session?.user||null;}
+    catch(e){console.warn("Session refresh before navigation:",e);}
+  }
+  if(!communityUser&&page!=="community"){page="community";}
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  const target=document.getElementById(page+"Page");
+  if(target)target.classList.add("active");
+  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+  window.scrollTo({top:0,behavior:"smooth"});
+  // Refresh each section when its tab is opened, so newly published content appears.
+  if(communityUser){
+    if(["home","opportunities","events","videos","audio"].includes(page))await loadNews();
+    if(page==="gallery")await loadGallery();
+    if(page==="community")await loadCommunityPosts();
+    if(page==="more"&&typeof renderMorePage==="function")renderMorePage();
+  }
+}
 document.querySelectorAll(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
 document.querySelectorAll("#categoryNav button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#categoryNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentCategory=b.dataset.category;renderPosts();showPage("home")}));
 document.getElementById("searchInput").addEventListener("input",renderPosts);
