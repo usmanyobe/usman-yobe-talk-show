@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const vapidPublic = Deno.env.get("VAPID_PUBLIC_KEY")!;
     const vapidPrivate = Deno.env.get("VAPID_PRIVATE_KEY")!;
-    const vapidSubject = Deno.env.get("VAPID_SUBJECT") || "mailto:admin@usmanyobe.com";
+    const vapidSubject = Deno.env.get("VAPID_SUBJECT") || "https://usmanyobe.github.io/usman-yobe-talk-show/";
 
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) return new Response(JSON.stringify({ error: "Missing authorization" }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
