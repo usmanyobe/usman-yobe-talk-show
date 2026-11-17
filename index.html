@@ -379,8 +379,22 @@ async function sendPushAnnouncement(){
   const status=document.getElementById('pushAnnouncementStatus');
   if(status)status.textContent='Sending...';
   const {data,error}=await db.functions.invoke('send-push-notification',{body:{title,body,url:'./'}});
-  if(error){if(status)status.textContent='Could not send: '+error.message;return;}
-  if(status)status.textContent='Sent to '+(data?.sent??0)+' device(s).';
+  if(error){
+    let detail=error.message||'Unknown error';
+    try{
+      const response=error.context;
+      if(response&&typeof response.clone==='function'){
+        const payload=await response.clone().json();
+        if(payload?.error)detail=payload.error;
+        else if(payload?.message)detail=payload.message;
+        else detail=JSON.stringify(payload);
+      }
+    }catch(_){}
+    if(status)status.textContent='Could not send: '+detail;
+    console.error('Push notification function error:',error);
+    return;
+  }
+  if(status)status.textContent='Sent to '+(data?.sent??0)+' device(s). Failed: '+(data?.failed??0)+'.';
 }
 
 /* SAVE / BOOKMARK */
