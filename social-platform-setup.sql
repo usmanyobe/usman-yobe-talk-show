@@ -42,7 +42,14 @@ alter table public.social_group_members enable row level security;
 drop policy if exists "Group members readable" on public.social_group_members;
 create policy "Group members readable" on public.social_group_members for select to authenticated using (true);
 drop policy if exists "Users join groups" on public.social_group_members;
-create policy "Users join groups" on public.social_group_members for insert to authenticated with check (auth.uid()=user_id);
+create policy "Users join groups" on public.social_group_members for insert to authenticated
+with check (
+ auth.uid()=user_id
+ and (
+   role='member'
+   or exists(select 1 from public.social_groups g where g.id=group_id and g.owner_id=auth.uid() and role='admin')
+ )
+);
 drop policy if exists "Users leave groups" on public.social_group_members;
 create policy "Users leave groups" on public.social_group_members for delete to authenticated using (auth.uid()=user_id);
 grant select,insert,delete on public.social_group_members to authenticated;
