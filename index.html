@@ -643,8 +643,8 @@ function communityPostAuthorHtml(p,profiles){
 const profile=p.user_id?profiles?.[p.user_id]:null;
 const name=profile?.full_name||p.author_name||'Member';const verified=profile?.is_verified?' <span title="Verified account" style="color:#1877f2">✔</span>':'';
 const avatar=profile?.avatar_url?'<img src="'+esc(profile.avatar_url)+'" alt="">':'<span class="community-avatar-placeholder">👤</span>';
-if(!p.user_id)return '<div class="community-post-author">'+avatar+'<span><strong>'+esc(name)+'</strong></span></div>';
-return '<button type="button" class="community-post-author" onclick="showMemberProfile(\''+esc(p.user_id)+'\')">'+avatar+'<span><strong>'+esc(name)+'</strong><small>View profile</small></span></button>';
+if(!p.user_id)return '<div class="community-post-author">'+avatar+'<span><strong>'+esc(name)+verified+'</strong></span></div>';
+return '<button type="button" class="community-post-author" onclick="showMemberProfile(\''+esc(p.user_id)+'\')">'+avatar+'<span><strong>'+esc(name)+verified+'</strong><small>View profile</small></span></button>';
 }
 function communityPostMemberActions(p,followedIds,friendMap){
 if(!communityUser||!p.user_id||String(p.user_id)===String(communityUser.id))return '';
