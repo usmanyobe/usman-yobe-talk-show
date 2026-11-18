@@ -274,12 +274,14 @@ function communitySetView(view,options={}){
  const navMap={home:0,reels:1,friends:2,groups:3,marketplace:4,messenger:5,notifications:6,profile:7,memberProfile:2,live:3,creator:7};
  const buttons=page.querySelectorAll('.community-facebook-nav button');
  buttons.forEach((b,i)=>b.classList.toggle('active',i===navMap[view]));
- if(view==='friends'&&typeof toggleFriendRequests==='function')toggleFriendRequests(true);
+ if(view==='friends'){const requestPanel=document.getElementById('friendRequestsPanel');if(requestPanel){requestPanel.style.display='block';communityFriendRequestsOpen=true;if(typeof loadFriendRequests==='function')loadFriendRequests();}}
  if(view==='notifications'&&typeof refreshCommunityNotifications==='function'){communityNotificationOpen=true;refreshCommunityNotifications();}
  if(view==='messenger'&&typeof toggleMessenger==='function')toggleMessenger(true,{history:false});
  if(view==='reels'&&typeof socialLoadReels==='function')socialLoadReels();
  if(view==='groups'&&typeof socialLoadGroups==='function')socialLoadGroups();
  if(view==='marketplace'&&typeof socialLoadMarket==='function')socialLoadMarket();
+ if(view==='live'&&typeof socialLoadLive==='function')socialLoadLive();
+ if(view==='creator'&&typeof socialLoadCreator==='function')socialLoadCreator();
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function communityNavHome(){communitySetView('home');}
