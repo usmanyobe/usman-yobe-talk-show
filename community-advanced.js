@@ -34,6 +34,7 @@ async function openTab(tab){
  if(tab==='saved')await loadSaved();
  if(tab==='memories')await loadMemories();
  if(tab==='privacy')await loadPrivacy();
+ if(tab==='security'&&window.communityIsAdmin){const p=$('uyModerationPanel');if(p)p.style.display='block';const b=$('uyLoadReports');if(b&&!b.dataset.bound){b.dataset.bound='1';b.addEventListener('click',loadReports);}}
 }
 async function createEvent(){
  if(!user()){status('Shiga account kafin ƙirƙirar event.',true);return;}
