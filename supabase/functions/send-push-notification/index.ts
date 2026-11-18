@@ -55,6 +55,11 @@ Deno.serve(async (req) => {
     let sent = 0;
     let failed = 0;
     for (const sub of subscriptions || []) {
+      if (!sub.endpoint || !sub.p256dh || !sub.auth) {
+        failed++;
+        console.error("Skipping invalid push subscription:", sub.id);
+        continue;
+      }
       try {
         await webpush.sendNotification(
           { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
@@ -70,7 +75,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return new Response(JSON.stringify({ sent, failed, total: subscriptions?.length || 0 }), { headers: { ...cors, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ success: true, sent, failed, total: subscriptions?.length || 0 }), { headers: { ...cors, "Content-Type": "application/json" } });
   } catch (err) {
     console.error(err);
     return new Response(JSON.stringify({ error: err?.message || "Unexpected server error" }), { status: 500, headers: { ...cors, "Content-Type": "application/json" } });
