@@ -59,11 +59,28 @@ async function saveItem(type,id){
  const {error}=await db().from('community_saved_items').upsert({user_id:user().id,item_type:type,item_id:String(id)},{onConflict:'user_id,item_type,item_id'});
  if(error)alert('Ba a adana ba: '+error.message);else alert('An adana cikin Saved.');
 }
+async function removeSaved(type,id){
+ const {error}=await db().from('community_saved_items').delete().eq('user_id',user().id).eq('item_type',type).eq('item_id',String(id));
+ if(error){status('Ba a cire abin daga Saved ba: '+error.message,true);return;}
+ status('An cire abin daga Saved.');await loadSaved();
+}
 async function loadSaved(){
  const box=$('uySavedList');if(!user()){box.textContent='Shiga account.';return;}
  const {data,error}=await db().from('community_saved_items').select('item_type,item_id,created_at').eq('user_id',user().id).order('created_at',{ascending:false}).limit(100);
  if(error){box.textContent='Database migration bai gama ba: '+error.message;return;}
- box.innerHTML=(data||[]).map(x=>`<p>🔖 ${esc(x.item_type)} · ID: ${esc(x.item_id)} <small>${esc(new Date(x.created_at).toLocaleDateString())}</small></p>`).join('')||'<p>Babu abin da aka adana tukuna.</p>';
+ const rows=data||[],postIds=rows.filter(x=>x.item_type==='post').map(x=>x.item_id);
+ let posts=[];
+ if(postIds.length){
+  const result=await db().from('forum_posts').select('id,content,media_url,media_type,created_at').in('id',postIds);
+  if(!result.error)posts=result.data||[];
+ }
+ const postMap=new Map(posts.map(p=>[String(p.id),p]));
+ box.innerHTML=rows.map(x=>{
+  const p=x.item_type==='post'?postMap.get(String(x.item_id)):null;
+  const preview=p?'<p>'+esc(p.content||'')+'</p>'+(p.media_url?(p.media_type==='video'?'<video controls playsinline preload="metadata" style="width:100%;max-height:220px" src="'+esc(p.media_url)+'"></video>':'<img loading="lazy" style="width:100%;max-height:220px;object-fit:contain" src="'+esc(p.media_url)+'" alt="Saved post">'):''):'<p>Abu ne: '+esc(x.item_type)+' · ID: '+esc(x.item_id)+'</p>';
+  return '<article class="social-hub-card"><b>🔖 '+esc(x.item_type)+'</b>'+preview+'<small>'+esc(new Date(x.created_at).toLocaleDateString())+'</small> <button class="community-btn secondary" data-remove-type="'+esc(x.item_type)+'" data-remove-id="'+esc(x.item_id)+'">Cire daga Saved</button></article>';
+ }).join('')||'<p>Babu abin da aka adana tukuna.</p>';
+ box.querySelectorAll('[data-remove-type]').forEach(b=>b.addEventListener('click',()=>removeSaved(b.dataset.removeType,b.dataset.removeId)));
 }
 async function loadMemories(){
  const box=$('uyMemoriesList');if(!user()){box.textContent='Shiga account.';return;}
@@ -114,8 +131,7 @@ function addFeedActions(){
   const id=card.id.replace('communityPost_','');if(!id)return;
   const bar=document.createElement('div');bar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:8px 0';
   const save=document.createElement('button');save.className='community-btn secondary';save.textContent='🔖 Save';save.dataset.uySave='1';save.addEventListener('click',()=>saveItem('post',id));
-  const reportBtn=document.createElement('button');reportBtn.className='community-btn secondary';reportBtn.textContent='⚑ Report';reportBtn.addEventListener('click',()=>report('post',id));
-  bar.append(save,reportBtn);card.appendChild(bar);
+  bar.append(save);card.appendChild(bar);
  });
 }
 async function optimizeSelectedImage(input){
