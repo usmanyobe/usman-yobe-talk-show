@@ -60,8 +60,8 @@ grant execute on function public.can_view_forum_post(uuid, text) to anon, authen
 -- Friends-only or Only-me posts to everyone.
 drop policy if exists "Enforce forum post audience privacy" on public.forum_posts;
 create policy "Enforce forum post audience privacy"
-  as restrictive
   on public.forum_posts
+  as restrictive
   for select
   to public
   using (public.can_view_forum_post(user_id, audience));
