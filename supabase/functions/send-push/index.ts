@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate);
 
     const adminClient = createClient(supabaseUrl, serviceKey);
-    const { data: subscriptions, error: queryError } = await adminClient.from("push_subscriptions").select("id,endpoint,p256dh,auth_key");
+    const { data: subscriptions, error: queryError } = await adminClient.from("push_subscriptions").select("id,endpoint,p256dh,auth");
     if (queryError) throw queryError;
 
     let sent = 0;
@@ -44,7 +44,7 @@ Deno.serve(async (req) => {
     for (const sub of subscriptions || []) {
       try {
         await webpush.sendNotification(
-          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth_key } },
+          { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
           JSON.stringify({ title, body, url, tag: "usman-yobe-announcement" })
         );
         sent++;
