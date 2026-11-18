@@ -116,7 +116,7 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 const SUPABASE_URL="https://latxtetkscajmbqppnad.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxhdHh0ZXRrc2Nham1icXBwbmFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2MTE5MDAsImV4cCI6MjExMDE4NzkwMH0.hE2PTt-ccIDlWmBhxlkQq2rT6CfA_J7V4XXvmN8EYHU";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const PUSH_VAPID_PUBLIC_KEY="BMGpoolbL81i566moft5EyeP23-5D8S8lweR-B8iROmbCKgUy3PiHcIDY8xReq-EaVGtB1Ig9YaPSqRmhqMsEl8";
+const PUSH_VAPID_PUBLIC_KEY="BCjsGcoYf1xi5orzYhexF4FukyQjBOwGF4FknzaWrcS-ZDkqkobh18rzfy7NJX9WRhUXjMv95pHSQugTBaeUDjc";
 let posts=[],galleryPhotos=[],currentCategory="all",activeGalleryPhoto=null;
 let currentLanguage=localStorage.getItem("usman_yobe_language")||"en",deepLinkHandled=false;
 const translations={
@@ -502,7 +502,8 @@ async function togglePushNotifications(){
     if(permission!=='granted'){say('Notification permission was not granted. Enable it in your phone settings.');return;}
     const registration=await navigator.serviceWorker.ready;
     let subscription=await registration.pushManager.getSubscription();
-    if(!subscription)subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushBase64ToBytes(PUSH_VAPID_PUBLIC_KEY)});
+    if(subscription)await subscription.unsubscribe();
+    subscription=await registration.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:pushBase64ToBytes(PUSH_VAPID_PUBLIC_KEY)});
     const json=subscription.toJSON();
     if(!json.keys?.p256dh||!json.keys?.auth)throw new Error('This device did not provide valid push encryption keys.');
     const {error}=await db.from('push_subscriptions').upsert({user_id:communityUser.id,endpoint:json.endpoint,p256dh:json.keys?.p256dh,auth:json.keys?.auth,updated_at:new Date().toISOString()},{onConflict:'endpoint'});
