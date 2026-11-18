@@ -1059,7 +1059,62 @@ async function socialCreateLive(){if(!socialRequireUser())return;const title=doc
 async function socialLoadLive(){const box=document.getElementById('socialLiveList');if(!box)return;const {data,error}=await db.from('social_live_sessions').select('id,host_id,title,stream_url,starts_at,status').order('starts_at',{ascending:true}).limit(50);if(error){box.textContent='Live sessions database is not ready. '+error.message;return;}box.innerHTML=(data||[]).map(x=>'<article class="social-hub-card"><strong>🔴 '+socialEsc(x.title)+'</strong><p>'+socialEsc(new Date(x.starts_at).toLocaleString())+' · '+socialEsc(x.status)+'</p><a href="'+socialEsc(x.stream_url)+'" target="_blank" rel="noopener">Open live stream ↗</a></article>').join('')||'<p>No live sessions scheduled.</p>';}
 async function socialLoadCreator(){const box=document.getElementById('socialCreatorStats');if(!box||!communityUser)return;box.textContent='Loading...';const [posts,reels,listings,groups]=await Promise.all([db.from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_marketplace').select('id',{count:'exact',head:true}).eq('seller_id',communityUser.id),db.from('social_groups').select('id',{count:'exact',head:true}).eq('owner_id',communityUser.id)]);const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];box.innerHTML=vals.map(v=>'<div class="social-stat"><strong>'+((v[2]?'—':v[1]||0))+'</strong>'+v[0]+'</div>').join('');}
 
-async function communityInit(){document.body.classList.add('auth-locked');let {data}=await db.auth.getSession();communityUser=data?.session?.user||null;await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();if(communityUser){await loadCommunityBlocks();await loadSavedItems();await subscribeCommunityRealtimeNotifications();await refreshCommunityNotifications();await loadCommunityStories();await loadCommunityPosts();await loadMemberDirectory();await loadFriendRequests();setMemberAccess(true);await loadNews();await loadGallery();}else{await refreshCommunityNotifications();await loadCommunityPosts();setMemberAccess(false);showPage('community');}db.auth.onAuthStateChange((_event,session)=>{communityUser=session?.user||null;setTimeout(async()=>{await communityCheckAdmin();renderCommunityAccount();await refreshCommunityBans();await refreshCommunityReports();if(communityUser){await loadCommunityBlocks();await subscribeCommunityRealtimeNotifications();await refreshCommunityNotifications();await loadCommunityStories();await loadCommunityPosts();await loadMemberDirectory();await loadFriendRequests();setMemberAccess(true);await loadNews();await loadGallery();}else{if(communityRealtimeChannel){db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}communityBlockedIds.clear();setMemberAccess(false);}},0);});}
+async function communityInit(){
+  document.body.classList.add('auth-locked');
+  const safeTask=(name,task)=>Promise.resolve().then(task).catch(error=>console.warn('Startup task '+name+':',error?.message||error));
+  try{
+    const sessionResult=await Promise.race([
+      db.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('Session check timed out')),10000))
+    ]);
+    communityUser=sessionResult.data?.session?.user||null;
+  }catch(error){
+    console.warn('Initial session check:',error?.message||error);
+    communityUser=null;
+  }
+  // Show the correct app screen immediately; background data must not block startup.
+  setMemberAccess(!!communityUser);
+  if(!communityUser)showPage('community',{history:false});
+  renderCommunityAccount();
+
+  const startMemberServices=()=>{
+    safeTask('admin access',async()=>{await communityCheckAdmin();renderCommunityAccount();});
+    safeTask('bans',refreshCommunityBans);
+    safeTask('reports',refreshCommunityReports);
+    if(!communityUser){
+      safeTask('guest notifications',refreshCommunityNotifications);
+      safeTask('guest community feed',loadCommunityPosts);
+      return;
+    }
+    safeTask('blocked members',loadCommunityBlocks);
+    safeTask('saved items',loadSavedItems);
+    safeTask('realtime notifications',subscribeCommunityRealtimeNotifications);
+    safeTask('notifications',refreshCommunityNotifications);
+    safeTask('stories',loadCommunityStories);
+    safeTask('community feed',loadCommunityPosts);
+    safeTask('member directory',loadMemberDirectory);
+    safeTask('friend requests',loadFriendRequests);
+    safeTask('news',loadNews);
+    safeTask('gallery',loadGallery);
+  };
+  startMemberServices();
+
+  db.auth.onAuthStateChange((event,session)=>{
+    if(event==='INITIAL_SESSION')return;
+    communityUser=session?.user||null;
+    setMemberAccess(!!communityUser);
+    if(!communityUser){
+      if(communityRealtimeChannel){db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}
+      communityBlockedIds.clear();
+      renderCommunityAccount();
+      safeTask('guest notifications',refreshCommunityNotifications);
+      safeTask('guest community feed',loadCommunityPosts);
+      return;
+    }
+    renderCommunityAccount();
+    startMemberServices();
+  });
+}
 communityInit();
 setInterval(()=>{if(communityUser&&!document.hidden){refreshCommunityNotifications();loadFriendRequests();loadCommunityStories();}},15000);setInterval(()=>{if(communityUser&&!document.hidden){refreshMessengerBadge();if(messengerOpen){loadMessengerConversations(true);if(messengerActiveUserId)loadMessengerMessages(true);}}},10000);
 registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories();
