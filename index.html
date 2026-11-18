@@ -1114,11 +1114,11 @@ async function communityInit(){
     startMemberServices();
   });
 }
-window.db=db;window.esc=esc;Object.defineProperty(window,'communityUser',{configurable:true,get:()=>communityUser});
+window.db=db;window.esc=esc;Object.defineProperty(window,'communityUser',{configurable:true,get:()=>communityUser});Object.defineProperty(window,'communityIsAdmin',{configurable:true,get:()=>communityIsAdmin});
 communityInit();
 setInterval(()=>{if(communityUser&&!document.hidden){refreshCommunityNotifications();loadFriendRequests();loadCommunityStories();}},15000);setInterval(()=>{if(communityUser&&!document.hidden){refreshMessengerBadge();if(messengerOpen){loadMessengerConversations(true);if(messengerActiveUserId)loadMessengerMessages(true);}}},10000);
 registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories();
 </script>
-<script src="./community-advanced.js?v=2"></script>
+<script src="./community-advanced.js?v=3"></script>
 </body>
 </html>
