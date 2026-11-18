@@ -765,7 +765,7 @@ return '<button type="button" class="messenger-person" onclick="openMessengerWit
 }).join('');
 }
 async function messengerBackToList(){const state=history.state||{};if(state.uyView==='messenger'&&state.peerId){history.back();return;}toggleMessenger(true,{history:false});}
-function openMessengerWith(id, options={}){
+async function openMessengerWith(id, options={}){
 if(!communityUser||!id||String(id)===String(communityUser.id))return;if(communityBlockedIds.has(String(id))){alert('You have blocked this member. Unblock them before messaging.');return;}
 if(options.history!==false){
 const current=history.state||{};
