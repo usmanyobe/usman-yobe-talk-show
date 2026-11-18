@@ -118,8 +118,30 @@ function addFeedActions(){
   bar.append(save,reportBtn);card.appendChild(bar);
  });
 }
+async function optimizeSelectedImage(input){
+ const file=input.files?.[0];if(!file||!file.type.startsWith('image/')||file.size<700*1024)return;
+ if(!window.createImageBitmap||!window.DataTransfer)return;
+ try{
+  const bmp=await createImageBitmap(file);const max=1920,scale=Math.min(1,max/Math.max(bmp.width,bmp.height));
+  if(scale===1&&file.size<2*1024*1024){bmp.close();return;}
+  const canvas=document.createElement('canvas');canvas.width=Math.round(bmp.width*scale);canvas.height=Math.round(bmp.height*scale);
+  const ctx=canvas.getContext('2d',{alpha:false});ctx.drawImage(bmp,0,0,canvas.width,canvas.height);bmp.close();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.82));if(!blob||blob.size>=file.size)return;
+  const optimized=new File([blob],(file.name.replace(/\\.[^.]+$/,'')||'community-photo')+'.jpg',{type:'image/jpeg',lastModified:Date.now()});
+  const transfer=new DataTransfer();transfer.items.add(optimized);input.files=transfer.files;
+  status('An rage girman hoto domin saurin lodawa.');
+ }catch(e){console.warn('Image optimization skipped:',e);}
+}
+function setupMediaOptimization(){
+ const input=$('communityPostMedia');
+ if(input&&!input.dataset.uyOptimized){input.dataset.uyOptimized='1';input.addEventListener('change',()=>optimizeSelectedImage(input));}
+ const feed=$('communityFeed');if(feed){
+  const optimize=()=>{feed.querySelectorAll('img').forEach(img=>{img.loading='lazy';img.decoding='async';});feed.querySelectorAll('video').forEach(v=>{v.preload='metadata';v.playsInline=true;});};
+  optimize();if(window.MutationObserver)new MutationObserver(optimize).observe(feed,{childList:true,subtree:true});
+ }
+}
 function init(){
- panel();
+ panel();setupMediaOptimization();
  document.querySelectorAll('#socialPlatformHub .social-hub-tabs button').forEach(b=>{
   if(b.dataset.advancedBound)return;b.dataset.advancedBound='1';
   if(!b.dataset.tab)b.addEventListener('click',()=>{if(b.textContent.includes('Reels'))enhanceReels();});
