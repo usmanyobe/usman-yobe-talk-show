@@ -366,7 +366,9 @@ window.addEventListener("popstate",async(event)=>{
   if(messengerPanel)messengerPanel.style.display="none";
   if(profileBox)profileBox.style.display="none";
   messengerOpen=false;
-  await showPage(state.uyPage||"home",{history:false});
+  const destination=state.uyPage||"home";
+  await showPage(destination,{history:false});
+  if(destination==="community")communitySetView("home",{history:false});
 });
 document.querySelectorAll("#categoryNav button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#categoryNav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");currentCategory=b.dataset.category;renderPosts();showPage("home")}));
 document.getElementById("searchInput").addEventListener("input",renderPosts);
