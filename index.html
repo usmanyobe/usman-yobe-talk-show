@@ -1074,7 +1074,6 @@ async function communityInit(){
   }
   // Show the correct app screen immediately; background data must not block startup.
   setMemberAccess(!!communityUser);
-  if(!communityUser)showPage('community',{history:false});
   renderCommunityAccount();
 
   const startMemberServices=()=>{
