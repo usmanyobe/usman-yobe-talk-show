@@ -19,12 +19,13 @@ function panel(){
  <section data-pane="saved" style="display:none"><h4>Abubuwan da ka adana</h4><div id="uySavedList"></div></section>
  <section data-pane="memories" style="display:none"><h4>Memories – tsoffin posts</h4><div id="uyMemoriesList"></div></section>
  <section data-pane="privacy" style="display:none"><h4>Privacy Settings</h4><label>Wanda zai ga sabbin posts</label><select id="uyAudience" class="community-input"><option value="public">Public – Kowa</option><option value="friends">Friends – Abokai</option><option value="private">Only me – Ni kaɗai</option></select><label><input id="uyShowOnline" type="checkbox" checked> Nuna lokacin da nake online</label><br><label><input id="uyAllowRequests" type="checkbox" checked> Karɓar friend requests</label><br><button class="community-btn" id="uySavePrivacy">Ajiye privacy</button><p class="community-muted">Wannan yana adana zaɓin sirrinka. Aiwatar da audience ga tsoffin posts yana buƙatar ƙara audience column da RLS zuwa forum_posts.</p></section>
- <section data-pane="security" style="display:none"><h4>Tsaro</h4><p class="community-muted">Two-factor authentication (2FA) ta Supabase Auth.</p><button class="community-btn" id="uyMfaEnroll">Kunna 2FA (Authenticator)</button><div id="uyMfaBox"></div><p class="community-muted">Yi amfani da Report a kan post, Reel, Marketplace ko profile idan ka ga zamba, spam ko fake account. Rahotanni suna shiga jerin moderation.</p></section>`;
+ <section data-pane="security" style="display:none"><h4>Tsaro</h4><p class="community-muted">Two-factor authentication (2FA) ta Supabase Auth.</p><button class="community-btn" id="uyMfaEnroll">Kunna 2FA (Authenticator)</button><div id="uyMfaBox"></div><p class="community-muted">Yi amfani da Report idan ka ga zamba, spam, cin zarafi ko fake account.</p><div id="uyModerationPanel" style="display:none"><h4>🛡 Rahotannin mambobi</h4><button class="community-btn secondary" id="uyLoadReports">Duba reports</button><div id="uyReportsList"></div></div></section>`;
  hub.appendChild(el);
  el.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
  $('uyCreateEvent').addEventListener('click',createEvent);
  $('uySavePrivacy').addEventListener('click',savePrivacy);
  $('uyMfaEnroll').addEventListener('click',enrollMfa);
+ if(window.communityIsAdmin){$('uyModerationPanel').style.display='block';$('uyLoadReports').addEventListener('click',loadReports);}
 }
 async function openTab(tab){
  document.querySelectorAll('#uyAdvancedPanel [data-pane]').forEach(p=>p.style.display=p.dataset.pane===tab?'block':'none');
@@ -107,6 +108,20 @@ async function report(type,id){
  const details=prompt('Ƙarin bayani (optional):')||'';
  const {error}=await db().from('community_content_reports').insert({reporter_id:user().id,target_type:type,target_id:String(id),reason,details:details.slice(0,1000)});
  alert(error?(error.code==='23505'?'Ka riga ka yi report kan wannan abu.':'Report ya kasa: '+error.message):'An aika rahoto. Moderators za su duba.');
+}
+async function loadReports(){
+ const box=$('uyReportsList');if(!window.communityIsAdmin){box.textContent='Admins kawai.';return;}
+ box.textContent='Ana loda rahotanni...';
+ const {data,error}=await db().from('community_content_reports').select('id,reporter_id,target_type,target_id,reason,details,status,created_at').in('status',['pending','reviewing']).order('created_at',{ascending:false}).limit(100);
+ if(error){box.textContent='Ba a iya loda reports: '+error.message;return;}
+ box.innerHTML=(data||[]).map(r=>'<article class="social-hub-card"><b>'+esc(r.reason)+' · '+esc(r.target_type)+'</b><p>Abu: '+esc(r.target_id)+'</p><p>'+esc(r.details||'Babu ƙarin bayani')+'</p><small>Mai rahoto: '+esc(String(r.reporter_id).slice(0,8))+' · '+esc(new Date(r.created_at).toLocaleString())+' · '+esc(r.status)+'</small><p><button class="community-btn secondary" data-report-id="'+esc(r.id)+'" data-next="reviewing">Duba</button> <button class="community-btn" data-report-id="'+esc(r.id)+'" data-next="resolved">Warware</button> <button class="community-btn secondary" data-report-id="'+esc(r.id)+'" data-next="dismissed">Yi watsi</button></p></article>').join('')||'<p>Babu rahotanni da ke jiran dubawa.</p>';
+ box.querySelectorAll('[data-report-id]').forEach(b=>b.addEventListener('click',()=>updateReport(b.dataset.reportId,b.dataset.next)));
+}
+async function updateReport(id,next){
+ if(!window.communityIsAdmin||!['reviewing','resolved','dismissed'].includes(next))return;
+ const {error}=await db().from('community_content_reports').update({status:next}).eq('id',id);
+ if(error){status('Ba a sabunta rahoton ba: '+error.message,true);return;}
+ status('An sabunta matsayin rahoto.');await loadReports();
 }
 async function enrollMfa(){
  if(!user()){status('Shiga account.',true);return;}
