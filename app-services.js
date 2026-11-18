@@ -1,0 +1,61 @@
+/* USMAN YOBE TALK SHOW — app services v1 */
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const db=()=>window.db;
+const user=()=>window.communityUser;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const msg=(id,t,bad=false)=>{const e=$(id);if(e){e.textContent=t;e.style.color=bad?'#b42318':'#087443';}};
+async function logEvent(type,page='',item=''){try{const u=user();if(!u)return;await db().from('app_analytics_events').insert({user_id:u.id,event_type:type,page_name:page||null,item_id:item?String(item):null});}catch(e){console.debug('Analytics event not saved',e.message);}}
+function ensurePanel(){
+ const more=$('morePage');if(!more||$('uyAppServices'))return;
+ const panel=document.createElement('section');panel.id='uyAppServices';panel.innerHTML=`
+ <h2 class="section-title">📢 Advertisements</h2><div id="uyAds" class="grid"><div class="empty">Loading advertisements…</div></div>
+ <h2 class="section-title">📝 Report News / Corrections</h2><div class="post" style="padding:15px">
+ <label for="uyReportTitle">News title / Taken labari</label><input id="uyReportTitle" class="community-input" maxlength="180" placeholder="Enter the news title">
+ <label for="uyReportType">Report type</label><select id="uyReportType" class="community-input"><option value="correction">Correction / Gyara</option><option value="complaint">Complaint / Korafi</option><option value="fact_check">Fact check / Tabbatarwa</option><option value="other">Other</option></select>
+ <label for="uyReportDetails">Explain the issue</label><textarea id="uyReportDetails" class="community-input" maxlength="4000" placeholder="Describe the error or correction needed"></textarea>
+ <label for="uyReportContact">Contact (optional)</label><input id="uyReportContact" class="community-input" maxlength="150" placeholder="Phone or email">
+ <button class="primary" id="uyReportSend">Submit report</button><p id="uyReportStatus" role="status"></p></div>
+ <h2 class="section-title">☎️ Contact Us</h2><div class="post" style="padding:15px">
+ <input id="uyContactName" class="community-input" maxlength="120" placeholder="Your name">
+ <input id="uyContactEmail" class="community-input" type="email" maxlength="180" placeholder="Email (optional)">
+ <input id="uyContactSubject" class="community-input" maxlength="180" placeholder="Subject">
+ <textarea id="uyContactMessage" class="community-input" maxlength="4000" placeholder="Your message"></textarea>
+ <button class="primary" id="uyContactSend">Send message</button><p id="uyContactStatus" role="status"></p>
+ <p>ASAWWARA TV • TASHAR AL’UMMA</p><a href="https://youtube.com/@asawwaratv" target="_blank" rel="noopener">YouTube</a> · <a href="https://www.tiktok.com/@usman1yobe" target="_blank" rel="noopener">TikTok</a></div>
+ <h2 class="section-title">🔔 Notification Settings</h2><div class="post" style="padding:15px" id="uyNotificationSettings">
+ <label><input type="checkbox" id="uyPrefBreaking" checked> Breaking news</label><br><label><input type="checkbox" id="uyPrefLatest" checked> Latest news</label><br><label><input type="checkbox" id="uyPrefCommunity" checked> Community activity</label><br><label><input type="checkbox" id="uyPrefMessages" checked> Messages</label><br><label><input type="checkbox" id="uyPrefEvents" checked> Events</label><br><label><input type="checkbox" id="uyPrefOpps" checked> Opportunities</label><br>
+ <button class="primary" id="uyPrefSave">Save notification settings</button><p id="uyPrefStatus" role="status"></p></div>
+ <div id="uyAdminServices" style="display:none"><h2 class="section-title">📊 Admin Analytics</h2><div class="post" style="padding:15px"><button class="primary" id="uyAnalyticsRefresh">Refresh analytics</button><div id="uyAnalyticsGrid" class="grid"></div></div>
+ <h2 class="section-title">➕ Publish Advertisement</h2><div class="post" style="padding:15px">
+ <input id="uyAdTitle" class="community-input" maxlength="160" placeholder="Advertisement title"><textarea id="uyAdDescription" class="community-input" placeholder="Advertisement description"></textarea>
+ <input id="uyAdImage" class="community-input" type="url" placeholder="Image URL (optional)"><input id="uyAdUrl" class="community-input" type="url" placeholder="Destination URL (https://...)">
+ <select id="uyAdPlacement" class="community-input"><option value="home">Home</option><option value="more">More</option><option value="all">All sections</option></select>
+ <select id="uyAdStatus" class="community-input"><option value="draft">Save as draft</option><option value="active">Publish active</option><option value="paused">Paused</option></select>
+ <button class="primary" id="uyAdSave">Save advertisement</button><p id="uyAdStatusText" role="status"></p><div id="uyAdAdminList"></div></div></div>`;
+ more.appendChild(panel);
+ $('uyReportSend').onclick=submitReport;$('uyContactSend').onclick=submitContact;$('uyPrefSave').onclick=savePrefs;$('uyAnalyticsRefresh').onclick=loadAnalytics;$('uyAdSave').onclick=saveAd;
+}
+async function loadAds(){
+ const box=$('uyAds');if(!box)return;
+ try{const {data,error}=await db().from('app_advertisements').select('id,title,description,image_url,target_url').eq('status','active').or('placement.eq.home,placement.eq.all').order('created_at',{ascending:false}).limit(6);if(error)throw error;
+ if(!data?.length){box.innerHTML='<div class="empty">No advertisements at the moment.</div>';return;}
+ box.innerHTML=data.map(a=>`<article class="post">${a.image_url?'<img class="post-image" src="'+esc(a.image_url)+'" alt="'+esc(a.title)+'" loading="lazy">':''}<div class="post-content"><span class="tag">ADVERTISEMENT</span><h3>${esc(a.title)}</h3><p>${esc(a.description)}</p>${a.target_url?'<a class="primary uyAdLink" data-ad="'+esc(a.id)+'" href="'+esc(a.target_url)+'" target="_blank" rel="noopener">Learn more</a>':''}</div></article>`).join('');
+ box.querySelectorAll('.uyAdLink').forEach(a=>a.addEventListener('click',()=>logEvent('ad_click','advertisements',a.dataset.ad)));
+ data.forEach(a=>logEvent('ad_impression','advertisements',a.id));
+ }catch(e){box.innerHTML='<div class="empty">Advertisements are temporarily unavailable.</div>';console.warn(e);}
+}
+async function submitReport(){const title=$('uyReportTitle').value.trim(),details=$('uyReportDetails').value.trim();if(!user()){msg('uyReportStatus','Please sign in first.',true);return;}if(title.length<2||details.length<5){msg('uyReportStatus','Enter the news title and explain the correction.',true);return;}const {error}=await db().from('news_corrections').insert({reporter_id:user().id,news_title:title,report_type:$('uyReportType').value,details,contact:$('uyReportContact').value.trim()||null});if(error){msg('uyReportStatus','Could not submit: '+error.message,true);return;}await logEvent('news_report','more');msg('uyReportStatus','Thank you. Your report has been sent to the editorial team.');$('uyReportDetails').value='';}
+async function submitContact(){if(!user()){msg('uyContactStatus','Please sign in first.',true);return;}const name=$('uyContactName').value.trim(),subject=$('uyContactSubject').value.trim(),message=$('uyContactMessage').value.trim();if(!name||!subject||message.length<5){msg('uyContactStatus','Complete your name, subject and message.',true);return;}const {error}=await db().from('contact_messages').insert({user_id:user().id,name,email:$('uyContactEmail').value.trim()||null,subject,message});if(error){msg('uyContactStatus','Could not send: '+error.message,true);return;}await logEvent('contact_message','more');msg('uyContactStatus','Your message has been sent successfully.');$('uyContactMessage').value='';}
+async function loadPrefs(){if(!user())return;const {data,error}=await db().from('notification_preferences').select('*').eq('user_id',user().id).maybeSingle();if(error){msg('uyPrefStatus','Could not load settings: '+error.message,true);return;}const map={uyPrefBreaking:'breaking_news',uyPrefLatest:'latest_news',uyPrefCommunity:'community_activity',uyPrefMessages:'messages',uyPrefEvents:'events',uyPrefOpps:'opportunities'};for(const [id,key] of Object.entries(map))$(id).checked=data?data[key]!==false:true;}
+async function savePrefs(){if(!user()){msg('uyPrefStatus','Please sign in first.',true);return;}const row={user_id:user().id,breaking_news:$('uyPrefBreaking').checked,latest_news:$('uyPrefLatest').checked,community_activity:$('uyPrefCommunity').checked,messages:$('uyPrefMessages').checked,events:$('uyPrefEvents').checked,opportunities:$('uyPrefOpps').checked,updated_at:new Date().toISOString()};const {error}=await db().from('notification_preferences').upsert(row,{onConflict:'user_id'});msg('uyPrefStatus',error?'Could not save: '+error.message:'Notification preferences saved.',!!error);}
+async function isAdmin(){try{const {data,error}=await db().rpc('is_admin');return !error&&data===true;}catch{return false;}}
+async function loadAnalytics(){const box=$('uyAnalyticsGrid');if(!box)return;box.innerHTML='<div class="empty">Loading…</div>';const {data,error}=await db().rpc('get_app_admin_analytics');if(error){box.innerHTML='<div class="empty">Analytics error: '+esc(error.message)+'</div>';return;}const labels={total_users:'Registered users',news_total:'All news',news_published:'Published news',ads_active:'Active ads',reports_pending:'Pending corrections',messages_new:'New contact messages',views_7d:'Page views (7 days)',ad_clicks_7d:'Ad clicks (7 days)',reports_total:'Total reports',contacts_total:'Total messages'};box.innerHTML=Object.entries(labels).map(([k,v])=>'<div class="post-content" style="background:#f4f7fc;border-radius:9px;padding:13px"><small>'+v+'</small><h2 style="color:#0759c7;margin:6px 0">'+Number(data?.[k]||0).toLocaleString()+'</h2></div>').join('');}
+async function loadAdminAds(){const box=$('uyAdAdminList');if(!box)return;const {data,error}=await db().from('app_advertisements').select('*').order('created_at',{ascending:false}).limit(30);if(error){box.textContent=error.message;return;}box.innerHTML=(data||[]).map(a=>'<div style="padding:9px;border-bottom:1px solid #ddd"><b>'+esc(a.title)+'</b> — '+esc(a.status)+' <button type="button" data-id="'+esc(a.id)+'" data-status="'+(a.status==='active'?'paused':'active')+'">'+(a.status==='active'?'Pause':'Activate')+'</button></div>').join('')||'No ads yet';box.querySelectorAll('button').forEach(b=>b.onclick=async()=>{const {error}=await db().from('app_advertisements').update({status:b.dataset.status}).eq('id',b.dataset.id);if(error)alert(error.message);else loadAdminAds();});}
+async function saveAd(){const title=$('uyAdTitle').value.trim();if(title.length<2){msg('uyAdStatusText','Enter an advertisement title.',true);return;}const row={title,description:$('uyAdDescription').value.trim(),image_url:$('uyAdImage').value.trim()||null,target_url:$('uyAdUrl').value.trim()||null,placement:$('uyAdPlacement').value,status:$('uyAdStatus').value,created_by:user()?.id||null};for(const k of ['image_url','target_url'])if(row[k]&&!/^https?:\/\//i.test(row[k])){msg('uyAdStatusText','URLs must start with http:// or https://',true);return;}const {error}=await db().from('app_advertisements').insert(row);msg('uyAdStatusText',error?'Could not save: '+error.message:'Advertisement saved.',!!error);if(!error){$('uyAdTitle').value='';$('uyAdDescription').value='';await loadAdminAds();await loadAds();}}
+async function init(){ensurePanel();if(!user())return;loadAds();loadPrefs();if(await isAdmin()){$('uyAdminServices').style.display='block';loadAnalytics();loadAdminAds();}}
+document.addEventListener('click',e=>{const b=e.target.closest('.bottom-nav button');if(b)setTimeout(()=>logEvent('page_view',b.dataset.page),250);});
+document.addEventListener('DOMContentLoaded',()=>setTimeout(init,1200));
+const originalShow=window.showPage;if(typeof originalShow==='function'){window.showPage=async function(page,...args){const result=await originalShow.call(this,page,...args);if(page==='more')init();return result;};}
+window.UYAppServices={init,loadAds,loadAnalytics};
+})();
