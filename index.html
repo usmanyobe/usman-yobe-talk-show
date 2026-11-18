@@ -894,7 +894,10 @@ media_url=db.storage.from('news-images').getPublicUrl(path).data.publicUrl;
 media_type=isVideo?'video':'image';
 }
 const author_name=communityUser.user_metadata?.full_name||communityUser.email||'Member';
-const {error}=await db.from('forum_posts').insert({user_id:communityUser.id,author_name,content,media_url,media_type});
+const {data:privacy,error:privacyError}=await db.from('community_privacy_settings').select('default_post_audience').eq('user_id',communityUser.id).maybeSingle();
+if(privacyError)throw new Error('Could not confirm your post privacy setting: '+privacyError.message);
+const audience=['public','friends','private'].includes(privacy?.default_post_audience)?privacy.default_post_audience:'public';
+const {error}=await db.from('forum_posts').insert({user_id:communityUser.id,author_name,content,media_url,media_type,audience});
 if(error)throw error;
 if(input)input.value='';
 if(mediaInput)mediaInput.value='';
