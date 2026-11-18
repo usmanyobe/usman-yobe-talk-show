@@ -773,6 +773,8 @@ async function openMessengerWith(id, options={}){
 if(!communityUser||!id||String(id)===String(communityUser.id))return;if(communityBlockedIds.has(String(id))){alert('You have blocked this member. Unblock them before messaging.');return;}
 if(options.history!==false){
 const current=history.state||{};
+const alreadyOnMessengerList=current.uyView==='messenger-list'||(current.uyView==='community-view'&&current.communityView==='messenger');
+if(!alreadyOnMessengerList)history.pushState({uyView:'messenger-list',uyPage:current.uyPage||'community'},'',location.href);
 history.pushState({uyView:'messenger',uyPage:current.uyPage||'community',peerId:String(id)},'',location.href);
 }
 const panel=document.getElementById('messengerPanel');
