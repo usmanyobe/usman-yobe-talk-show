@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const workerSecret = Deno.env.get("AUTOMATIC_PUSH_WORKER")!;
+    const workerSecret = Deno.env.get("automatic_push_worker")!;
     const cleanSecret = (value: string | undefined) =>
       String(value || "").trim().replace(/^["']|["']$/g, "").replace(/\\s/g, "");
     const vapidPublic = cleanSecret(Deno.env.get("VAPID_PUBLIC_KEY"));
