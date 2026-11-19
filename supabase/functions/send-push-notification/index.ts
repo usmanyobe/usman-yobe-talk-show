@@ -27,7 +27,23 @@ Deno.serve(async (req) => {
 
     const authHeader = req.headers.get("Authorization") || "";
     const payload = await req.json();
-    const internal = authHeader === `Bearer ${serviceKey}` && payload?.mode === "process_queue";
+
+    // Supabase's Edge gateway verifies the JWT signature before invoking this
+    // function (verify_jwt must remain enabled). Detect the internal worker by
+    // its verified service_role claim instead of comparing against a possibly
+    // differently surfaced legacy/default environment secret.
+    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+    let bearerClaims: any = null;
+    try {
+      const encodedPayload = bearerToken.split(".")[1];
+      if (encodedPayload) {
+        const normalized = encodedPayload.replace(/-/g, "+").replace(/_/g, "/");
+        bearerClaims = JSON.parse(atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=")));
+      }
+    } catch {
+      bearerClaims = null;
+    }
+    const internal = bearerClaims?.role === "service_role" && payload?.mode === "process_queue";
     const adminClient = createClient(supabaseUrl, serviceKey);
 
     if (!internal) {
