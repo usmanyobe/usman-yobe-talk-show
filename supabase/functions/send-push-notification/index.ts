@@ -14,37 +14,25 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const workerSecret = Deno.env.get("AUTOMATIC_PUSH_WORKER")!;
     const cleanSecret = (value: string | undefined) =>
       String(value || "").trim().replace(/^["']|["']$/g, "").replace(/\\s/g, "");
     const vapidPublic = cleanSecret(Deno.env.get("VAPID_PUBLIC_KEY"));
     const vapidPrivate = cleanSecret(Deno.env.get("VAPID_PRIVATE_KEY"));
     const vapidSubject = Deno.env.get("VAPID_SUBJECT") || "https://usmanyobe.github.io/usman-yobe-talk-show/";
 
-    if (!supabaseUrl || !anonKey || !serviceKey || !vapidPublic || !vapidPrivate) {
+    if (!supabaseUrl || !anonKey || !workerSecret || !vapidPublic || !vapidPrivate) {
       throw new Error("Missing required Supabase or VAPID environment secrets.");
     }
 
     const authHeader = req.headers.get("Authorization") || "";
+    const apiKeyHeader = req.headers.get("apikey") || "";
     const payload = await req.json();
 
-    // Supabase's Edge gateway verifies the JWT signature before invoking this
-    // function (verify_jwt must remain enabled). Detect the internal worker by
-    // its verified service_role claim instead of comparing against a possibly
-    // differently surfaced legacy/default environment secret.
-    const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    let bearerClaims: any = null;
-    try {
-      const encodedPayload = bearerToken.split(".")[1];
-      if (encodedPayload) {
-        const normalized = encodedPayload.replace(/-/g, "+").replace(/_/g, "/");
-        bearerClaims = JSON.parse(atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=")));
-      }
-    } catch {
-      bearerClaims = null;
-    }
-    const internal = bearerClaims?.role === "service_role" && payload?.mode === "process_queue";
-    const adminClient = createClient(supabaseUrl, serviceKey);
+    // The internal cron worker authenticates with the dedicated secret API key.
+    // Keep this key server-side only; it is never sent to the browser.
+    const internal = apiKeyHeader === workerSecret && payload?.mode === "process_queue";
+    const adminClient = createClient(supabaseUrl, workerSecret);
 
     if (!internal) {
       if (!authHeader) return new Response(JSON.stringify({ error: "Missing authorization" }), { status: 401, headers: { ...cors, "Content-Type": "application/json" } });
