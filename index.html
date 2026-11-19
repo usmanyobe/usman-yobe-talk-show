@@ -75,8 +75,22 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 [dir="rtl"] body{text-align:right}[dir="rtl"] .breaking{border-left:0;border-right:5px solid var(--red)}[dir="rtl"] .close{float:left}
 @media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}.gallery-card img{height:125px}.section-title{font-size:19px}}
 </style>
+<style>
+/* Show login gate immediately before app scripts finish loading */
+body.auth-locked nav,
+body.auth-locked #breakingBox,
+body.auth-locked main>footer,
+body.auth-locked .header-tools input,
+body.auth-locked main>.page:not(#communityPage) {
+  display: none !important;
+}
+body.auth-locked #communityPage {
+  display: block !important;
+  min-height: 65vh;
+}
+</style>
 </head>
-<body>
+<body class="auth-locked">
 <header><div class="brand"><img class="logo" src="./74556.png" alt="USMAN YOBE logo" onerror="this.style.display='none'"><div><h1>USMAN YOBE TALK SHOW</h1><p>TASHAR AL'UMMA • ...one voice, one community, one future</p></div></div>
 <div class="header-tools"><input id="searchInput" type="search" placeholder="Search news..."><select class="language" id="languageSelect" aria-label="Language"><option value="en">English</option><option value="ha">Hausa</option><option value="ar">العربية</option></select></div></header>
 <nav id="categoryNav"><button class="active" data-category="all">All</button><button data-category="News">News</button><button data-category="Politics">Politics</button><button data-category="Entertainment">Entertainment</button><button data-category="Business">Business</button><button data-category="Youth">Youth</button><button data-category="Sports">Sports</button><button data-category="Education">Education</button></nav>
