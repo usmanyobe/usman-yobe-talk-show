@@ -271,6 +271,7 @@ function communitySetView(view,options={}){
   const status=hub.querySelector('#socialHubStatus');if(status)status.style.display=view==='reels'?'':'none';
  }
  page.dataset.communityView=view;
+ try{localStorage.setItem('uy_last_location',JSON.stringify({page:'community',view:view,memberId:view==='memberProfile'?(activeMemberProfileId||null):null}));}catch(e){}
  // Keep the same post composer available on Home and in the member's Profile.
  const account=document.getElementById('communityAccount');
  const composer=account&&Array.from(account.querySelectorAll(':scope > .community-panel')).find(el=>el.querySelector('h3')?.textContent?.includes('Create a post'));
@@ -317,6 +318,7 @@ async function showPage(page, options={}){
     catch(e){console.warn("Session refresh before navigation:",e);}
   }
   if(!communityUser&&page!=="community"){page="community";}
+  try{localStorage.setItem("uy_last_location",JSON.stringify({page:page,view:page==="community"?(document.getElementById("communityPage")?.dataset.communityView||"home"):null}));}catch(e){}
   if(options.history!==false){
     const current=history.state;
     if(current?.uyView!=="page"||current?.uyPage!==page){
@@ -1093,6 +1095,16 @@ async function communityInit(){
   // Show the correct app screen immediately; background data must not block startup.
   setMemberAccess(!!communityUser);
   renderCommunityAccount();
+  if(communityUser){
+    try{
+      const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
+      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
+      if(saved&&allowedPages.includes(saved.page)){
+        await showPage(saved.page,{history:false});
+        if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
+      }
+    }catch(e){console.warn("Could not restore last app location:",e?.message||e);}
+  }
 
   const startMemberServices=()=>{
     safeTask('admin access',async()=>{await communityCheckAdmin();renderCommunityAccount();});
