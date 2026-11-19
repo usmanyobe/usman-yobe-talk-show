@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     if (publicBytes.length !== 65) throw new Error(`VAPID_PUBLIC_KEY is invalid: decoded to ${publicBytes.length} bytes; expected 65.`);
     webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate);
 
-    const sendToUsers = async (userIds: string[], title: string, body: string, url: string, tag: string) => {
+    const sendToUsers = async (userIds: string[], title: string, body: string, url: string, tag: string, preferenceKey: string) => {
       const uniqueIds = [...new Set(userIds.filter(Boolean))];
       if (!uniqueIds.length) return { sent: 0, failed: 0, total: 0 };
       const [{ data: subscriptions, error: subError }, { data: prefs, error: prefError }] = await Promise.all([
@@ -59,7 +59,6 @@ Deno.serve(async (req) => {
       let sent = 0, failed = 0;
       for (const sub of subscriptions || []) {
         const pref: any = prefMap.get(sub.user_id);
-        const preferenceKey = String(payload.preference_key || "community_activity");
         if (pref && pref[preferenceKey] === false) continue;
         if (!sub.endpoint || !sub.p256dh || !sub.auth) {
           failed++;
@@ -90,7 +89,7 @@ Deno.serve(async (req) => {
       if (queueError) throw queueError;
       let sent = 0, failed = 0, processed = 0;
       for (const job of jobs || []) {
-        const result = await sendToUsers([job.recipient_id], job.title, job.body, job.url || "./", job.id);
+        const result = await sendToUsers([job.recipient_id], job.title, job.body, job.url || "./", "automatic-" + job.id, job.preference_key || "community_activity");
         sent += result.sent; failed += result.failed; processed++;
         const { error } = await adminClient.from("push_notification_queue")
           .update({ processed_at: new Date().toISOString(), delivery_result: result })
