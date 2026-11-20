@@ -79,14 +79,14 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 [dir="rtl"] body{text-align:right}[dir="rtl"] .breaking{border-left:0;border-right:5px solid var(--red)}[dir="rtl"] .close{float:left}
 @media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}.gallery-card img{height:125px}.section-title{font-size:19px}}
 
-/* Opportunities refresh and compact education wordmarks */
+/* Opportunities refresh and official education, BVN and NIN service cards */
 html,body{overscroll-behavior-y:none}
 .opportunities-heading-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .opportunities-heading-row .section-title{margin-bottom:8px}
 .opportunities-heading-row .page-intro{margin-bottom:12px}
 .opportunities-refresh{flex:0 0 auto;border:0;border-radius:9px;background:#0759c7;color:#fff;padding:11px 14px;font-weight:800;font-size:13px}
 .education-photo{display:none}
-.education-logo{width:100%;height:105px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:1px;font-size:25px;box-shadow:inset 0 0 0 2px #ffffff88}
+.education-logo{width:100%;height:105px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:1px;font-size:30px;box-shadow:inset 0 0 0 2px #ffffff88;text-shadow:0 2px 4px #0003}
 .jamb-logo{background:linear-gradient(135deg,#087c45,#dff5e9);color:#fff;text-shadow:0 1px 3px #064}
 .waec-logo{background:linear-gradient(135deg,#073b87,#e6efff);color:#fff;text-shadow:0 1px 3px #123}
 .neco-logo{background:linear-gradient(135deg,#8b2020,#f8e7e7);color:#fff;text-shadow:0 1px 3px #500}
@@ -121,7 +121,9 @@ body.auth-locked #communityPage {
 <article class="education-card"><div class="education-logo jamb-logo" aria-label="JAMB logo">JAMB</div><strong>JAMB</strong><small data-i18n="jambDesc">Official website and e-Facility</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
 <article class="education-card"><div class="education-logo waec-logo" aria-label="WAEC logo">WAEC</div><strong>WAEC</strong><small data-i18n="waecDesc">Official website and online services</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
 <article class="education-card"><div class="education-logo neco-logo" aria-label="NECO logo">NECO</div><strong>NECO</strong><small data-i18n="necoDesc">Official website and examination information</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-<article class="education-card"><div class="education-logo scholarship-logo" aria-label="Scholarships logo">SCHOLARSHIPS</div><strong data-i18n="scholarships">Scholarships</strong><small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small><div class="education-links"><button onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button></div></article></div></section><div id="opportunitiesGrid" class="grid"></div></section>
+<article class="education-card"><div class="education-logo scholarship-logo" aria-label="Scholarships logo">SCHOLARSHIPS</div><strong data-i18n="scholarships">Scholarships</strong><small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small><div class="education-links"><button onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button></div></article>
+<article class="education-card"><div class="education-logo" style="background:linear-gradient(135deg,#087c45,#dff5e9);color:#fff">BVN</div><strong>BVN Number</strong><small>Retrieve your BVN using the phone number registered with your bank. NIBSS charges ₦20 for this USSD service.</small><div class="education-links"><a href="tel:%2A565%2A0%23">Dial *565*0#</a><a class="secondary" href="https://nibss-plc.com.ng/ussd-validation-services/" target="_blank" rel="noopener">Official Guide</a></div></article>
+<article class="education-card"><div class="education-logo" style="background:linear-gradient(135deg,#0759c7,#dceaff);color:#fff">NIN</div><strong>NIN Number</strong><small>Retrieve your NIN by dialing *346# from the phone number registered with NIMC.</small><div class="education-links"><a href="tel:%2A346%23">Dial *346#</a><a class="secondary" href="https://nimc.gov.ng/" target="_blank" rel="noopener">NIMC Official</a></div></article></div></section><div id="opportunitiesGrid" class="grid"></div></section>
 
 <section id="eventsPage" class="page"><h2 class="section-title" id="eventsHeading">📅 Events</h2><p class="page-intro" id="eventsIntro">Discover upcoming community events, meetings and celebrations.</p><div id="eventsGrid" class="grid"></div></section>
 <section id="videosPage" class="page"><h2 class="section-title" id="videosHeading">📹 Videos</h2><p class="page-intro" id="videosIntro">Watch videos published on USMAN YOBE TALK SHOW.</p><div id="videosGrid" class="grid"></div><p style="text-align:center;margin-top:20px"><a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" id="youtubeMore">Watch more ASAWWARA TV videos on YouTube</a></p></section>
