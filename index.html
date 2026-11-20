@@ -1023,7 +1023,7 @@ const target=document.getElementById('communityPost_'+CSS.escape(shared));
 if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.outline='3px solid #0759c7';setTimeout(()=>target.style.outline='',3500);}
 }
 }
-function setMemberAccess(allowed){document.body.classList.toggle('auth-locked',!allowed);if(!allowed){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('communityPage')?.classList.add('active');const box=document.getElementById('communityAccount');if(box&&!communityUser)renderCommunityAccount();}else{document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('homePage')?.classList.add('active');}}
+function setMemberAccess(allowed){document.body.classList.toggle('auth-locked',!allowed);if(!allowed){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('communityPage')?.classList.add('active');const box=document.getElementById('communityAccount');if(box&&!communityUser)renderCommunityAccount();}else{const active=document.querySelector('.page.active');if(!active){let saved=null;try{saved=JSON.parse(localStorage.getItem('uy_last_location')||'null');}catch(e){}const page=saved&&['home','opportunities','events','videos','community','gallery','audio','health','live','more','radio'].includes(saved.page)?saved.page:'home';document.getElementById(page+'Page')?.classList.add('active');}}}
 
 async function subscribeCommunityRealtimeNotifications(){if(!communityUser||!db.channel)return;if(communityRealtimeChannel){await db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}communityRealtimeChannel=db.channel('community-notifications-'+communityUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'forum_notifications',filter:'recipient_id=eq.'+communityUser.id},()=>{refreshCommunityNotifications();const badge=document.getElementById('communityNotificationBadge');if(badge){badge.style.transform='scale(1.18)';setTimeout(()=>badge.style.transform='',250);}}).subscribe();}
 async function loadCommunityBlocks(){if(!communityUser)return;const {data,error}=await db.from('community_blocks').select('blocked_id').eq('blocker_id',communityUser.id);if(error){console.warn('Blocked members:',error.message);return;}communityBlockedIds=new Set((data||[]).map(x=>String(x.blocked_id)));await renderCommunityBlockedMembers();}
@@ -1098,13 +1098,11 @@ async function communityInit(){
   if(communityUser){
     try{
       const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
-      const navEntry=performance.getEntriesByType?.("navigation")?.[0];
-      let reloadMarker=null;
-      try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
-      const markerTime=Number(reloadMarker||0);
-      const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||markerTime>0;
       const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
-      if(isReload&&saved&&allowedPages.includes(saved.page)){
+      // Restore the last saved location on every authenticated app start.
+      // Do not depend on reload detection: PWA launches and auth callbacks can
+      // otherwise reset the screen before the saved route is restored.
+      if(saved&&allowedPages.includes(saved.page)){
         await showPage(saved.page,{history:false,persist:false});
         if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false,persist:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
       }
