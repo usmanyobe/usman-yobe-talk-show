@@ -1162,7 +1162,7 @@ async function communityInit(){
       let reloadMarker=null;
       try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
       const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||Number(reloadMarker||0)>0;
-      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
+      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib"];
       if(isReload&&saved&&allowedPages.includes(saved.page)){
         // A true reload restores the exact saved page and Community subsection.
         await showPage(saved.page,{history:false,persist:false});
