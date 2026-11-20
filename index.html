@@ -318,7 +318,7 @@ async function showPage(page, options={}){
     catch(e){console.warn("Session refresh before navigation:",e);}
   }
   if(!communityUser&&page!=="community"){page="community";}
-  try{localStorage.setItem("uy_last_location",JSON.stringify({page:page,view:page==="community"?(document.getElementById("communityPage")?.dataset.communityView||"home"):null}));}catch(e){}
+  if(options.persist!==false){try{localStorage.setItem("uy_last_location",JSON.stringify({page:page,view:page==="community"?(document.getElementById("communityPage")?.dataset.communityView||"home"):null,memberId:page==="community"&&document.getElementById("communityPage")?.dataset.communityView==="memberProfile"?(activeMemberProfileId||null):null}));}catch(e){}}
   if(options.history!==false){
     const current=history.state;
     if(current?.uyView!=="page"||current?.uyPage!==page){
@@ -1100,7 +1100,7 @@ async function communityInit(){
       const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
       const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
       if(saved&&allowedPages.includes(saved.page)){
-        await showPage(saved.page,{history:false});
+        await showPage(saved.page,{history:false,persist:false});
         if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
       }
     }catch(e){console.warn("Could not restore last app location:",e?.message||e);}
