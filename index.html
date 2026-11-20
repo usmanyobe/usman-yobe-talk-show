@@ -503,7 +503,6 @@ async function registerServiceWorker(){if(!("serviceWorker"in navigator))return;
 /* COMMUNITY FORUM + MEMBER ACCOUNT */
 const communityStyle=document.createElement('style');
 communityStyle.textContent=`
-body.auth-locked nav,body.auth-locked #breakingBox,body.auth-locked main>footer{display:none!important}body.auth-locked .header-tools input{display:none!important}body.auth-locked main>.page:not(#communityPage){display:none!important}body.auth-locked #communityPage{display:block!important;min-height:65vh}body.auth-locked .community-top-actions,body.auth-locked #memberDirectoryPanel{display:none!important}body.auth-locked #communityPage:before{content:"USMAN YOBE TALK SHOW • TASHAR AL’UMMA";display:block;background:linear-gradient(120deg,#071b49,#0759c7);color:white;padding:18px;border-radius:13px;font-weight:800;text-align:center;margin:8px 0 14px}
 #communityPage .community-panel{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:15px;margin:12px 0;box-shadow:0 5px 20px #071b4910}
 #communityPage .community-input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d9e1ed;border-radius:9px;margin:6px 0 11px;font:14px Arial}
 #communityPage .community-btn{border:0;background:#0759c7;color:#fff;border-radius:8px;padding:11px 14px;font-weight:bold;margin:4px 5px 4px 0}
