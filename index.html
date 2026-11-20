@@ -119,6 +119,12 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 .ib-partnership{background:linear-gradient(120deg,#fff9e8,#fff);border:1px solid #ead9a8;border-radius:14px;padding:15px;text-align:center}
 .ib-partnership strong{display:block;color:#745315;font-size:13px;margin-bottom:6px}.ib-partnership p{font-size:12px;line-height:1.65;color:#665a42;margin:0}
 @media(max-width:360px){.ib-banner h2{font-size:21px}.ib-action{font-size:11px;padding:9px 5px}}
+
+/* Education Centre: examination-board emblems and service logos */
+.exam-logo{width:100%;height:112px;border-radius:10px;background-image:url('https://coralimpactsinternationalschool.com/wp-content/uploads/2025/10/External-Exams-768x768.png');background-repeat:no-repeat;background-size:300% 300%;background-color:#fff;border:1px solid var(--border)}
+.exam-waec{background-position:50% 0%}.exam-neco{background-position:0% 100%}.exam-jamb{background-position:100% 100%}
+.education-logo{width:100%;height:112px;border-radius:10px;display:grid;place-items:center;font-size:25px;font-weight:900;letter-spacing:1px;border:1px solid var(--border)}
+.nabteb-logo{background:#e7f6ec;color:#08783b}.ijmb-logo{background:#eaf4ed;color:#176b43}.jupeb-logo{background:#e9f0fa;color:#234a80}.nuc-logo,.nbte-logo{background:#edf5ed;color:#08783b}.trcn-logo{background:#eaf3e9;color:#176b43}.nelfund-logo{background:#edf3ff;color:#0759c7}
 </style>
 <style>
 /* Show login gate immediately before app scripts finish loading */
@@ -139,14 +145,17 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 <h3 data-i18n="educationCentre">🎓 Education Centre</h3>
 <p id="educationCentreIntro">Access official examination websites, student services and scholarship opportunities.</p>
 <div class="education-grid">
-<article class="education-card"><div class="education-icon">🎓</div><strong>JAMB</strong><small>Official website and e-Facility</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
-<article class="education-card"><div class="education-icon">📘</div><strong>WAEC</strong><small>Official website and online services</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
-<article class="education-card"><div class="education-icon">📝</div><strong>NECO</strong><small>National Examinations Council</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-<article class="education-card"><div class="education-icon">📚</div><strong>NABTEB</strong><small>Technical and business examinations</small><div class="education-links"><a href="https://nabteb.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-<article class="education-card"><div class="education-icon">🏛️</div><strong>NUC</strong><small>University accreditation and information</small><div class="education-links"><a href="https://www.nuc.edu.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-<article class="education-card"><div class="education-icon">🎒</div><strong>NELFUND</strong><small>Student loan information and application</small><div class="education-links"><a href="https://nelf.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-</div>
-</section>
+<article class="education-card"><div class="exam-logo exam-waec" role="img" aria-label="WAEC logo"></div><strong>WAEC</strong><small>West African Examinations Council</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
+<article class="education-card"><div class="exam-logo exam-neco" role="img" aria-label="NECO logo"></div><strong>NECO</strong><small>National Examinations Council</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="exam-logo exam-jamb" role="img" aria-label="JAMB logo"></div><strong>JAMB</strong><small>Joint Admissions and Matriculation Board</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
+<article class="education-card"><div class="education-logo nabteb-logo">NABTEB</div><strong>NABTEB</strong><small>Technical and business examinations</small><div class="education-links"><a href="https://nabteb.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo ijmb-logo">IJMB</div><strong>IJMB</strong><small>Interim Joint Matriculation Board programme</small><div class="education-links"><a href="https://www.abu.edu.ng/" target="_blank" rel="noopener">ABU Website</a></div></article>
+<article class="education-card"><div class="education-logo jupeb-logo">JUPEB</div><strong>JUPEB</strong><small>Joint Universities Preliminary Examinations Board</small><div class="education-links"><a href="https://jupeb.edu.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo nuc-logo">NUC</div><strong>NUC</strong><small>University accreditation and information</small><div class="education-links"><a href="https://www.nuc.edu.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo nbte-logo">NBTE</div><strong>NBTE</strong><small>Technical education and polytechnics</small><div class="education-links"><a href="https://nbte.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo trcn-logo">TRCN</div><strong>TRCN</strong><small>Teachers Registration Council of Nigeria</small><div class="education-links"><a href="https://trcn.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo nelfund-logo">NELFUND</div><strong>NELFUND</strong><small>Student loan information and application</small><div class="education-links"><a href="https://nelf.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+</div></section>
 </section>
 <section id="ibPage" class="page ib-page">
 <div class="ib-banner">
