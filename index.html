@@ -1098,13 +1098,18 @@ async function communityInit(){
   if(communityUser){
     try{
       const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
+      const navEntry=performance.getEntriesByType?.("navigation")?.[0];
+      let reloadMarker=null;
+      try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
+      const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||Number(reloadMarker||0)>0;
       const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
-      // Restore the last saved location on every authenticated app start.
-      // Do not depend on reload detection: PWA launches and auth callbacks can
-      // otherwise reset the screen before the saved route is restored.
-      if(saved&&allowedPages.includes(saved.page)){
+      if(isReload&&saved&&allowedPages.includes(saved.page)){
+        // A true reload restores the exact saved page and Community subsection.
         await showPage(saved.page,{history:false,persist:false});
         if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false,persist:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
+      }else{
+        // A fresh app launch or login always starts at News (the Home page).
+        await showPage("home",{history:false});
       }
     }catch(e){console.warn("Could not restore last app location:",e?.message||e);}
   }
