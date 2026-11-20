@@ -271,7 +271,7 @@ function communitySetView(view,options={}){
   const status=hub.querySelector('#socialHubStatus');if(status)status.style.display=view==='reels'?'':'none';
  }
  page.dataset.communityView=view;
- try{localStorage.setItem('uy_last_location',JSON.stringify({page:'community',view:view,memberId:view==='memberProfile'?(activeMemberProfileId||null):null}));}catch(e){}
+ if(options.persist!==false){try{localStorage.setItem('uy_last_location',JSON.stringify({page:'community',view:view,memberId:view==='memberProfile'?(activeMemberProfileId||null):null}));}catch(e){}}
  // Keep the same post composer available on Home and in the member's Profile.
  const account=document.getElementById('communityAccount');
  const composer=account&&Array.from(account.querySelectorAll(':scope > .community-panel')).find(el=>el.querySelector('h3')?.textContent?.includes('Create a post'));
@@ -483,7 +483,7 @@ const communityFacebookNav=document.createElement('div');
 communityFacebookNav.className='community-facebook-nav';
 communityFacebookNav.innerHTML='<button class="active" onclick="communityNavHome(this)"><span>⌂</span><small>Home</small></button><button onclick="communityNavStories(this)"><span>▣</span><small>Reels</small></button><button onclick="communityNavFriends(this)"><span>♧</span><small>Friends</small></button><button onclick="communityNavGroups(this)"><span>♙</span><small>Groups</small></button><button onclick="communityNavMarket(this)"><span>🛍</span><small>Market</small></button><button onclick="communityNavMessenger(this)"><span>✉</span><small>Chat</small></button><button onclick="communityNavNotifications(this)"><span>♧<i id="communityNavNotificationDot"></i></span><small>Alerts</small></button><button onclick="communityNavProfile(this)"><span>◉</span><small>Profile</small></button>';
 communitySection.appendChild(communityFacebookNav);
-communitySetView('home',{history:false});
+communitySetView('home',{history:false,persist:false});
 const communityFacebookNavStyle=document.createElement('style');
 communityFacebookNavStyle.textContent='.community-facebook-nav{display:none}#communityPage.active .community-facebook-nav{display:flex;position:fixed;z-index:999;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e1e5eb;box-shadow:0 -2px 12px #00000012;padding:7px 3px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}.community-facebook-nav button{flex:1;min-width:0;border:0;background:transparent;color:#242a32;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;font-size:10px;font-weight:600}.community-facebook-nav button span{font-size:27px;line-height:29px;position:relative}.community-facebook-nav button small{font-size:10px}.community-facebook-nav button.active{color:#0866ff}.community-facebook-nav #communityNavNotificationDot{display:none;position:absolute;right:-4px;top:0;width:8px;height:8px;border-radius:50%;background:#e41e3f;border:1px solid #fff}#communityPage.active{padding-bottom:82px!important}#communityPage #communityStoriesPanel{background:transparent;border:0;box-shadow:none;padding:8px 0}#communityPage #communityStoriesList>div{flex:0 0 116px!important;width:116px!important;height:190px;max-width:116px!important;position:relative;overflow:hidden;padding:0!important;border-radius:13px!important;background:#dce8f6}#communityPage #communityStoriesList>div img,#communityPage #communityStoriesList>div video{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:0!important}#communityPage #communityStoriesList>div p{position:absolute;bottom:22px;left:7px;right:7px;color:white;font-weight:700;text-shadow:0 1px 4px #000;margin:0}#communityPage #communityStoriesList>div small{position:absolute;bottom:5px;left:7px;color:white;text-shadow:0 1px 4px #000}';
 document.head.appendChild(communityFacebookNavStyle);
@@ -1106,7 +1106,7 @@ async function communityInit(){
       const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
       if(isReload&&saved&&allowedPages.includes(saved.page)){
         await showPage(saved.page,{history:false,persist:false});
-        if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
+        if(saved.page==="community"&&saved.view){communitySetView(saved.view,{history:false,persist:false});if(saved.view==="memberProfile"&&saved.memberId)await showMemberProfile(saved.memberId,{history:false});}
       }
     }catch(e){console.warn("Could not restore last app location:",e?.message||e);}
   }
