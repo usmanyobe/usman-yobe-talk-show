@@ -461,7 +461,7 @@ document.querySelectorAll("[data-i18n]").forEach(el=>{let k=el.dataset.i18n;if(t
 document.getElementById("languageSelect").addEventListener("change",e=>setLanguage(e.target.value));
 document.getElementById("articleModal").addEventListener("click",e=>{if(e.target.id==="articleModal")closeArticle()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)document.querySelectorAll("audio,video").forEach(m=>{if(!m.paused)m.pause()})});
-async function registerServiceWorker(){if(!("serviceWorker"in navigator))return;try{const registration=await navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"});await registration.update();console.log("Service worker registered and update checked")}catch(e){console.error("Service worker registration failed:",e)}}
+async function registerServiceWorker(){if(!("serviceWorker"in navigator))return;try{let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(refreshing)return;refreshing=true;window.location.reload();});const registration=await navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"});await registration.update();if(registration.waiting){registration.waiting.postMessage({type:"SKIP_WAITING"});}document.addEventListener("visibilitychange",()=>{if(!document.hidden)registration.update().catch(()=>{});});console.log("Service worker registered; latest app version checked")}catch(e){console.error("Service worker registration failed:",e)}}
 /* COMMUNITY FORUM + MEMBER ACCOUNT */
 const communityStyle=document.createElement('style');
 communityStyle.textContent=`
