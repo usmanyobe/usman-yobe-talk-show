@@ -78,6 +78,19 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 .health-links a{display:inline-block;background:#eaf2ff;color:#0750a9;padding:9px 11px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:bold}
 [dir="rtl"] body{text-align:right}[dir="rtl"] .breaking{border-left:0;border-right:5px solid var(--red)}[dir="rtl"] .close{float:left}
 @media(max-width:420px){.brand h1{font-size:16px}nav{top:132px}.post-image{height:165px}.gallery-card img{height:125px}.section-title{font-size:19px}}
+
+/* Opportunities refresh and compact education wordmarks */
+html,body{overscroll-behavior-y:none}
+.opportunities-heading-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.opportunities-heading-row .section-title{margin-bottom:8px}
+.opportunities-heading-row .page-intro{margin-bottom:12px}
+.opportunities-refresh{flex:0 0 auto;border:0;border-radius:9px;background:#0759c7;color:#fff;padding:11px 14px;font-weight:800;font-size:13px}
+.education-photo{display:none}
+.education-logo{width:100%;height:105px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;letter-spacing:1px;font-size:25px;box-shadow:inset 0 0 0 2px #ffffff88}
+.jamb-logo{background:linear-gradient(135deg,#087c45,#dff5e9);color:#fff;text-shadow:0 1px 3px #064}
+.waec-logo{background:linear-gradient(135deg,#073b87,#e6efff);color:#fff;text-shadow:0 1px 3px #123}
+.neco-logo{background:linear-gradient(135deg,#8b2020,#f8e7e7);color:#fff;text-shadow:0 1px 3px #500}
+.scholarship-logo{background:linear-gradient(135deg,#d6a62c,#fff4c9);color:#493400;font-size:17px}
 </style>
 <style>
 /* Show login gate immediately before app scripts finish loading */
@@ -103,12 +116,12 @@ body.auth-locked #communityPage {
 <button onclick="showPage('opportunities')">🎓 <span data-i18n="opportunities">Opportunities</span></button><button onclick="showPage('events')">📅 <span data-i18n="events">Events</span></button><button onclick="showPage('gallery')">📸 <span data-i18n="gallery">Photo Gallery</span></button><button onclick="showPage('audio')">🎧 <span data-i18n="audioNews">Audio News</span></button><button onclick="showPage('health')">🏥 <span data-i18n="health">Health</span></button><button onclick="showPage('radio')" style="margin-top:12px;background:#fff;color:#071b49;border:0;border-radius:9px;padding:11px 15px;font-weight:bold">📻 <span data-i18n="radio">Live Radio</span></button></div></div>
 <h2 class="section-title" id="latestHeading">Latest News</h2><p id="newsLoadStatus" style="font-size:13px;color:#738096;margin:0 0 10px"></p><div id="newsGrid" class="grid"></div></section>
 
-<section id="opportunitiesPage" class="page"><h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2><p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p><div id="opportunityCategories" class="opportunity-categories"></div>
+<section id="opportunitiesPage" class="page"><div class="opportunities-heading-row"><div><h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2><p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p></div><button class="opportunities-refresh" onclick="refreshToNews()" type="button">↻ Refresh</button></div><div id="opportunityCategories" class="opportunity-categories"></div>
 <section class="education-centre"><h3 data-i18n="educationCentre">🎓 Education Centre</h3><p id="educationCentreIntro">Access official examination websites, student services and scholarship opportunities.</p><div class="education-grid">
-<article class="education-card"><img class="education-photo" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&auto=format&fit=crop" alt="Student preparing for JAMB"><strong>JAMB</strong><small data-i18n="jambDesc">Official website and e-Facility</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
-<article class="education-card"><img class="education-photo" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=640&auto=format&fit=crop" alt="Student studying for WAEC"><strong>WAEC</strong><small data-i18n="waecDesc">Official website and online services</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
-<article class="education-card"><img class="education-photo" src="https://images.unsplash.com/photo-1513258496099-48168024AEC0?w=640&auto=format&fit=crop" alt="Student writing an examination"><strong>NECO</strong><small data-i18n="necoDesc">Official website and examination information</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
-<article class="education-card"><img class="education-photo" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=640&auto=format&fit=crop" alt="University students celebrating scholarships"><strong data-i18n="scholarships">Scholarships</strong><small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small><div class="education-links"><button onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button></div></article></div></section><div id="opportunitiesGrid" class="grid"></div></section>
+<article class="education-card"><div class="education-logo jamb-logo" aria-label="JAMB logo">JAMB</div><strong>JAMB</strong><small data-i18n="jambDesc">Official website and e-Facility</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
+<article class="education-card"><div class="education-logo waec-logo" aria-label="WAEC logo">WAEC</div><strong>WAEC</strong><small data-i18n="waecDesc">Official website and online services</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
+<article class="education-card"><div class="education-logo neco-logo" aria-label="NECO logo">NECO</div><strong>NECO</strong><small data-i18n="necoDesc">Official website and examination information</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="education-logo scholarship-logo" aria-label="Scholarships logo">SCHOLARSHIPS</div><strong data-i18n="scholarships">Scholarships</strong><small data-i18n="scholarshipDesc">Browse scholarship opportunities published in this app</small><div class="education-links"><button onclick="showScholarshipOpportunities()" data-i18n="browseScholarships">Browse Scholarships</button></div></article></div></section><div id="opportunitiesGrid" class="grid"></div></section>
 
 <section id="eventsPage" class="page"><h2 class="section-title" id="eventsHeading">📅 Events</h2><p class="page-intro" id="eventsIntro">Discover upcoming community events, meetings and celebrations.</p><div id="eventsGrid" class="grid"></div></section>
 <section id="videosPage" class="page"><h2 class="section-title" id="videosHeading">📹 Videos</h2><p class="page-intro" id="videosIntro">Watch videos published on USMAN YOBE TALK SHOW.</p><div id="videosGrid" class="grid"></div><p style="text-align:center;margin-top:20px"><a href="https://www.youtube.com/@ASAWWARATV" target="_blank" rel="noopener" id="youtubeMore">Watch more ASAWWARA TV videos on YouTube</a></p></section>
@@ -312,6 +325,7 @@ function communityNavMessenger(){communitySetView('messenger');}
 function communityNavNotifications(){communitySetView('notifications');}
 function communityNavProfile(){communitySetView('profile');}
 function communityNavSettings(){communitySetView('profile');setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},150);}
+function refreshToNews(){try{localStorage.setItem("uy_last_location",JSON.stringify({page:"home",view:"home"}));}catch(e){}showPage("home");}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
   if(!allowedPages.includes(page))page="home";
