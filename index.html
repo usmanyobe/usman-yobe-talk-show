@@ -225,8 +225,9 @@ async function loadNews(){
     const params=new URLSearchParams({select:columns,status:"eq.published",order:"published_at.desc"});
     const response=await fetch(SUPABASE_URL+"/rest/v1/news_posts?"+params.toString(),{
       method:"GET",
-      headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+((await db.auth.getSession()).data?.session?.access_token||SUPABASE_KEY),Accept:"application/json"},
-      cache:"no-store"
+      headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Accept:"application/json"},
+      cache:"no-store",
+      signal:(()=>{const c=new AbortController();setTimeout(()=>c.abort(),12000);return c.signal;})()
     });
     if(!response.ok) throw new Error("News API "+response.status+": "+(await response.text()).slice(0,240));
     const data=await response.json();
@@ -259,7 +260,7 @@ async function loadNews(){
     }
   }
 }
-async function loadGallery(){if(!communityUser){let grid=document.getElementById("galleryGrid");if(grid)grid.innerHTML='<div class="empty">Log in to view the photo gallery.</div>';return;}let grid=document.getElementById("galleryGrid");grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;let {data,error}=await db.from("gallery_photos").select("id,title,description,image_url,created_at").order("created_at",{ascending:false});if(error){console.error(error);grid.innerHTML=`<div class="empty">${tr("galleryError")}</div>`;return}galleryPhotos=data||[];renderGallery()}
+async function loadGallery(){const grid=document.getElementById("galleryGrid");if(!grid)return;if(!communityUser){grid.innerHTML='<div class="empty">Log in to view the photo gallery.</div>';return;}grid.innerHTML=`<div class="empty">${tr("loadingPhotos")}</div>`;try{const query=db.from("gallery_photos").select("id,title,description,image_url,created_at").order("created_at",{ascending:false});const result=await Promise.race([query,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Request timed out. Check your internet connection and try again.")),12000))]);if(result.error)throw result.error;galleryPhotos=result.data||[];renderGallery()}catch(error){console.error("Gallery load failed:",error);grid.innerHTML='<div class="empty">'+tr("galleryError")+'<br>'+esc(error.message||String(error))+'</div>';}}
 function renderGallery(){let grid=document.getElementById("galleryGrid");if(!galleryPhotos.length){grid.innerHTML=`<div class="empty">${tr("noPhotos")}</div>`;return}grid.innerHTML=galleryPhotos.map(p=>{let image=safeURL(p.image_url);return image?`<article class="gallery-card" onclick="openGalleryImage('${esc(p.id)}')"><img src="${esc(image)}" alt="${esc(p.title)}" loading="lazy"><div class="gallery-caption"><strong>${esc(p.title)}</strong><small>${formatDate(p.created_at)}</small></div></article>`:""}).join("")}
 function openGalleryImage(id){let p=galleryPhotos.find(x=>String(x.id)===String(id));if(!p)return;let image=safeURL(p.image_url);if(!image)return;activeGalleryPhoto=p;document.getElementById("galleryFullImage").src=image;document.getElementById("galleryFullTitle").textContent=p.title||"";document.getElementById("galleryFullDescription").textContent=p.description||"";document.getElementById("galleryView").classList.add("open")}
 function closeGalleryImage(e){if(e&&e.target.id!=="galleryView"&&!e.target.classList.contains("close"))return;document.getElementById("galleryView").classList.remove("open");document.getElementById("galleryFullImage").src="";activeGalleryPhoto=null}
@@ -1071,7 +1072,7 @@ else if(relation?.status==='pending'&&relation.receiver_id===communityUser.id)fr
 else friendButton='<button type="button" class="community-btn secondary" onclick="sendFriendRequest(\''+id+'\',this)">🤝 Add Friend</button>';
 return '<div class="community-post-member-actions"><button type="button" class="community-btn secondary" data-following="'+(following?'yes':'no')+'" onclick="toggleMemberFollow(\''+id+'\',this)">'+(following?'✓ Following':'＋ Follow')+'</button><button type="button" class="community-btn secondary" onclick="openMessengerWith(\''+id+'\')">💬 Message</button>'+friendButton+'</div>';
 }
-async function loadCommunityPosts(){
+async function loadCommunityPostsInternal(){
 const feed=document.getElementById('communityFeed');
 if(!feed)return;
 feed.innerHTML='<div class="empty">Loading community posts...</div>';
@@ -1124,6 +1125,26 @@ const target=document.getElementById('communityPost_'+CSS.escape(shared));
 if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.outline='3px solid #0759c7';setTimeout(()=>target.style.outline='',3500);}
 }
 }
+
+let communityPostsLoadPromise=null;
+async function loadCommunityPosts(){
+const feed=document.getElementById('communityFeed');
+if(!feed)return;
+if(communityPostsLoadPromise)return communityPostsLoadPromise;
+communityPostsLoadPromise=(async()=>{
+try{
+await Promise.race([
+loadCommunityPostsInternal(),
+new Promise((_,reject)=>setTimeout(()=>reject(new Error('Loading timed out. Please check your internet connection and tap refresh.')),18000))
+]);
+}catch(error){
+console.error('Community feed load failed:',error);
+feed.innerHTML='<div class="empty">Could not load community posts. '+esc(error.message||String(error))+'</div>';
+}
+})();
+try{await communityPostsLoadPromise;}finally{communityPostsLoadPromise=null;}
+}
+
 function setMemberAccess(allowed){document.body.classList.remove("auth-locked");if(!allowed){const box=document.getElementById("communityAccount");if(box)renderCommunityAccount();}}
 
 async function subscribeCommunityRealtimeNotifications(){if(!communityUser||!db.channel)return;if(communityRealtimeChannel){await db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}communityRealtimeChannel=db.channel('community-notifications-'+communityUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'forum_notifications',filter:'recipient_id=eq.'+communityUser.id},()=>{refreshCommunityNotifications();const badge=document.getElementById('communityNotificationBadge');if(badge){badge.style.transform='scale(1.18)';setTimeout(()=>badge.style.transform='',250);}}).subscribe();}
