@@ -81,6 +81,8 @@ footer{text-align:center;padding:25px 10px;color:#738096;font-size:12px;line-hei
 
 /* Opportunities refresh and official education, BVN and NIN service cards */
 html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
+#pullRefreshNotice{position:fixed;top:8px;left:50%;transform:translate(-50%,-150%);z-index:9999;background:#071b49;color:#fff;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;box-shadow:0 3px 12px #0003;transition:transform .2s}
+#pullRefreshNotice.visible{transform:translate(-50%,0)}
 .opportunities-heading-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .opportunities-heading-row .section-title{margin-bottom:8px}
 .opportunities-heading-row .page-intro{margin-bottom:12px}
@@ -107,7 +109,7 @@ body.auth-locked #communityPage {
 }
 </style>
 </head>
-<body class="auth-locked">
+<body class="auth-locked"><div id="pullRefreshNotice" role="status" aria-live="polite">Refreshing…</div>
 <header><div class="brand"><img class="logo" src="./74556.png" alt="USMAN YOBE logo" onerror="this.style.display='none'"><div><h1>USMAN YOBE TALK SHOW</h1><p>TASHAR AL'UMMA • ...one voice, one community, one future</p></div><button class="header-more" onclick="showPage('more')" aria-label="More options"><span>☰</span><small>More</small></button></div>
 <div class="header-tools"><input id="searchInput" type="search" placeholder="Search news..."><select class="language" id="languageSelect" aria-label="Language"><option value="en">English</option><option value="ha">Hausa</option><option value="ar">العربية</option></select></div></header>
 <nav id="categoryNav"><button class="active" data-category="all">All</button><button data-category="News">News</button><button data-category="Politics">Politics</button><button data-category="Entertainment">Entertainment</button><button data-category="Business">Business</button><button data-category="Youth">Youth</button><button data-category="Sports">Sports</button><button data-category="Education">Education</button></nav>
@@ -328,6 +330,43 @@ function communityNavNotifications(){communitySetView('notifications');}
 function communityNavProfile(){communitySetView('profile');}
 function communityNavSettings(){communitySetView('profile');setTimeout(()=>{if(typeof communityToggleSettings==='function')communityToggleSettings(true);},150);}
 function refreshToNews(){try{localStorage.setItem("uy_last_location",JSON.stringify({page:"home",view:"home"}));}catch(e){}showPage("home");}
+/* Native-like pull down to refresh current app section */
+(function enablePullToRefresh(){
+ let startY=0,startX=0,tracking=false,busy=false;
+ async function refreshCurrentSection(){
+  if(busy)return;busy=true;
+  const active=document.querySelector("main>.page.active");
+  const page=active?.id||"homePage";
+  try{
+   if(["homePage","opportunitiesPage","eventsPage","videosPage","audioPage"].includes(page))await loadNews();
+   if(page==="galleryPage")await loadGallery();
+   if(page==="communityPage"){
+    if(typeof communitySetView==="function"){
+     const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
+     const view=saved?.view||"home";
+     if(view==="home"&&typeof loadCommunityPosts==="function")await loadCommunityPosts();
+     if(view==="groups"&&typeof loadCommunityGroups==="function")await loadCommunityGroups();
+     if(view==="notifications"&&typeof refreshCommunityNotifications==="function")await refreshCommunityNotifications();
+     if(view==="messenger"&&typeof loadMessengerConversations==="function")await loadMessengerConversations();
+    }
+   }
+   const indicator=document.getElementById("pullRefreshNotice");
+   if(indicator){indicator.textContent="✓ Updated";indicator.classList.add("visible");setTimeout(()=>indicator.classList.remove("visible"),1300);}
+  }catch(e){console.warn("Pull refresh failed:",e);}
+  finally{busy=false;}
+ }
+ document.addEventListener("touchstart",e=>{
+  if(e.touches.length!==1)return;
+  startY=e.touches[0].clientY;startX=e.touches[0].clientX;
+  tracking=(window.scrollY<=2&&document.documentElement.scrollTop<=2);
+ },{passive:true});
+ document.addEventListener("touchend",e=>{
+  if(!tracking||!e.changedTouches.length)return;
+  const dy=e.changedTouches[0].clientY-startY,dx=e.changedTouches[0].clientX-startX;
+  tracking=false;
+  if(dy>85&&Math.abs(dx)<65&&(window.scrollY<=2||document.documentElement.scrollTop<=2))refreshCurrentSection();
+ },{passive:true});
+})();
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
   if(!allowedPages.includes(page))page="home";
