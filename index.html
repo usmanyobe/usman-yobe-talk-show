@@ -1099,7 +1099,10 @@ async function communityInit(){
     try{
       const saved=JSON.parse(localStorage.getItem("uy_last_location")||"null");
       const navEntry=performance.getEntriesByType?.("navigation")?.[0];
-      const isReload=navEntry?.type==="reload"||performance.navigation?.type===1;
+      let reloadMarker=null;
+      try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
+      const markerTime=Number(reloadMarker||0);
+      const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||(markerTime>0&&Date.now()-markerTime<30000);
       const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio"];
       if(isReload&&saved&&allowedPages.includes(saved.page)){
         await showPage(saved.page,{history:false,persist:false});
@@ -1147,6 +1150,12 @@ async function communityInit(){
   });
 }
 window.db=db;window.esc=esc;Object.defineProperty(window,'communityUser',{configurable:true,get:()=>communityUser});Object.defineProperty(window,'communityIsAdmin',{configurable:true,get:()=>communityIsAdmin});
+// Preserve the current page when the user reloads the site, including standalone PWA mode.
+try{
+  const markReload=()=>{try{sessionStorage.setItem("uy_reload_restore",String(Date.now()));}catch(e){}};
+  window.addEventListener("beforeunload",markReload);
+  window.addEventListener("pagehide",markReload);
+}catch(e){}
 communityInit();
 setInterval(()=>{if(communityUser&&!document.hidden){refreshCommunityNotifications();loadFriendRequests();loadCommunityStories();}},15000);setInterval(()=>{if(communityUser&&!document.hidden){refreshMessengerBadge();if(messengerOpen){loadMessengerConversations(true);if(messengerActiveUserId)loadMessengerMessages(true);}}},10000);
 registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories();
