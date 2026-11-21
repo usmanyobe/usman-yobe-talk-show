@@ -419,7 +419,7 @@ async function loadIBComments(){
  const {data,error}=await db.from('ib_yobe_comments').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100);
  if(error){list.innerHTML='<div class="empty">Ba a iya ɗauko comments ba: '+esc(error.message)+'</div>';return;}
  const rows=data||[];
- if(!rows.length){list.innerHTML='<div class="empty">Babu comment tukuna. Ka zama na farko wajen bayyana ra'ayi.</div>';return;}
+ if(!rows.length){list.innerHTML='<div class="empty">Babu comment tukuna. Ka zama na farko wajen bayyana ra’ayinsa.</div>';return;}
  const ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))],names={};
  if(ids.length){const profiles=await db.from('community_profiles').select('id,full_name').in('id',ids);if(!profiles.error)(profiles.data||[]).forEach(x=>names[x.id]=x.full_name);}
  list.innerHTML=rows.map(x=>{
