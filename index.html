@@ -125,6 +125,12 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 .exam-waec{background-position:50% 0%}.exam-neco{background-position:0% 100%}.exam-jamb{background-position:100% 100%}
 .education-logo{width:100%;height:112px;border-radius:10px;display:grid;place-items:center;font-size:25px;font-weight:900;letter-spacing:1px;border:1px solid var(--border)}
 .nabteb-logo{background:#e7f6ec;color:#08783b}.ijmb-logo{background:#eaf4ed;color:#176b43}.jupeb-logo{background:#e9f0fa;color:#234a80}.nuc-logo,.nbte-logo{background:#edf5ed;color:#08783b}.trcn-logo{background:#eaf3e9;color:#176b43}.nelfund-logo{background:#edf3ff;color:#0759c7}
+
+/* Education Centre logos: compact emblem sizing, never stretch to card width */
+.education-card .exam-logo{width:84px;height:84px;min-width:84px;margin:0 auto 8px;background-size:300% 300%;background-color:transparent;border:0;border-radius:50%;}
+.education-card .education-logo-img{display:block;width:84px;height:84px;max-width:84px;object-fit:contain;margin:0 auto 8px;padding:0;background:transparent;border:0;border-radius:0;}
+.education-card{text-align:center;}
+.education-card .education-links{justify-content:center;flex-wrap:wrap;}
 </style>
 <style>
 /* Show login gate immediately before app scripts finish loading */
