@@ -131,6 +131,17 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 .education-card .education-logo-img{display:block;width:84px;height:84px;max-width:84px;object-fit:contain;margin:0 auto 8px;padding:0;background:transparent;border:0;border-radius:0;}
 .education-card{text-align:center;}
 .education-card .education-links{justify-content:center;flex-wrap:wrap;}
+
+/* Clear, readable examination emblems on mobile */
+.education-card .exam-logo{width:112px;height:112px;min-width:112px;margin:0 auto 12px;background-size:200% 200%;background-color:#fff;border:0;border-radius:50%;background-repeat:no-repeat;}
+.education-card .exam-waec{background-position:0% 0%;}
+.education-card .exam-neco{background-position:100% 0%;}
+.education-card .exam-jamb{background-position:0% 100%;}
+.education-card .nabteb-emblem{width:112px;height:112px;min-width:112px;margin:0 auto 12px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:radial-gradient(circle,#fff 0 42%,#08783b 43% 48%,#e7f6ec 49% 100%);border:3px solid #08783b;color:#08783b;box-shadow:0 2px 7px #0002;}
+.education-card .nabteb-emblem span{font-size:21px;line-height:1;font-weight:900;letter-spacing:1px;}
+.education-card .nabteb-emblem small{font-size:8px;font-weight:800;letter-spacing:1px;}
+.education-card>strong{display:block;margin-top:4px;font-size:18px;}
+.education-card>small{display:block;line-height:1.5;min-height:44px;}
 </style>
 <style>
 /* Show login gate immediately before app scripts finish loading */
@@ -154,7 +165,7 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 <article class="education-card"><div class="exam-logo exam-waec" role="img" aria-label="WAEC logo"></div><strong>WAEC</strong><small>West African Examinations Council</small><div class="education-links"><a href="https://waecnigeria.org/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://waeconline.org.ng/" target="_blank" rel="noopener">WAEC Online</a></div></article>
 <article class="education-card"><div class="exam-logo exam-neco" role="img" aria-label="NECO logo"></div><strong>NECO</strong><small>National Examinations Council</small><div class="education-links"><a href="https://neco.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
 <article class="education-card"><div class="exam-logo exam-jamb" role="img" aria-label="JAMB logo"></div><strong>JAMB</strong><small>Joint Admissions and Matriculation Board</small><div class="education-links"><a href="https://jamb.gov.ng/" target="_blank" rel="noopener">Official Website</a><a class="secondary" href="https://efacility.jamb.gov.ng/account/" target="_blank" rel="noopener">e-Facility</a></div></article>
-<article class="education-card"><img class="education-logo-img" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22640%22%20height%3D%22360%22%20viewBox%3D%220%200%20640%20360%22%3E%3Crect%20width%3D%22640%22%20height%3D%22360%22%20rx%3D%2230%22%20fill%3D%22%23e8f5ec%22%2F%3E%3Ccircle%20cx%3D%22320%22%20cy%3D%22144%22%20r%3D%22105%22%20fill%3D%22white%22%20stroke%3D%22%2308783b%22%20stroke-width%3D%2212%22%2F%3E%3Ccircle%20cx%3D%22320%22%20cy%3D%22144%22%20r%3D%2283%22%20fill%3D%22%2308783b%22%2F%3E%3Cpath%20d%3D%22M265%20160%20L320%2092%20L375%20160%20L320%20208%20Z%22%20fill%3D%22white%22%20opacity%3D%22.96%22%2F%3E%3Cpath%20d%3D%22M286%20155h68v14h-68z%22%20fill%3D%22%2308783b%22%2F%3E%3Ctext%20x%3D%22320%22%20y%3D%22286%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2252%22%20font-weight%3D%22900%22%20text-anchor%3D%22middle%22%20fill%3D%22%2308783b%22%3ENABTEB%3C%2Ftext%3E%3Ctext%20x%3D%22320%22%20y%3D%22325%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%20text-anchor%3D%22middle%22%20letter-spacing%3D%222%22%20fill%3D%22%2308783b%22%3ETECHNICAL%20%26%20BUSINESS%20EXAMS%3C%2Ftext%3E%3C%2Fsvg%3E" alt="NABTEB emblem" loading="lazy"><strong>NABTEB</strong><small>Technical and business examinations</small><div class="education-links"><a href="https://nabteb.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
+<article class="education-card"><div class="nabteb-emblem" role="img" aria-label="NABTEB emblem"><span>NABTEB</span><small>EXAMINATIONS</small></div><strong>NABTEB</strong><small>Technical and business examinations</small><div class="education-links"><a href="https://nabteb.gov.ng/" target="_blank" rel="noopener">Official Website</a></div></article>
 </div></section>
 </section>
 <section id="ibPage" class="page ib-page">
