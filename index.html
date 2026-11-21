@@ -415,7 +415,7 @@ async function loadIBComments(){
  list.innerHTML='<div class="empty">Ana ɗauko comments...</div>';
  const form=document.getElementById('ibCommentForm'),note=document.getElementById('ibCommentLoginNote');
  if(form)form.style.display=communityUser?'grid':'none';
- if(note)note.textContent=communityUser?'Ka rubuta ra'ayinka a ƙasa.':'Domin aika comment, da fatan za a shiga app da account. Za ka iya karanta comments.';
+ if(note)note.textContent=communityUser?"Ka rubuta ra'ayinka a ƙasa.":'Domin aika comment, da fatan za a shiga app da account. Za ka iya karanta comments.';
  const {data,error}=await db.from('ib_yobe_comments').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100);
  if(error){list.innerHTML='<div class="empty">Ba a iya ɗauko comments ba: '+esc(error.message)+'</div>';return;}
  const rows=data||[];
