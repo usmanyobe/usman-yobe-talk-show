@@ -99,6 +99,9 @@ html,body{overscroll-behavior-y:auto;-webkit-overflow-scrolling:touch}
 .neco-logo{background:linear-gradient(135deg,#8b2020,#f8e7e7);color:#fff;text-shadow:0 1px 3px #500}
 .scholarship-logo{background:linear-gradient(135deg,#d6a62c,#fff4c9);color:#493400;font-size:17px}
 
+
+.ib-comments-list{display:grid;gap:10px;margin-top:14px}.ib-comment-item{background:#f5f7fb;border:1px solid #e4eaf3;border-radius:12px;padding:12px}.ib-comment-head{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.ib-comment-head strong{color:#071b49;font-size:13px}.ib-comment-head small{color:#7a8799;font-size:10px}.ib-comment-item p{margin:8px 0 0;color:#29364b;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}.ib-comment-form{display:grid;gap:9px;margin-top:12px}.ib-comment-form textarea{width:100%;min-height:90px;resize:vertical;border:1px solid #d8e0ec;border-radius:10px;padding:11px;font:inherit;font-size:13px;box-sizing:border-box}.ib-comment-form button{border:0;border-radius:10px;background:#0759c7;color:#fff;padding:12px;font-weight:800}.ib-comment-note{font-size:12px;color:#69778c;margin-top:10px}.ib-comment-delete{border:0;background:transparent;color:#c62828;font-size:11px;font-weight:700;padding:5px}
+
 /* IB YOBE TALK SHOW partner page refresh */
 .page.ib-page{display:none}.page.ib-page.active{display:grid;gap:15px}
 .ib-banner{position:relative;overflow:hidden;border-radius:18px;padding:22px 16px;background:radial-gradient(circle at 90% 10%,#1d5cae 0,transparent 38%),linear-gradient(135deg,#061638,#0b3475 68%,#071b49);color:#fff;text-align:center;box-shadow:0 9px 25px #071b4928}
@@ -241,6 +244,16 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
     <a class="ib-action youtube" href="https://www.youtube.com/@ibyobe" target="_blank" rel="noopener">▶ Bi tashar YouTube</a>
     <a class="ib-action whatsapp" href="https://wa.me/2348167347691?text=Assalamu%20alaikum%2C%20ina%20son%20samun%20sanarwar%20shirye-shiryen%20IB%20YOBE%20TALK%20SHOW.">💬 Nemi sanarwa ta WhatsApp</a>
   </div>
+</div>
+<div class="ib-content-card" id="ibCommentsSection">
+  <h3>💬 Ra'ayoyin Masu Kallo (Comments)</h3>
+  <p>Ku bayyana ra'ayoyinku cikin mutunci. Sai an shiga app da account kafin a aika comment.</p>
+  <div id="ibCommentsList" class="ib-comments-list"><div class="empty">Ana ɗauko comments...</div></div>
+  <div id="ibCommentLoginNote" class="ib-comment-note"></div>
+  <form id="ibCommentForm" class="ib-comment-form" onsubmit="ibSubmitComment(event)" style="display:none">
+    <textarea id="ibCommentInput" maxlength="1000" placeholder="Rubuta ra'ayinka a nan..." required></textarea>
+    <button id="ibCommentSend" type="submit">Aika Comment</button>
+  </form>
 </div>
 <div class="ib-content-card">
   <h3>🌐 Bi mu a kafafen sada zumunta</h3>
@@ -396,6 +409,45 @@ function openArticleFromURL(){if(deepLinkHandled)return;let id=new URL(location.
 async function sharePost(id){let p=posts.find(x=>String(x.id)===String(id));if(!p)return;let u=new URL(location.href);u.searchParams.set("article",p.id);try{if(navigator.share)await navigator.share({title:p.title,text:p.excerpt||p.title,url:u.href});else if(navigator.clipboard){await navigator.clipboard.writeText(u.href);alert(tr("copied"))}else prompt("Copy this link:",u.href)}catch(e){console.log(e)}}
 
 
+
+async function loadIBComments(){
+ const list=document.getElementById('ibCommentsList');if(!list)return;
+ list.innerHTML='<div class="empty">Ana ɗauko comments...</div>';
+ const form=document.getElementById('ibCommentForm'),note=document.getElementById('ibCommentLoginNote');
+ if(form)form.style.display=communityUser?'grid':'none';
+ if(note)note.textContent=communityUser?'Ka rubuta ra'ayinka a ƙasa.':'Domin aika comment, da fatan za a shiga app da account. Za ka iya karanta comments.';
+ const {data,error}=await db.from('ib_yobe_comments').select('id,user_id,content,created_at').order('created_at',{ascending:false}).limit(100);
+ if(error){list.innerHTML='<div class="empty">Ba a iya ɗauko comments ba: '+esc(error.message)+'</div>';return;}
+ const rows=data||[];
+ if(!rows.length){list.innerHTML='<div class="empty">Babu comment tukuna. Ka zama na farko wajen bayyana ra'ayi.</div>';return;}
+ const ids=[...new Set(rows.map(x=>x.user_id).filter(Boolean))],names={};
+ if(ids.length){const profiles=await db.from('community_profiles').select('id,full_name').in('id',ids);if(!profiles.error)(profiles.data||[]).forEach(x=>names[x.id]=x.full_name);}
+ list.innerHTML=rows.map(x=>{
+  const name=names[x.user_id]||((communityUser&&communityUser.id===x.user_id)?(communityUser.user_metadata?.full_name||communityUser.email):'Member');
+  const own=communityUser&&communityUser.id===x.user_id;
+  const del=own||communityIsAdmin?'<button class="ib-comment-delete" type="button" onclick="ibDeleteComment('+Number(x.id)+')">Goge</button>':'';
+  return '<article class="ib-comment-item"><div class="ib-comment-head"><strong>'+esc(name||'Member')+'</strong><small>'+esc(new Date(x.created_at).toLocaleString())+'</small></div><p>'+esc(x.content)+'</p>'+del+'</article>';
+ }).join('');
+}
+async function ibSubmitComment(event){
+ event.preventDefault();
+ if(!communityUser){alert('Da fatan za a shiga app da account kafin aika comment.');return;}
+ const input=document.getElementById('ibCommentInput'),button=document.getElementById('ibCommentSend'),content=input?.value.trim();
+ if(!content){alert('Rubuta comment kafin aika shi.');return;}
+ if(button){button.disabled=true;button.textContent='Ana aikawa...';}
+ const {error}=await db.from('ib_yobe_comments').insert({user_id:communityUser.id,content});
+ if(error){alert('Ba a aika comment ba: '+error.message);}
+ else{input.value='';await loadIBComments();}
+ if(button){button.disabled=false;button.textContent='Aika Comment';}
+}
+async function ibDeleteComment(id){
+ if(!communityUser||(!communityIsAdmin)){const {data}=await db.from('ib_yobe_comments').select('user_id').eq('id',id).maybeSingle();if(!data||data.user_id!==communityUser?.id){alert('Ba ka da izinin gogewa.');return;}}
+ if(!confirm('Kana son goge wannan comment?'))return;
+ const {error}=await db.from('ib_yobe_comments').delete().eq('id',id);
+ if(error){alert('Ba a iya gogewa ba: '+error.message);return;}
+ await loadIBComments();
+}
+
 function communityNavSetActive(btn){document.querySelectorAll('.community-facebook-nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');}
 function communitySetView(view,options={}){
  const page=document.getElementById('communityPage');if(!page)return;
@@ -547,6 +599,7 @@ async function showPage(page, options={}){
   if(["home","opportunities","events","videos","audio"].includes(page))await loadNews();
   if(page==="gallery"&&communityUser)await loadGallery();
   if(page==="community")await loadCommunityPosts();
+  if(page==="ib")await loadIBComments();
   if(page==="more"&&typeof renderMorePage==="function")renderMorePage();
 }
 document.querySelectorAll(".bottom-nav button").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
@@ -1365,6 +1418,7 @@ async function communityInit(){
     safeTask('bans',refreshCommunityBans);
     safeTask('reports',refreshCommunityReports);
     safeTask('public news',loadNews);
+     safeTask('IB Yobe comments',loadIBComments);
     if(!communityUser){
       safeTask('guest notifications',refreshCommunityNotifications);
       safeTask('guest community feed',loadCommunityPosts);
