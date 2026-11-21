@@ -1503,5 +1503,36 @@ registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories
 </script>
 <script src="./community-advanced.js?v=6"></script>
 <script src="./app-services.js?v=1"></script>
+
+<script>
+/* Navigation repair: keep one copy of each tab and enforce the requested order. */
+(function(){
+ function repairMainNavigation(){
+   const navs=Array.from(document.querySelectorAll(".bottom-nav"));
+   if(!navs.length) return;
+   const nav=navs[0];
+   navs.slice(1).forEach(n=>n.remove());
+   const byPage=new Map();
+   Array.from(nav.children).forEach(el=>{
+     const page=el.getAttribute("data-page");
+     if(page){
+       if(byPage.has(page)) el.remove();
+       else byPage.set(page,el);
+     }
+   });
+   const links=Array.from(nav.querySelectorAll('a[aria-label="Open JIDDATEL"],a[href*="app.jiddatel.com.ng"]'));
+   links.slice(1).forEach(el=>el.remove());
+   const ib=nav.querySelector('[data-page="ib"]');
+   const jd=nav.querySelector('a[aria-label="Open JIDDATEL"],a[href*="app.jiddatel.com.ng"]');
+   const community=nav.querySelector('[data-page="community"]');
+   if(ib) nav.appendChild(ib);
+   if(jd) nav.appendChild(jd);
+   if(community) nav.appendChild(community);
+ }
+ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",repairMainNavigation);
+ else repairMainNavigation();
+ setTimeout(repairMainNavigation,500);
+})();
+</script>
 </body>
 </html>
