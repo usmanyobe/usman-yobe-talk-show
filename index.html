@@ -258,7 +258,7 @@ function categoryName(c){return translations[currentLanguage]?.[c]||c||tr("News"
 async function loadNews(){
   const grid=document.getElementById("newsGrid");
   const status=document.getElementById("newsLoadStatus");
-  if(grid) grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
+  let hasCachedNews=false;try{const cached=localStorage.getItem("uy_news_snapshot");if(cached){const parsed=JSON.parse(cached);if(Array.isArray(parsed)&&parsed.length){posts=parsed;hasCachedNews=true;renderPosts();renderBreakingAlert();renderOpportunities();renderEvents();renderVideos();renderAudio();if(status)status.textContent="Ana sabunta labarai…";}}}catch(e){}if(grid&&!hasCachedNews)grid.innerHTML=`<div class="empty">${tr("loading")}</div>`;
   const columns="id,title,excerpt,content,category,image_url,video_url,audio_url,created_at,published_at,is_breaking_news,opportunity_type,eligibility,application_deadline,how_to_apply,application_url,contact_info,status";
   try{
     // Use the same direct REST route verified by news-check.html.
@@ -267,12 +267,13 @@ async function loadNews(){
       method:"GET",
       headers:{apikey:SUPABASE_KEY,Authorization:"Bearer "+SUPABASE_KEY,Accept:"application/json"},
       cache:"no-store",
-      signal:(()=>{const c=new AbortController();setTimeout(()=>c.abort(),12000);return c.signal;})()
+      signal:(()=>{const c=new AbortController();setTimeout(()=>c.abort(),6500);return c.signal;})()
     });
     if(!response.ok) throw new Error("News API "+response.status+": "+(await response.text()).slice(0,240));
     const data=await response.json();
     if(!Array.isArray(data)) throw new Error("Amsar labarai ba jerin bayanai ba ce.");
     posts=data;
+    try{localStorage.setItem("uy_news_snapshot",JSON.stringify(data));}catch(e){}
     const opportunityCount=posts.filter(p=>p.opportunity_type&&String(p.opportunity_type).trim()).length;
     if(status) status.textContent="An samo labarai "+posts.length+"; damammaki "+opportunityCount+".";
     try{renderPosts();}catch(e){console.error("News cards:",e);if(grid)grid.innerHTML='<div class="empty">An karɓi labarai '+posts.length+' amma an samu matsalar nuna su: '+esc(e.message||String(e))+'</div>';}
@@ -287,9 +288,9 @@ async function loadNews(){
     console.error("Direct news request failed:",error);
     // Keep a second route available if direct REST is temporarily unavailable.
     try{
-      const result=await db.from("news_posts").select(columns).eq("status","published").order("published_at",{ascending:false});
+      const fallbackQuery=db.from("news_posts").select(columns).eq("status","published").order("published_at",{ascending:false});const result=await Promise.race([fallbackQuery,new Promise((_,reject)=>setTimeout(()=>reject(new Error("News server is taking too long")),3500))]);
       if(result.error) throw result.error;
-      posts=result.data||[];
+      posts=result.data||[];try{localStorage.setItem("uy_news_snapshot",JSON.stringify(posts));}catch(e){}
       if(status)status.textContent="An samo labarai "+posts.length+".";
       renderPosts();renderBreakingAlert();renderOpportunities();renderEvents();renderVideos();renderAudio();openArticleFromURL();
     }catch(fallbackError){
@@ -429,7 +430,7 @@ async function refreshToNews(){
  try{
   const indicator=document.getElementById("pullRefreshNotice");
   if(indicator){indicator.textContent="Refreshing…";indicator.classList.add("visible");}
-  if(["home","opportunities","events","videos","audio"].includes(page))await loadNews();
+  if(["home","opportunities","events","videos","audio"].includes(page))loadNews();
   else if(page==="gallery")await loadGallery();
   else if(page==="community"){
    if(view==="home"&&typeof loadCommunityPosts==="function")await loadCommunityPosts();
