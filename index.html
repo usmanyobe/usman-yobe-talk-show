@@ -192,23 +192,14 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
 <h2 class="section-title" id="latestHeading">Latest News</h2><p id="newsLoadStatus" style="font-size:13px;color:#738096;margin:0 0 10px"></p><div id="newsGrid" class="grid"></div></section>
 
 <section id="kalmultimediaPage" class="page">
- <div class="kal-page-head">
-  <img src="./kal-multimedia-icon.svg" alt="KAL MULTIMEDIA logo">
-  <div><h2 class="section-title">KAL MULTIMEDIA</h2><p>Sabbin labarai, hotuna da bidiyo daga KAL MULTIMEDIA.</p></div>
- </div>
+ <div class="kal-page-head"><img src="./kal-multimedia-icon.svg" alt="KAL MULTIMEDIA logo"><div><h2 class="section-title">KAL MULTIMEDIA</h2><p>Sabbin labarai, hotuna da bidiyo daga KAL MULTIMEDIA.</p></div></div>
  <div class="kal-feed-card" id="kalLatestUpdates">
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-   <h3 style="margin:0">📰 Latest Updates — Sabbin Labarai</h3>
-   <button type="button" onclick="refreshKalUpdates()" style="border:0;border-radius:8px;background:#e7efff;color:#071b49;padding:9px 12px;font-weight:800">↻ Sabunta</button>
-  </div>
-  <p>Ga sabon Reel da aka turo daga KAL MULTIMEDIA. Idan Facebook ya amince da haɗawa, za ka iya kallon bidiyon a nan.</p>
-  <div id="fb-root"></div>
-  <div id="kalFacebookReel" class="fb-video" data-href="https://www.facebook.com/share/r/1EnqPKLg5Z/" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:260px;background:#f2f5fa;border-radius:12px;overflow:hidden"></div>
-  <a class="kal-open-facebook" href="https://www.facebook.com/share/r/1EnqPKLg5Z/" target="_blank" rel="noopener">▶️ Buɗe wannan Reel a Facebook</a>
-  <p class="kal-note">Idan Reel bai bayyana ba, Facebook na iya buƙatar cikakken adireshin Reel na jama'a. Maɓallin sama zai buɗe a Facebook.</p>
-  <p id="kalRefreshStatus" class="kal-note" aria-live="polite">Ana ƙoƙarin haɗa Reel da Facebook…</p>
- </div>
-</section>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3 style="margin:0">🎬 Bidiyoyi — KAL MULTIMEDIA</h3><button type="button" onclick="refreshKalUpdates()" style="border:0;border-radius:8px;background:#e7efff;color:#071b49;padding:9px 12px;font-weight:800">↻ Sabunta</button></div>
+  <p>Za ka iya kunna kowanne bidiyo a nan cikin app. Idan Facebook bai nuna shi ba, yi amfani da maɓallin kallonsa.</p><div id="fb-root"></div><div id="kalVideosList" class="kal-videos-list"><article class="kal-video-card"><h3>▶️ Bidiyo na 1</h3><div id="kalFacebookVideo1" class="fb-video" data-href="https://www.facebook.com/share/v/19swFxYZHV/" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px;background:#f2f5fa;border-radius:12px;overflow:hidden"></div><a class="kal-open-facebook" href="https://www.facebook.com/share/v/19swFxYZHV/" target="_blank" rel="noopener">▶️ Kalli Bidiyo na 1</a></article>
+<article class="kal-video-card"><h3>▶️ Bidiyo na 2</h3><div id="kalFacebookVideo2" class="fb-video" data-href="https://www.facebook.com/share/v/1K4p5qB2mT/" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px;background:#f2f5fa;border-radius:12px;overflow:hidden"></div><a class="kal-open-facebook" href="https://www.facebook.com/share/v/1K4p5qB2mT/" target="_blank" rel="noopener">▶️ Kalli Bidiyo na 2</a></article>
+<article class="kal-video-card"><h3>▶️ Bidiyo na 3</h3><div id="kalFacebookVideo3" class="fb-video" data-href="https://www.facebook.com/share/v/19b7GdYEpp/" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px;background:#f2f5fa;border-radius:12px;overflow:hidden"></div><a class="kal-open-facebook" href="https://www.facebook.com/share/v/19b7GdYEpp/" target="_blank" rel="noopener">▶️ Kalli Bidiyo na 3</a></article>
+<article class="kal-video-card"><h3>▶️ Bidiyo na 4</h3><div id="kalFacebookVideo4" class="fb-video" data-href="https://www.facebook.com/share/r/1EnqPKLg5Z/" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px;background:#f2f5fa;border-radius:12px;overflow:hidden"></div><a class="kal-open-facebook" href="https://www.facebook.com/share/r/1EnqPKLg5Z/" target="_blank" rel="noopener">▶️ Kalli Bidiyo na 4</a></article></div><p id="kalRefreshStatus" class="kal-note" aria-live="polite">Ana haɗa bidiyoyi da Facebook…</p>
+ </div></section>
 
 <section id="opportunitiesPage" class="page"><div class="opportunities-heading-row"><div><h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2><p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p></div></div><div id="opportunityCategories" class="opportunity-categories"></div><div class="opportunities-refresh-row"><button class="opportunities-refresh" onclick="refreshToNews()" type="button">↻ Refresh this page</button></div><h3 class="section-title" style="font-size:17px">Latest Opportunities</h3><div id="opportunitiesGrid" class="grid"><div class="empty">Loading opportunities…</div></div>
 <section class="education-centre">
@@ -637,8 +628,8 @@ async function refreshToNews(){
   if(dy>75&&Math.abs(dx)<60&&(window.scrollY<=2||document.documentElement.scrollTop<=2||document.body.scrollTop<=2))refreshToNews();
  },{passive:true});
 })();
-function loadKalFacebookSDK(){if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(document.getElementById("kalmultimediaPage"));return;}if(document.getElementById("kalFacebookSDK"))return;const js=document.createElement("script");js.id="kalFacebookSDK";js.async=true;js.defer=true;js.crossOrigin="anonymous";js.src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v27.0";js.onload=()=>{if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(document.getElementById("kalmultimediaPage"));};document.body.appendChild(js);}
-function refreshKalUpdates(){const status=document.getElementById("kalRefreshStatus"),reel=document.getElementById("kalFacebookReel");if(!reel)return;if(status)status.textContent="Ana sake ƙoƙarin haɗa Reel da Facebook…";if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(document.getElementById("kalmultimediaPage"));if(status)setTimeout(()=>{status.textContent="An sake gwada haɗin. Idan bai bayyana ba, buɗe Reel ta maɓallin Facebook.";},1800);}else{loadKalFacebookSDK();if(status)setTimeout(()=>{status.textContent="An nemi Facebook ya nuna Reel. Idan bai bayyana ba, buɗe shi ta maɓallin sama.";},2500);}}
+function loadKalFacebookSDK(){const page=document.getElementById("kalmultimediaPage");if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);return;}if(document.getElementById("kalFacebookSDK"))return;const js=document.createElement("script");js.id="kalFacebookSDK";js.async=true;js.defer=true;js.crossOrigin="anonymous";js.src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v27.0";js.onload=()=>{if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(page);};document.body.appendChild(js);}
+function refreshKalUpdates(){const status=document.getElementById("kalRefreshStatus"),page=document.getElementById("kalmultimediaPage");if(!page)return;if(status)status.textContent="Ana sake haɗa bidiyoyi da Facebook…";if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);if(status)setTimeout(()=>{status.textContent="An sake gwada nuna bidiyoyin. Za ka iya danna maɓallin Kalli Bidiyo idan wani bai bayyana ba.";},1800);}else{loadKalFacebookSDK();if(status)setTimeout(()=>{status.textContent="An nemi Facebook ya nuna bidiyoyin. Idan ba su bayyana ba, yi amfani da maɓallan kallon bidiyo.";},2500);}}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia"];
   if(!allowedPages.includes(page))page="home";
