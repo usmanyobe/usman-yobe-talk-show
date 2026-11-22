@@ -1,12 +1,13 @@
 
-const CACHE_NAME = "usman-yobe-talk-show-v152";
+const CACHE_NAME = "usman-yobe-talk-show-v153";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./app-services.js",
-  "./kal-multimedia-icon.svg"
+  "./kal-multimedia-icon.svg",
+  "./abi-city-icon.svg"
 ];
 
 // INSTALL
