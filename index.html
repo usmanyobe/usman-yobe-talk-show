@@ -247,6 +247,11 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
   </div>
   <p style="font-size:12px;margin-top:9px">Sabbin bidiyoyi za su bayyana daga jerin bidiyoyin YouTube na ABI CITY. Idan ba su kunna a cikin app ba, danna Buɗe YouTube.</p>
  </div>
+ <div class="kal-feed-card" id="abiCityUploadedVideosCard">
+  <h3>🎬 Bidiyoyin da aka wallafa kai tsaye — ABI CITY</h3>
+  <p>Sabbin bidiyoyin da aka ɗora daga Admin za su bayyana a nan.</p>
+  <div id="abiCityDynamicVideos"><div class="empty">Ana ɗauko bidiyoyi...</div></div>
+ </div>
  <div class="kal-feed-card">
   <h3>😂 ABI CITY a Social Media</h3>
   <div class="ib-social-grid">
@@ -688,6 +693,26 @@ function loadKalFacebookSDK(){const page=document.getElementById("kalmultimediaP
 function refreshKalUpdates(){const status=document.getElementById("kalRefreshStatus"),page=document.getElementById("kalmultimediaPage");if(!page)return;if(status)status.textContent="Ana sake haɗa bidiyoyi da Facebook…";if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);if(status)setTimeout(()=>{status.textContent="An sake gwada nuna bidiyoyin. Za ka iya danna maɓallin Kalli Bidiyo idan wani bai bayyana ba.";},1800);}else{loadKalFacebookSDK();if(status)setTimeout(()=>{status.textContent="An nemi Facebook ya nuna bidiyoyin. Idan ba su bayyana ba, yi amfani da maɓallan kallon bidiyo.";},2500);}}
 async function loadKalVideoComments(){const items=[["kal-video-1","kalVideoComments1"],["kal-video-2","kalVideoComments2"],["kal-video-3","kalVideoComments3"],["kal-video-4","kalVideoComments4"]];for(const [id,box] of items)await loadMediaComments("kal_video",id,box);}
 async function loadKalDynamicVideos(){const box=document.getElementById("kalDynamicVideos");if(!box)return;box.innerHTML='<div class="empty">Ana ɗauko sabbin bidiyoyi...</div>';const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","KAL MULTIMEDIA").eq("status","published").not("video_url","is",null).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="empty">Ba a iya ɗauko sabbin bidiyoyi ba: '+esc(error.message)+'</div>';return;}const rows=data||[];if(!rows.length){box.innerHTML="";return;}box.innerHTML=rows.map(v=>{const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,""),url=safeURL(v.video_url)||"",isFacebook=/facebook\\.com|fb\\.watch/i.test(url),player=isFacebook?'<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>':'<video controls playsinline preload="metadata" style="width:100%;max-height:420px"><source src="'+esc(url)+'"></video>';return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small><div id="kalComments-'+id+'" class="media-comments kal-media-comments"></div></article>';}).join("");if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else loadKalFacebookSDK();for(const v of rows){const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,"");await loadMediaComments("kal_video",id,"kalComments-"+id);}}
+async function loadAbiCityDynamicVideos(){
+ const box=document.getElementById("abiCityDynamicVideos");
+ if(!box)return;
+ box.innerHTML='<div class="empty">Ana ɗauko bidiyoyin ABI CITY...</div>';
+ const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","ABI CITY COMEDY").eq("status","published").not("video_url","is",null).order("created_at",{ascending:false});
+ if(error){box.innerHTML='<div class="empty">Ba a iya ɗauko bidiyoyi ba: '+esc(error.message)+'</div>';return;}
+ const rows=data||[];
+ if(!rows.length){box.innerHTML='<div class="empty">Babu bidiyo tukuna. Da zarar an wallafa daga Admin, zai bayyana a nan.</div>';return;}
+ box.innerHTML=rows.map(v=>{
+  const url=safeURL(v.video_url)||"";
+  let player="";
+  const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+  if(yt)player='<iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(v.title)+'" loading="lazy" style="width:100%;aspect-ratio:16/9;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
+  else if(/facebook\.com|fb\.watch/i.test(url))player='<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>';
+  else player='<video controls playsinline preload="metadata" style="width:100%;max-height:420px"><source src="'+esc(url)+'"></video>';
+  return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small></article>';
+ }).join("");
+ if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);
+ else if(rows.some(v=>/facebook\.com|fb\.watch/i.test(String(v.video_url||""))))loadKalFacebookSDK();
+}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia","abicity"];
   if(!allowedPages.includes(page))page="home";
@@ -711,6 +736,7 @@ async function showPage(page, options={}){
   if(page==="gallery"&&communityUser)await loadGallery();
   if(page==="community")await loadCommunityPosts();
   if(page==="ib")await loadIBComments();
+  if(page==="abicity")await loadAbiCityDynamicVideos();
    if(page==="kalmultimedia"){loadKalFacebookSDK();await loadKalVideoComments();await loadKalDynamicVideos();if(communityUser)await loadGallery();else{const kg=document.getElementById("kalGalleryGrid");if(kg)kg.innerHTML='<div class="empty">Shiga app da account domin ganin hotunan KAL MULTIMEDIA.</div>';}}
   if(page==="more"&&typeof renderMorePage==="function")renderMorePage();
 }
