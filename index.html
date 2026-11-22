@@ -196,12 +196,16 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
   <img src="./kal-multimedia-icon.svg" alt="KAL MULTIMEDIA logo">
   <div><h2 class="section-title">KAL MULTIMEDIA</h2><p>Sabbin labarai, hotuna da bidiyo daga KAL MULTIMEDIA.</p></div>
  </div>
- <div class="kal-feed-card">
-  <h3>📡 KAL MULTIMEDIA — Facebook</h3>
-  <p>Za ka iya duba shafin KAL MULTIMEDIA daga nan. Ba sai ka girka Facebook app ba; idan Facebook ya nemi shiga, za ka iya ci gaba ta browser.</p>
-  <iframe title="KAL MULTIMEDIA Facebook" src="https://www.facebook.com/share/1A2EEiz4KK/" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" style="width:100%;height:520px;border:0;border-radius:12px;background:#fff"></iframe>
-  <a class="kal-open-facebook" href="https://www.facebook.com/share/1A2EEiz4KK/" target="_blank" rel="noopener">🌐 Buɗe KAL MULTIMEDIA a Facebook</a>
-  <p class="kal-note">Lura: Facebook na iya hana wasu abubuwa bayyana a cikin iframe. Maɓallin sama zai buɗe link ɗin kai tsaye idan hakan ta faru.</p>
+ <div class="kal-feed-card" id="kalLatestUpdates">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+   <h3 style="margin:0">📰 Latest Updates — Sabbin Labarai</h3>
+   <button type="button" onclick="refreshKalUpdates()" style="border:0;border-radius:8px;background:#e7efff;color:#071b49;padding:9px 12px;font-weight:800">↻ Sabunta</button>
+  </div>
+  <p>Sabbin posting, sanarwa da abubuwan da KAL MULTIMEDIA ya wallafa za su bayyana ta hanyar Facebook idan an yarda a nuna su a nan. Ba sai ka girka Facebook app ba.</p>
+  <iframe id="kalFacebookFrame" title="KAL MULTIMEDIA Latest Updates" src="https://www.facebook.com/share/1A2EEiz4KK/" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" style="width:100%;height:520px;border:0;border-radius:12px;background:#fff"></iframe>
+  <a class="kal-open-facebook" href="https://www.facebook.com/share/1A2EEiz4KK/" target="_blank" rel="noopener">🌐 Duba duk posting na KAL MULTIMEDIA</a>
+  <p class="kal-note">Lura: Facebook na iya hana wasu posting bayyana a cikin app. Idan ba su bayyana ba, yi amfani da maɓallin sama domin buɗe su a browser.</p>
+  <p id="kalRefreshStatus" class="kal-note" aria-live="polite">Ana nuna sabbin bayanai idan Facebook ya ba da izinin haɗawa.</p>
  </div>
 </section>
 
@@ -603,6 +607,7 @@ async function refreshToNews(){
   const indicator=document.getElementById("pullRefreshNotice");
   if(indicator){indicator.textContent="Refreshing…";indicator.classList.add("visible");}
   if(["home","opportunities","events","videos","audio"].includes(page))loadNews();
+  else if(page==="kalmultimedia")refreshKalUpdates();
   else if(page==="gallery")await loadGallery();
   else if(page==="community"){
    if(view==="home"&&typeof loadCommunityPosts==="function")await loadCommunityPosts();
@@ -631,6 +636,7 @@ async function refreshToNews(){
   if(dy>75&&Math.abs(dx)<60&&(window.scrollY<=2||document.documentElement.scrollTop<=2||document.body.scrollTop<=2))refreshToNews();
  },{passive:true});
 })();
+function refreshKalUpdates(){const frame=document.getElementById("kalFacebookFrame"),status=document.getElementById("kalRefreshStatus");if(!frame)return;if(status)status.textContent="Ana sake loda shafin KAL MULTIMEDIA…";const src=frame.getAttribute("src");frame.setAttribute("src","about:blank");setTimeout(()=>{frame.setAttribute("src",src);if(status)status.textContent="An nemi sabunta posting. Abin da ya bayyana ya danganta da izinin Facebook.";},120);}
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia"];
   if(!allowedPages.includes(page))page="home";
@@ -1453,7 +1459,7 @@ async function communityInit(){
       let reloadMarker=null;
       try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
       const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||Number(reloadMarker||0)>0;
-      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib"];
+      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia"];
       if(isReload&&saved&&allowedPages.includes(saved.page)){
         // A true reload restores the exact saved page and Community subsection.
         await showPage(saved.page,{history:false,persist:false});
