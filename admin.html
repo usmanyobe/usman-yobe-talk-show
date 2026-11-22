@@ -108,6 +108,16 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <div id="galleryList">Ana ɗauko hotuna...</div>
 </div>
 
+<!-- KAL MULTIMEDIA VIDEO MANAGER -->
+<div class="card" id="kalVideoAdmin">
+ <h3>🎬 KAL MULTIMEDIA — Sarrafa Bidiyoyi</h3><p class="help">Ɗora bidiyo daga wayarka ko saka hanyar bidiyo. Za su bayyana kai tsaye a shafin KAL MULTIMEDIA.</p>
+ <label>Taken bidiyo</label><input id="kalAdminVideoTitle" maxlength="160" placeholder="Misali: Labaran Yobe na yau">
+ <label>Ɗan bayani</label><textarea id="kalAdminVideoDescription" maxlength="3000" placeholder="Rubuta bayani game da bidiyon..."></textarea>
+ <label>Zaɓi bidiyo daga wayarka (har 50MB)</label><input id="kalAdminVideoFile" type="file" accept="video/*" onchange="previewKalAdminVideo()"><video id="kalAdminVideoPreview" class="preview" controls playsinline preload="metadata"></video>
+ <p class="help">Ko saka URL na bidiyo (Facebook share link ko direct video URL).</p><label>Video URL (zaɓi ɗaya kawai)</label><input id="kalAdminVideoUrl" type="url" placeholder="https://...">
+ <button id="kalAdminVideoSave" onclick="saveKalAdminVideo()">📤 Wallafa Bidiyo a KAL MULTIMEDIA</button><div id="kalAdminVideoMessage" class="message"></div><hr>
+ <div class="toprow"><h3>Bidiyoyin KAL MULTIMEDIA</h3><button class="secondary" onclick="loadKalAdminVideos()">Refresh</button></div><div id="kalAdminVideoList">Ana ɗauko bidiyoyi...</div>
+</div>
 <!-- NEWS AND EVENTS FORM -->
 <div class="card">
 <h3 id="formTitle">Publish New Story</h3>
@@ -365,7 +375,7 @@ async function checkAdmin(){
   await verifyAdmin();
   document.getElementById("loginSection").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  await Promise.all([loadPosts(),loadGallery()]);
+  await Promise.all([loadPosts(),loadGallery(),loadKalAdminVideos()]);
  }catch(e){
   await db.auth.signOut();
   showLogin();
@@ -534,6 +544,16 @@ document.getElementById("galleryList").addEventListener("click",event=>{
  if(button.dataset.galleryAction==="edit")editGalleryPhoto(id);
  if(button.dataset.galleryAction==="delete")deleteGalleryPhoto(id);
 });
+
+/* KAL MULTIMEDIA VIDEO MANAGER */
+let kalAdminVideoObjectURL=null,kalAdminVideos=[];
+function previewKalAdminVideo(){const file=document.getElementById("kalAdminVideoFile").files[0],p=document.getElementById("kalAdminVideoPreview");if(!file)return;if(!file.type.startsWith("video/")||file.size>50*1024*1024){alert("Zaɓi bidiyo wanda bai wuce 50MB ba.");document.getElementById("kalAdminVideoFile").value="";return;}if(kalAdminVideoObjectURL)URL.revokeObjectURL(kalAdminVideoObjectURL);kalAdminVideoObjectURL=URL.createObjectURL(file);p.src=kalAdminVideoObjectURL;p.style.display="block";p.load();document.getElementById("kalAdminVideoUrl").value="";}
+async function saveKalAdminVideo(){const title=document.getElementById("kalAdminVideoTitle").value.trim(),description=document.getElementById("kalAdminVideoDescription").value.trim(),file=document.getElementById("kalAdminVideoFile").files[0],url=document.getElementById("kalAdminVideoUrl").value.trim(),btn=document.getElementById("kalAdminVideoSave");hideMessage("kalAdminVideoMessage");if(!title){showMessage("kalAdminVideoMessage","Saka taken bidiyon.","error");return;}if(!file&&!url){showMessage("kalAdminVideoMessage","Zaɓi bidiyo ko saka URL.","error");return;}if(file&&url){showMessage("kalAdminVideoMessage","Yi amfani da file ko URL guda ɗaya.","error");return;}if(url&&!isValidHttpURL(url)){showMessage("kalAdminVideoMessage","Video URL ba daidai ba ne.","error");return;}if(file&&(!file.type.startsWith("video/")||file.size>50*1024*1024)){showMessage("kalAdminVideoMessage","Bidiyon bai kamata ya wuce 50MB ba.","error");return;}btn.disabled=true;btn.textContent="Ana wallafawa...";let path=null;try{await verifyAdmin();let video_url=url||null;if(file){const safe=file.name.replace(/\.[^/.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"-").substring(0,60),ext=file.name.includes(".")?file.name.split(".").pop().replace(/[^a-zA-Z0-9]/g,"").toLowerCase():"mp4";path="kal-multimedia/"+Date.now()+"-"+safe+"."+(ext||"mp4");const up=await db.storage.from("news-videos").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});if(up.error)throw up.error;video_url=db.storage.from("news-videos").getPublicUrl(path).data.publicUrl;}const now=new Date().toISOString();const result=await db.from("news_posts").insert({title,category:"KAL MULTIMEDIA",is_breaking_news:false,image_url:null,video_url,audio_url:null,excerpt:description||null,content:description||title,status:"published",opportunity_type:null,eligibility:null,application_deadline:null,how_to_apply:null,application_url:null,contact_info:null,updated_at:now,published_at:now});if(result.error)throw result.error;document.getElementById("kalAdminVideoTitle").value="";document.getElementById("kalAdminVideoDescription").value="";document.getElementById("kalAdminVideoUrl").value="";document.getElementById("kalAdminVideoFile").value="";const p=document.getElementById("kalAdminVideoPreview");p.pause();p.removeAttribute("src");p.load();p.style.display="none";if(kalAdminVideoObjectURL){URL.revokeObjectURL(kalAdminVideoObjectURL);kalAdminVideoObjectURL=null;}showMessage("kalAdminVideoMessage","An wallafa bidiyon a KAL MULTIMEDIA cikin nasara!","success");await loadKalAdminVideos();}catch(e){if(path)await db.storage.from("news-videos").remove([path]);showMessage("kalAdminVideoMessage","Matsala wajen wallafa bidiyo: "+e.message,"error");}finally{btn.disabled=false;btn.textContent="📤 Wallafa Bidiyo a KAL MULTIMEDIA";}}
+async function loadKalAdminVideos(){const area=document.getElementById("kalAdminVideoList");if(!area)return;area.textContent="Ana ɗauko bidiyoyi...";try{const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","KAL MULTIMEDIA").order("created_at",{ascending:false});if(error)throw error;kalAdminVideos=data||[];area.innerHTML=kalAdminVideos.length?kalAdminVideos.map(v=>'<div class="post"><h4>'+escapeHTML(v.title)+'</h4><p>'+escapeHTML(v.excerpt||"")+'</p><p class="small">'+escapeHTML(v.video_url||"")+'</p><div class="actions"><button class="secondary" data-kal-video-action="edit" data-id="'+escapeHTML(v.id)+'">Gyara Taken/Bayani</button><button class="danger" data-kal-video-action="delete" data-id="'+escapeHTML(v.id)+'">Goge Bidiyo</button></div></div>').join(""):'Babu bidiyoyin da aka ƙara tukuna.';}catch(e){area.textContent="Matsala wajen ɗauko bidiyoyi: "+e.message;}}
+async function editKalAdminVideo(id){const v=kalAdminVideos.find(x=>String(x.id)===String(id));if(!v)return;const title=prompt("Sabon taken bidiyo:",v.title||"");if(title===null)return;if(!title.trim()){alert("Saka taken bidiyo.");return;}const description=prompt("Sabon bayani:",v.excerpt||"");if(description===null)return;try{await verifyAdmin();const {error}=await db.from("news_posts").update({title:title.trim(),excerpt:description.trim()||null,content:description.trim()||title.trim(),updated_at:new Date().toISOString()}).eq("id",id);if(error)throw error;alert("An gyara bidiyon.");await loadKalAdminVideos();}catch(e){alert("Matsala: "+e.message);}}
+function getKalVideoStoragePath(url){const marker="/storage/v1/object/public/news-videos/";const i=String(url||"").indexOf(marker);if(i<0)return null;try{return decodeURIComponent(url.substring(i+marker.length).split("?")[0]);}catch{return null;}}
+async function deleteKalAdminVideo(id){const v=kalAdminVideos.find(x=>String(x.id)===String(id));if(!v||!confirm("Kana tabbatar da goge wannan bidiyo daga KAL MULTIMEDIA?"))return;try{await verifyAdmin();const path=getKalVideoStoragePath(v.video_url);if(path){const {error:e}=await db.storage.from("news-videos").remove([path]);if(e)throw e;}const {error}=await db.from("news_posts").delete().eq("id",id);if(error)throw error;alert("An goge bidiyon.");await loadKalAdminVideos();}catch(e){alert("Matsala wajen gogewa: "+e.message);}}
+document.getElementById("kalAdminVideoList").addEventListener("click",event=>{const b=event.target.closest("button[data-kal-video-action]");if(!b)return;if(b.dataset.kalVideoAction==="edit")editKalAdminVideo(b.dataset.id);if(b.dataset.kalVideoAction==="delete")deleteKalAdminVideo(b.dataset.id);});
 
 /* CATEGORY FIELDS */
 function updateOpportunityFields(){
