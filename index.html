@@ -188,7 +188,7 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
 <nav id="categoryNav"><button class="active" data-category="all">All</button><button data-category="News">News</button><button data-category="Politics">Politics</button><button data-category="Entertainment">Entertainment</button><button data-category="Business">Business</button><button data-category="Youth">Youth</button><button data-category="Sports">Sports</button><button data-category="Education">Education</button></nav>
 <main><div id="breakingBox" class="breaking"><strong id="breakingTitle">🔴 BREAKING NEWS</strong><div id="breakingItems"></div></div>
 <section id="homePage" class="page active"><div class="hero"><h2 id="welcomeTitle">Welcome to USMAN YOBE TALK SHOW</h2><p id="welcomeText">Get news, videos, audio and important updates from Yobe and around the world.</p><div class="hero-links">
-<button onclick="showPage('opportunities')">🎓 <span data-i18n="opportunities">Opportunities</span></button><button onclick="showPage('radio')">📻 <span data-i18n="radio">Live Radio</span></button><button onclick="showPage('gallery')">📸 <span data-i18n="gallery">Photo Gallery</span></button><button onclick="showPage('audio')">🎧 <span data-i18n="audioNews">Audio News</span></button><button onclick="showPage('health')">🏥 <span data-i18n="health">Health</span></button><button onclick="showPage('kalmultimedia')" class="kal-home-button"><img src="./kal-multimedia-icon.svg" alt="" loading="lazy"> KAL MULTIMEDIA</button><a href="https://app.jiddatel.com.ng/#/signin/" target="_blank" rel="noopener" style="display:inline-block;border:1px solid #ffffff66;background:#ffffff18;color:white;padding:9px 12px;border-radius:8px;font-weight:bold;text-decoration:none">📱 JIDDATEL</a></div></div>
+<button onclick="showPage('opportunities')">🎓 <span data-i18n="opportunities">Opportunities</span></button><button onclick="showPage('radio')">📻 <span data-i18n="radio">Live Radio</span></button><button onclick="showPage('gallery')">📸 <span data-i18n="gallery">Photo Gallery</span></button><button onclick="showPage('audio')">🎧 <span data-i18n="audioNews">Audio News</span></button><button onclick="showPage('health')">🏥 <span data-i18n="health">Health</span></button><button onclick="showPage('kalmultimedia')" class="kal-home-button"><img src="./kal-multimedia-icon.svg" alt="" loading="lazy"> KAL MULTIMEDIA</button><button onclick="showPage('abicity')" class="kal-home-button" style="background:#fff0f2;color:#9b1238;border:1px solid #ffd0da">😂 ABI CITY COMEDY</button><a href="https://app.jiddatel.com.ng/#/signin/" target="_blank" rel="noopener" style="display:inline-block;border:1px solid #ffffff66;background:#ffffff18;color:white;padding:9px 12px;border-radius:8px;font-weight:bold;text-decoration:none">📱 JIDDATEL</a></div></div>
 <h2 class="section-title" id="latestHeading">Latest News</h2><p id="newsLoadStatus" style="font-size:13px;color:#738096;margin:0 0 10px"></p><div id="newsGrid" class="grid"></div></section>
 
 <section id="kalmultimediaPage" class="page">
@@ -220,6 +220,42 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
   </div>
   <div id="kalDynamicVideos" class="kal-videos-list"></div>
  <div class="kal-feed-card" id="kalPhotoGallery"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3 style="margin:0">📸 Hotuna — KAL MULTIMEDIA</h3><button type="button" class="gallery-refresh" onclick="loadGallery()">↻ Sabunta Hotuna</button></div><p>Hotunan da aka ɗora a Photo Gallery za su bayyana a nan. Ana buƙatar shiga account domin ganin hotuna.</p><div id="kalGalleryGrid" class="gallery-grid"><div class="empty">Ana ɗauko hotuna...</div></div></div></div></section>
+
+<section id="abicityPage" class="page">
+ <div class="kal-page-head" style="background:linear-gradient(120deg,#4b1230,#c0265b)">
+  <div style="width:76px;height:76px;flex:0 0 76px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:42px">😂</div>
+  <div><h2 class="section-title">ABI CITY COMEDY</h2><p>Shafin barkwanci da nishaɗi — dariya da annashuwa.</p></div>
+ </div>
+ <div class="kal-feed-card">
+  <h3>🔴 ABI CITY — LIVE TV</h3>
+  <p>Idan ABI CITY na gudanar da live a YouTube, za ka iya kallo a nan.</p>
+  <div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:12px;overflow:hidden">
+   <iframe src="https://www.youtube.com/embed/live_stream?channel=UCd9pgOxUAbcSXhIdxtpQQdA" title="ABI CITY Comedy Live TV" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <div class="ib-action-row" style="margin-top:12px">
+   <a class="ib-action youtube" href="https://www.youtube.com/@muhammedaminu-b1x/live" target="_blank" rel="noopener">🔴 Buɗe Live a YouTube</a>
+  </div>
+ </div>
+ <div class="kal-feed-card">
+  <h3>📺 Sabbin Bidiyoyi — ABI CITY</h3>
+  <div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:12px;overflow:hidden">
+   <iframe src="https://www.youtube.com/embed/videoseries?list=UUd9pgOxUAbcSXhIdxtpQQdA" title="Sabbin bidiyoyin ABI CITY" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+  <div class="ib-action-row" style="margin-top:12px">
+   <a class="ib-action youtube" href="https://youtube.com/@muhammedaminu-b1x?sub_confirmation=1" target="_blank" rel="noopener">🔔 Subscribe YouTube</a>
+   <a class="ib-action" style="background:#071b49;color:#fff" href="https://youtube.com/@muhammedaminu-b1x" target="_blank" rel="noopener">▶ Buɗe YouTube</a>
+  </div>
+  <p style="font-size:12px;margin-top:9px">Sabbin bidiyoyi za su bayyana daga jerin bidiyoyin YouTube na ABI CITY. Idan ba su kunna a cikin app ba, danna Buɗe YouTube.</p>
+ </div>
+ <div class="kal-feed-card">
+  <h3>😂 ABI CITY a Social Media</h3>
+  <div class="ib-social-grid">
+   <a class="ib-social tt" href="https://www.tiktok.com/@abi.city5" target="_blank" rel="noopener"><span>♪</span><div>TikTok<small>@abi.city5</small></div></a>
+   <a class="ib-social fb" href="https://www.facebook.com/share/1ALvqFvcCi/" target="_blank" rel="noopener"><span>f</span><div>Facebook<small>Bi shafin ABI CITY</small></div></a>
+   <a class="ib-social yt" href="https://youtube.com/@muhammedaminu-b1x" target="_blank" rel="noopener"><span>▶</span><div>YouTube<small>ABI CITY</small></div></a>
+  </div>
+ </div>
+</section>
 
 <section id="opportunitiesPage" class="page"><div class="opportunities-heading-row"><div><h2 class="section-title" id="opportunitiesHeading">🎓 Opportunities</h2><p class="page-intro" id="opportunitiesIntro">Find jobs, scholarships, training, grants and other opportunities.</p></div></div><div id="opportunityCategories" class="opportunity-categories"></div><div class="opportunities-refresh-row"><button class="opportunities-refresh" onclick="refreshToNews()" type="button">↻ Refresh this page</button></div><h3 class="section-title" style="font-size:17px">Latest Opportunities</h3><div id="opportunitiesGrid" class="grid"><div class="empty">Loading opportunities…</div></div>
 <section class="education-centre">
@@ -653,7 +689,7 @@ function refreshKalUpdates(){const status=document.getElementById("kalRefreshSta
 async function loadKalVideoComments(){const items=[["kal-video-1","kalVideoComments1"],["kal-video-2","kalVideoComments2"],["kal-video-3","kalVideoComments3"],["kal-video-4","kalVideoComments4"]];for(const [id,box] of items)await loadMediaComments("kal_video",id,box);}
 async function loadKalDynamicVideos(){const box=document.getElementById("kalDynamicVideos");if(!box)return;box.innerHTML='<div class="empty">Ana ɗauko sabbin bidiyoyi...</div>';const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","KAL MULTIMEDIA").eq("status","published").not("video_url","is",null).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="empty">Ba a iya ɗauko sabbin bidiyoyi ba: '+esc(error.message)+'</div>';return;}const rows=data||[];if(!rows.length){box.innerHTML="";return;}box.innerHTML=rows.map(v=>{const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,""),url=safeURL(v.video_url)||"",isFacebook=/facebook\\.com|fb\\.watch/i.test(url),player=isFacebook?'<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>':'<video controls playsinline preload="metadata" style="width:100%;max-height:420px"><source src="'+esc(url)+'"></video>';return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small><div id="kalComments-'+id+'" class="media-comments kal-media-comments"></div></article>';}).join("");if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else loadKalFacebookSDK();for(const v of rows){const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,"");await loadMediaComments("kal_video",id,"kalComments-"+id);}}
 async function showPage(page, options={}){
-  const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia"];
+  const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia","abicity"];
   if(!allowedPages.includes(page))page="home";
   // Public page navigation must never wait for a network session check.
   // Community authentication is handled by communityInit and its own login UI.
@@ -1475,7 +1511,7 @@ async function communityInit(){
       let reloadMarker=null;
       try{reloadMarker=sessionStorage.getItem("uy_reload_restore");sessionStorage.removeItem("uy_reload_restore");}catch(e){}
       const isReload=navEntry?.type==="reload"||performance.navigation?.type===1||Number(reloadMarker||0)>0;
-      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia"];
+      const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","kalmultimedia","abicity"];
       if(isReload&&saved&&allowedPages.includes(saved.page)){
         // A true reload restores the exact saved page and Community subsection.
         await showPage(saved.page,{history:false,persist:false});
