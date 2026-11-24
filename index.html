@@ -401,6 +401,10 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
   <p style="font-size:12px;margin-top:8px">Idan player bai bayyana ba, danna mahaɗin bidiyon domin buɗe shi.</p>
  </div>
 </div>
+<div class="ib-content-card" id="muslimYobePublishedContent">
+ <h3>📰 Sabbin Labarai, Hotuna da Bidiyoyi</h3><p>Abubuwan da MUSLIM YOBE ta wallafa za su bayyana a nan.</p>
+ <div id="muslimYobeDynamicPosts"><div class="empty">Ana ɗauko sabbin abubuwa...</div></div>
+</div>
 <div class="ib-content-card">
  <h3>🌐 Bi MUSLIM YOBE a kafafen sada zumunta</h3>
  <p>Ku biyo shafukan MUSLIM YOBE domin kada ku rasa sabbin labarai da rahotanni.</p>
@@ -783,6 +787,27 @@ function loadAbiCityTikTokProfile(){
  script.onload=()=>{window.tiktokEmbedLoaded=true;if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);};
  document.body.appendChild(script);
 }
+async function loadMuslimYobePosts(){
+ const box=document.getElementById("muslimYobeDynamicPosts");if(!box)return;box.innerHTML='<div class="empty">Ana ɗauko labarai da bidiyoyi...</div>';
+ try{
+  const {data,error}=await db.from("news_posts").select("id,title,excerpt,content,image_url,video_url,created_at").eq("category","MUSLIM YOBE").eq("status","published").order("published_at",{ascending:false}).limit(40);if(error)throw error;
+  const rows=data||[];if(!rows.length){box.innerHTML='<div class="empty">Babu sabbin abubuwa tukuna.</div>';return;}
+  box.innerHTML=rows.map(p=>{
+   const image=safeURL(p.image_url)||"",url=safeURL(p.video_url)||"";let player="";
+   if(url){
+    const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+    if(yt)player='<div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(p.title)+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>';
+    else if(/facebook\.com|fb\.watch/i.test(url))player='<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="false" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><p><a href="'+esc(url)+'" target="_blank" rel="noopener">Buɗe bidiyon Facebook</a></p>';
+    else if(/tiktok\.com/i.test(url))player='<blockquote class="tiktok-embed" cite="'+esc(url)+'" style="max-width:605px;min-width:250px;margin:0 auto"><section><a target="_blank" rel="noopener" href="'+esc(url)+'">Kalli bidiyon TikTok</a></section></blockquote>';
+    else player='<video controls playsinline preload="metadata" style="width:100%;max-height:460px;border-radius:10px;background:#071b49"><source src="'+esc(url)+'"></video>';
+   }
+   return '<article class="kal-video-card" style="margin:14px 0;padding:14px"><h3>'+esc(p.title)+'</h3>'+(image?'<img src="'+esc(image)+'" alt="'+esc(p.title)+'" loading="lazy" style="width:100%;max-height:420px;object-fit:contain;border-radius:10px;background:#071b49">':'')+(player?'<div style="margin-top:10px">'+player+'</div>':'')+(p.excerpt?'<p style="line-height:1.7">'+esc(p.excerpt)+'</p>':'')+(p.content&&p.content!==p.excerpt?'<p style="line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</p>':'')+'<small>'+formatDate(p.created_at)+'</small></article>';
+  }).join("");
+  if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else if(rows.some(p=>/facebook\.com|fb\.watch/i.test(String(p.video_url||""))))loadKalFacebookSDK();
+  if(rows.some(p=>/tiktok\.com/i.test(String(p.video_url||"")))){if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);else if(!document.getElementById("muslimYobeTikTokScript")){const script=document.createElement("script");script.id="muslimYobeTikTokScript";script.async=true;script.src="https://www.tiktok.com/embed.js";script.onload=()=>{if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);};document.body.appendChild(script);}}
+ }catch(e){box.innerHTML='<div class="empty">Ba a iya ɗauko abubuwan MUSLIM YOBE ba: '+esc(e.message||String(e))+'</div>';}
+}
+
 async function loadAbiCityDynamicVideos(){
  const box=document.getElementById("abiCityDynamicVideos");
  if(!box)return;
@@ -827,6 +852,7 @@ async function showPage(page, options={}){
   if(page==="community")await loadCommunityPosts();
   if(page==="ib")await loadIBComments();
   if(page==="abicity"){loadAbiCityTikTokProfile();await loadAbiCityDynamicVideos();}
+  if(page==="muslimyobe")await loadMuslimYobePosts();
    if(page==="kalmultimedia"){loadKalFacebookSDK();await loadKalVideoComments();await loadKalDynamicVideos();if(communityUser)await loadGallery();else{const kg=document.getElementById("kalGalleryGrid");if(kg)kg.innerHTML='<div class="empty">Shiga app da account domin ganin hotunan KAL MULTIMEDIA.</div>';}}
   if(page==="more"&&typeof renderMorePage==="function")renderMorePage();
 }
