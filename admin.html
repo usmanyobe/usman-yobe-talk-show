@@ -171,6 +171,7 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <option value="Events">📅 Events / Taruka da Shirye-shirye</option>
 <option value="Damar Rayuwa">DAMAR RAYUWA</option>
 </select>
+<label style="display:flex;align-items:center;gap:9px;margin:12px 0;padding:12px;border:1px solid #d5deeb;border-radius:9px;background:#f7faff"><input type="checkbox" id="mainShowOnMainNews" style="width:20px;height:20px;margin:0"><span>Nuna wannan posting a babban News (idan na shafin abokan hulɗa ne)</span></label>
 
 <!-- OPPORTUNITY FIELDS -->
 <div id="opportunityGuide" class="opportunity-note hidden">
@@ -859,6 +860,7 @@ async function savePost(){
    title,
    category,
    is_breaking_news,
+   show_on_main_news:document.getElementById("mainShowOnMainNews").checked,
    image_url:image_url||null,
    video_url:video_url||null,
    audio_url:selectedAudioURL||existingPost?.audio_url||null,
