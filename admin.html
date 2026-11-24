@@ -128,6 +128,20 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
  <button id="abiCityAdminVideoSave" onclick="saveAbiCityAdminVideo()">📤 Wallafa Bidiyo a ABI CITY COMEDY</button><div id="abiCityAdminVideoMessage" class="message"></div><hr>
  <div class="toprow"><h3>Bidiyoyin ABI CITY COMEDY</h3><button class="secondary" onclick="loadAbiCityAdminVideos()">Refresh</button></div><div id="abiCityAdminVideoList">Ana ɗauko bidiyoyi...</div>
 </div>
+<!-- MUSLIM YOBE CONTENT MANAGER -->
+<div class="card" id="muslimYobeAdmin">
+ <h3>📰 MUSLIM YOBE — Sarrafa Labarai, Hotuna da Bidiyoyi</h3>
+ <p class="help">Duk abin da ka wallafa a nan zai bayyana a shafin MUSLIM YOBE kawai. Ba zai shiga babban News ba.</p>
+ <label>Taken labari / hoto / bidiyo</label><input id="muslimAdminTitle" maxlength="180" placeholder="Rubuta take">
+ <label>Takaitaccen bayani</label><textarea id="muslimAdminExcerpt" maxlength="3000" placeholder="Takaitaccen bayani..."></textarea>
+ <label>Cikakken bayani (zaɓi ne)</label><textarea id="muslimAdminContent" maxlength="12000" placeholder="Cikakken labari ko bayani..."></textarea>
+ <hr><label>Hoton labari ko hoto na musamman (har 5MB)</label><input id="muslimAdminImage" type="file" accept="image/*">
+ <label>Bidiyo daga wayarka (har 50MB)</label><input id="muslimAdminVideo" type="file" accept="video/*">
+ <label>Ko saka URL na bidiyo</label><input id="muslimAdminVideoUrl" type="url" placeholder="YouTube / Facebook / TikTok / direct video URL">
+ <label>Matsayin wallafawa</label><select id="muslimAdminStatus"><option value="published">Wallafa yanzu</option><option value="draft">Ajiye a matsayin Draft</option></select>
+ <button id="muslimAdminSave" onclick="saveMuslimYobePost()">📤 Wallafa a MUSLIM YOBE</button><div id="muslimAdminMessage" class="message"></div>
+ <hr><div class="toprow"><h3>Abubuwan MUSLIM YOBE</h3><button class="secondary" onclick="loadMuslimYobeAdminPosts()">Refresh</button></div><div id="muslimAdminList">Ana ɗauko abubuwa...</div>
+</div>
 <!-- NEWS AND EVENTS FORM -->
 <div class="card">
 <h3 id="formTitle">Publish New Story</h3>
@@ -385,7 +399,7 @@ async function checkAdmin(){
   await verifyAdmin();
   document.getElementById("loginSection").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  await Promise.all([loadPosts(),loadGallery(),loadKalAdminVideos(),loadAbiCityAdminVideos()]);
+  await Promise.all([loadPosts(),loadGallery(),loadKalAdminVideos(),loadAbiCityAdminVideos(),loadMuslimYobeAdminPosts()]);
  }catch(e){
   await db.auth.signOut();
   showLogin();
@@ -575,6 +589,41 @@ function getKalVideoStoragePath(url){const marker="/storage/v1/object/public/new
 async function deleteAbiCityAdminVideo(id){const v=abiCityAdminVideos.find(x=>String(x.id)===String(id));if(!v||!confirm("Kana tabbatar da goge wannan bidiyo daga ABI CITY COMEDY?"))return;try{await verifyAdmin();const path=getKalVideoStoragePath(v.video_url);if(path){const {error:e}=await db.storage.from("news-videos").remove([path]);if(e)throw e;}const {error}=await db.from("news_posts").delete().eq("id",id);if(error)throw error;alert("An goge bidiyon.");await loadAbiCityAdminVideos();}catch(e){alert("Matsala wajen gogewa: "+e.message);}}
 document.getElementById("abiCityAdminVideoList").addEventListener("click",event=>{const b=event.target.closest("button[data-abicity-video-action]");if(!b)return;if(b.dataset.abicityVideoAction==="edit")editAbiCityAdminVideo(b.dataset.id);if(b.dataset.abicityVideoAction==="delete")deleteAbiCityAdminVideo(b.dataset.id);});
 
+
+/* MUSLIM YOBE CONTENT MANAGER */
+let muslimYobeAdminPosts=[];
+async function saveMuslimYobePost(){
+ const title=document.getElementById("muslimAdminTitle").value.trim(),excerpt=document.getElementById("muslimAdminExcerpt").value.trim(),content=document.getElementById("muslimAdminContent").value.trim();
+ const imageFile=document.getElementById("muslimAdminImage").files[0],videoFile=document.getElementById("muslimAdminVideo").files[0],videoInput=document.getElementById("muslimAdminVideoUrl").value.trim(),status=document.getElementById("muslimAdminStatus").value,btn=document.getElementById("muslimAdminSave");
+ hideMessage("muslimAdminMessage");
+ if(!title){showMessage("muslimAdminMessage","Da farko saka take.","error");return;}
+ if(videoFile&&videoInput){showMessage("muslimAdminMessage","Zaɓi bidiyo daga waya ko saka URL guda ɗaya.","error");return;}
+ if(imageFile&&(!imageFile.type.startsWith("image/")||imageFile.size>5*1024*1024)){showMessage("muslimAdminMessage","Hoton bai kamata ya wuce 5MB ba.","error");return;}
+ if(videoFile&&(!videoFile.type.startsWith("video/")||videoFile.size>50*1024*1024)){showMessage("muslimAdminMessage","Bidiyon bai kamata ya wuce 50MB ba.","error");return;}
+ if(videoInput&&!isValidHttpURL(videoInput)){showMessage("muslimAdminMessage","URL na bidiyo bai daidai ba.","error");return;}
+ btn.disabled=true;btn.textContent="Ana wallafawa...";const uploaded=[];
+ try{
+  await verifyAdmin();let image_url=null,video_url=videoInput||null;
+  if(imageFile){const ext=(imageFile.name.split(".").pop()||"jpg").replace(/[^a-zA-Z0-9]/g,"").toLowerCase()||"jpg",path="muslim-yobe/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ext;const up=await db.storage.from("news-images").upload(path,imageFile,{cacheControl:"3600",upsert:false,contentType:imageFile.type});if(up.error)throw up.error;uploaded.push({bucket:"news-images",path});image_url=db.storage.from("news-images").getPublicUrl(path).data.publicUrl;}
+  if(videoFile){const ext=(videoFile.name.split(".").pop()||"mp4").replace(/[^a-zA-Z0-9]/g,"").toLowerCase()||"mp4",path="muslim-yobe/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ext;const up=await db.storage.from("news-videos").upload(path,videoFile,{cacheControl:"3600",upsert:false,contentType:videoFile.type});if(up.error)throw up.error;uploaded.push({bucket:"news-videos",path});video_url=db.storage.from("news-videos").getPublicUrl(path).data.publicUrl;}
+  const now=new Date().toISOString(),row={title,category:"MUSLIM YOBE",is_breaking_news:false,image_url,video_url,audio_url:null,excerpt:excerpt||null,content:content||excerpt||title,status,opportunity_type:null,eligibility:null,application_deadline:null,how_to_apply:null,application_url:null,contact_info:null,updated_at:now,published_at:status==="published"?now:null};
+  const {error}=await db.from("news_posts").insert(row);if(error)throw error;
+  ["muslimAdminTitle","muslimAdminExcerpt","muslimAdminContent","muslimAdminImage","muslimAdminVideo","muslimAdminVideoUrl"].forEach(id=>document.getElementById(id).value="");
+  showMessage("muslimAdminMessage",status==="published"?"An wallafa a MUSLIM YOBE cikin nasara!":"An ajiye a matsayin Draft.","success");await loadMuslimYobeAdminPosts();
+ }catch(e){for(const item of uploaded){try{await db.storage.from(item.bucket).remove([item.path]);}catch(_){}}showMessage("muslimAdminMessage","Matsala wajen wallafawa: "+e.message,"error");}
+ finally{btn.disabled=false;btn.textContent="📤 Wallafa a MUSLIM YOBE";}
+}
+async function loadMuslimYobeAdminPosts(){
+ const area=document.getElementById("muslimAdminList");if(!area)return;area.textContent="Ana ɗauko abubuwa...";
+ try{const {data,error}=await db.from("news_posts").select("id,title,excerpt,image_url,video_url,status,created_at").eq("category","MUSLIM YOBE").order("created_at",{ascending:false});if(error)throw error;muslimYobeAdminPosts=data||[];
+ area.innerHTML=muslimYobeAdminPosts.length?muslimYobeAdminPosts.map(p=>'<div class="post"><h4>'+escapeHTML(p.title)+'</h4><p class="small">MUSLIM YOBE | '+escapeHTML(p.status)+'</p><p>'+escapeHTML(p.excerpt||"")+'</p>'+(p.image_url?'<p class="small">📸 Akwai hoto</p>':'')+(p.video_url?'<p class="small">🎬 Akwai bidiyo</p>':'')+'<div class="actions"><button class="secondary" data-muslim-action="edit" data-id="'+escapeHTML(p.id)+'">Gyara take/bayani</button><button class="secondary" data-muslim-action="toggle" data-id="'+escapeHTML(p.id)+'">'+(p.status==="published"?"Mayar Draft":"Wallafa")+'</button><button class="danger" data-muslim-action="delete" data-id="'+escapeHTML(p.id)+'">Goge</button></div></div>').join(""):"Babu abin da aka wallafa tukuna.";
+ }catch(e){area.textContent="Matsala wajen ɗauko abubuwa: "+e.message;}
+}
+async function editMuslimYobePost(id){const p=muslimYobeAdminPosts.find(x=>String(x.id)===String(id));if(!p)return;const title=prompt("Sabon take:",p.title||"");if(title===null)return;if(!title.trim()){alert("Saka take.");return;}const excerpt=prompt("Sabon takaitaccen bayani:",p.excerpt||"");if(excerpt===null)return;try{await verifyAdmin();const {error}=await db.from("news_posts").update({title:title.trim(),excerpt:excerpt.trim()||null,updated_at:new Date().toISOString()}).eq("id",id).eq("category","MUSLIM YOBE");if(error)throw error;await loadMuslimYobeAdminPosts();alert("An gyara bayanin.");}catch(e){alert("Matsala wajen gyara: "+e.message);}}
+async function toggleMuslimYobePost(id){const p=muslimYobeAdminPosts.find(x=>String(x.id)===String(id));if(!p)return;const status=p.status==="published"?"draft":"published";try{await verifyAdmin();const now=new Date().toISOString();const {error}=await db.from("news_posts").update({status,published_at:status==="published"?now:p.published_at,updated_at:now}).eq("id",id).eq("category","MUSLIM YOBE");if(error)throw error;await loadMuslimYobeAdminPosts();}catch(e){alert("Matsala wajen canza matsayi: "+e.message);}}
+function getMuslimStorageObject(url,bucket){const marker="/storage/v1/object/public/"+bucket+"/",i=String(url||"").indexOf(marker);if(i<0)return null;try{return decodeURIComponent(url.substring(i+marker.length).split("?")[0]);}catch{return null;}}
+async function deleteMuslimYobePost(id){const p=muslimYobeAdminPosts.find(x=>String(x.id)===String(id));if(!p||!confirm("Kana tabbatar da goge wannan abu daga MUSLIM YOBE?"))return;try{await verifyAdmin();const removals=[];const ip=getMuslimStorageObject(p.image_url,"news-images"),vp=getMuslimStorageObject(p.video_url,"news-videos");if(ip)removals.push(db.storage.from("news-images").remove([ip]));if(vp)removals.push(db.storage.from("news-videos").remove([vp]));for(const r of await Promise.all(removals))if(r.error)throw r.error;const {error}=await db.from("news_posts").delete().eq("id",id).eq("category","MUSLIM YOBE");if(error)throw error;await loadMuslimYobeAdminPosts();}catch(e){alert("Matsala wajen gogewa: "+e.message);}}
+document.getElementById("muslimAdminList").addEventListener("click",event=>{const b=event.target.closest("button[data-muslim-action]");if(!b)return;if(b.dataset.muslimAction==="edit")editMuslimYobePost(b.dataset.id);if(b.dataset.muslimAction==="toggle")toggleMuslimYobePost(b.dataset.id);if(b.dataset.muslimAction==="delete")deleteMuslimYobePost(b.dataset.id);});
 
 /* CATEGORY FIELDS */
 function updateOpportunityFields(){
