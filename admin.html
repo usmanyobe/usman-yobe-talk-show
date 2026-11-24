@@ -939,6 +939,7 @@ function clearForm(){
  ].forEach(id=>{document.getElementById(id).value="";});
 
  document.getElementById("isBreakingNews").checked=false;
+ document.getElementById("mainShowOnMainNews").checked=false;
  document.getElementById("imageFile").value="";
  document.getElementById("videoFile").value="";
 
@@ -1019,6 +1020,7 @@ function editPost(id){
  document.getElementById("newsTitle").value=p.title||"";
  document.getElementById("category").value=p.category||"News";
  document.getElementById("isBreakingNews").checked=p.is_breaking_news===true;
+ document.getElementById("mainShowOnMainNews").checked=p.show_on_main_news===true;
  updateOpportunityFields();
 
  [
