@@ -768,14 +768,28 @@ async function refreshToNews(){
 function loadKalFacebookSDK(){const page=document.getElementById("kalmultimediaPage");if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);return;}if(document.getElementById("kalFacebookSDK"))return;const js=document.createElement("script");js.id="kalFacebookSDK";js.async=true;js.defer=true;js.crossOrigin="anonymous";js.src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v27.0";js.onload=()=>{if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(page);};document.body.appendChild(js);}
 function refreshKalUpdates(){const status=document.getElementById("kalRefreshStatus"),page=document.getElementById("kalmultimediaPage");if(!page)return;if(status)status.textContent="Reconnecting Facebook videos...";if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);if(status)setTimeout(()=>{status.textContent="Video display has been refreshed. If a video is missing, use its Watch Video link.";},1800);}else{loadKalFacebookSDK();if(status)setTimeout(()=>{status.textContent="Facebook has been asked to display the videos. If they do not appear, use the video links.";},2500);}}
 async function loadKalVideoComments(){const items=[["kal-video-1","kalVideoComments1"],["kal-video-2","kalVideoComments2"],["kal-video-3","kalVideoComments3"],["kal-video-4","kalVideoComments4"]];for(const [id,box] of items)await loadMediaComments("kal_video",id,box);}
+function getPartnerYouTubeId(rawUrl){
+ try{
+  const u=new URL(rawUrl);
+  const host=u.hostname.toLowerCase().replace(/^www\./,"");
+  if(host==="youtu.be")return (u.pathname.split("/").filter(Boolean)[0]||"").match(/^[A-Za-z0-9_-]{11}$/)?.[0]||"";
+  if(host.endsWith("youtube.com")||host==="youtube-nocookie.com"){
+   const path=u.pathname.split("/").filter(Boolean);
+   const id=u.searchParams.get("v")||(path[0]==="embed"||path[0]==="shorts"||path[0]==="live"?path[1]:"");
+   return /^[A-Za-z0-9_-]{11}$/.test(id||"")?id:"";
+  }
+ }catch(e){}
+ const fallback=String(rawUrl||"").match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?.*?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/i);
+ return fallback?fallback[1]:"";
+}
 function buildPartnerVideoPlayer(rawUrl,title){
  const url=safeURL(rawUrl)||"";
  if(!url)return '<p>Ba a samu hanyar bidiyon ba.</p>';
- const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
- if(yt)return '<div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(title||"Video")+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>';
+ const ytId=getPartnerYouTubeId(url);
+ if(ytId)return '<div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube.com/embed/'+ytId+'?playsinline=1&rel=0" title="'+esc(title||"Video")+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen webkitallowfullscreen></iframe></div>';
  if(/facebook\.com|fb\.watch/i.test(url))return '<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="false" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>';
  if(/tiktok\.com/i.test(url))return '<blockquote class="tiktok-embed" cite="'+esc(url)+'" style="max-width:605px;min-width:250px;margin:0 auto"><section><a target="_blank" rel="noopener" href="'+esc(url)+'">Watch TikTok Video</a></section></blockquote><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Open TikTok if the player does not appear</a>';
- return '<video controls playsinline preload="metadata" style="width:100%;max-height:420px;border-radius:10px;background:#071b49"><source src="'+esc(url)+'"></video>';
+ return '<video controls playsinline webkit-playsinline preload="metadata" style="width:100%;max-height:420px;border-radius:10px;background:#071b49"><source src="'+esc(url)+'" type="video/mp4">Your browser cannot play this video.</video>';
 }
 function refreshPartnerVideoEmbeds(box){
  if(!box)return;
@@ -821,18 +835,10 @@ async function loadMuslimYobePosts(){
   const {data,error}=await db.from("news_posts").select("id,title,excerpt,content,image_url,video_url,created_at").eq("category","MUSLIM YOBE").eq("status","published").order("published_at",{ascending:false}).limit(40);if(error)throw error;
   const rows=data||[];if(!rows.length){box.innerHTML='<div class="empty">No updates available yet.</div>';return;}
   box.innerHTML=rows.map(p=>{
-   const image=safeURL(p.image_url)||"",url=safeURL(p.video_url)||"";let player="";
-   if(url){
-    const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
-    if(yt)player='<div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(p.title)+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>';
-    else if(/facebook\.com|fb\.watch/i.test(url))player='<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="false" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><p><a href="'+esc(url)+'" target="_blank" rel="noopener">Open Facebook Video</a></p>';
-    else if(/tiktok\.com/i.test(url))player='<blockquote class="tiktok-embed" cite="'+esc(url)+'" style="max-width:605px;min-width:250px;margin:0 auto"><section><a target="_blank" rel="noopener" href="'+esc(url)+'">Watch TikTok Video</a></section></blockquote>';
-    else player='<video controls playsinline preload="metadata" style="width:100%;max-height:460px;border-radius:10px;background:#071b49"><source src="'+esc(url)+'"></video>';
-   }
+   const image=safeURL(p.image_url)||"",url=safeURL(p.video_url)||"",player=url?buildPartnerVideoPlayer(url,p.title):"";
    return '<article class="kal-video-card" style="margin:14px 0;padding:14px"><h3>'+esc(p.title)+'</h3>'+(image?'<img src="'+esc(image)+'" alt="'+esc(p.title)+'" loading="lazy" style="width:100%;max-height:420px;object-fit:contain;border-radius:10px;background:#071b49">':'')+(player?'<div style="margin-top:10px">'+player+'</div>':'')+(p.excerpt?'<p style="line-height:1.7">'+esc(p.excerpt)+'</p>':'')+(p.content&&p.content!==p.excerpt?'<p style="line-height:1.7;white-space:pre-wrap">'+esc(p.content)+'</p>':'')+'<small>'+formatDate(p.created_at)+'</small></article>';
   }).join("");
-  if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else if(rows.some(p=>/facebook\.com|fb\.watch/i.test(String(p.video_url||""))))loadKalFacebookSDK();
-  if(rows.some(p=>/tiktok\.com/i.test(String(p.video_url||"")))){if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);else if(!document.getElementById("muslimYobeTikTokScript")){const script=document.createElement("script");script.id="muslimYobeTikTokScript";script.async=true;script.src="https://www.tiktok.com/embed.js";script.onload=()=>{if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);};document.body.appendChild(script);}}
+  refreshPartnerVideoEmbeds(box);
  }catch(e){box.innerHTML='<div class="empty">Could not load MUSLIM YOBE content: '+esc(e.message||String(e))+'</div>';}
 }
 
