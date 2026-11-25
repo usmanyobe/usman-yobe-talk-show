@@ -768,7 +768,35 @@ async function refreshToNews(){
 function loadKalFacebookSDK(){const page=document.getElementById("kalmultimediaPage");if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);return;}if(document.getElementById("kalFacebookSDK"))return;const js=document.createElement("script");js.id="kalFacebookSDK";js.async=true;js.defer=true;js.crossOrigin="anonymous";js.src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v27.0";js.onload=()=>{if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(page);};document.body.appendChild(js);}
 function refreshKalUpdates(){const status=document.getElementById("kalRefreshStatus"),page=document.getElementById("kalmultimediaPage");if(!page)return;if(status)status.textContent="Ana sake haɗa bidiyoyi da Facebook…";if(window.FB&&window.FB.XFBML){window.FB.XFBML.parse(page);if(status)setTimeout(()=>{status.textContent="An sake gwada nuna bidiyoyin. Za ka iya danna maɓallin Kalli Bidiyo idan wani bai bayyana ba.";},1800);}else{loadKalFacebookSDK();if(status)setTimeout(()=>{status.textContent="An nemi Facebook ya nuna bidiyoyin. Idan ba su bayyana ba, yi amfani da maɓallan kallon bidiyo.";},2500);}}
 async function loadKalVideoComments(){const items=[["kal-video-1","kalVideoComments1"],["kal-video-2","kalVideoComments2"],["kal-video-3","kalVideoComments3"],["kal-video-4","kalVideoComments4"]];for(const [id,box] of items)await loadMediaComments("kal_video",id,box);}
-async function loadKalDynamicVideos(){const box=document.getElementById("kalDynamicVideos");if(!box)return;box.innerHTML='<div class="empty">Ana ɗauko sabbin bidiyoyi...</div>';const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","KAL MULTIMEDIA").eq("status","published").not("video_url","is",null).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="empty">Ba a iya ɗauko sabbin bidiyoyi ba: '+esc(error.message)+'</div>';return;}const rows=data||[];if(!rows.length){box.innerHTML="";return;}box.innerHTML=rows.map(v=>{const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,""),url=safeURL(v.video_url)||"",isFacebook=/facebook\\.com|fb\\.watch/i.test(url),player=isFacebook?'<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>':'<video controls playsinline preload="metadata" style="width:100%;max-height:420px"><source src="'+esc(url)+'"></video>';return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small><div id="kalComments-'+id+'" class="media-comments kal-media-comments"></div></article>';}).join("");if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else loadKalFacebookSDK();for(const v of rows){const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,"");await loadMediaComments("kal_video",id,"kalComments-"+id);}}
+function buildPartnerVideoPlayer(rawUrl,title){
+ const url=safeURL(rawUrl)||"";
+ if(!url)return '<p>Ba a samu hanyar bidiyon ba.</p>';
+ const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
+ if(yt)return '<div style="position:relative;width:100%;aspect-ratio:16/9;background:#071b49;border-radius:10px;overflow:hidden"><iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(title||"Video")+'" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>';
+ if(/facebook\.com|fb\.watch/i.test(url))return '<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="false" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>';
+ if(/tiktok\.com/i.test(url))return '<blockquote class="tiktok-embed" cite="'+esc(url)+'" style="max-width:605px;min-width:250px;margin:0 auto"><section><a target="_blank" rel="noopener" href="'+esc(url)+'">Kalli bidiyon TikTok</a></section></blockquote><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Buɗe TikTok idan player bai bayyana ba</a>';
+ return '<video controls playsinline preload="metadata" style="width:100%;max-height:420px;border-radius:10px;background:#071b49"><source src="'+esc(url)+'"></video>';
+}
+function refreshPartnerVideoEmbeds(box){
+ if(!box)return;
+ if(/facebook\.com|fb\.watch/i.test(box.innerHTML)){
+  if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);else loadKalFacebookSDK();
+ }
+ if(/tiktok\.com/i.test(box.innerHTML)){
+  if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);
+  else if(!document.getElementById("partnerTikTokEmbedScript")){
+   const script=document.createElement("script");script.id="partnerTikTokEmbedScript";script.async=true;script.src="https://www.tiktok.com/embed.js";
+   script.onload=()=>{if(window.tiktokEmbed&&typeof window.tiktokEmbed.lib==="function")window.tiktokEmbed.lib(box);};
+   document.body.appendChild(script);
+  }
+ }
+}
+async function loadKalDynamicVideos(){const box=document.getElementById("kalDynamicVideos");if(!box)return;box.innerHTML='<div class="empty">Ana ɗauko sabbin bidiyoyi...</div>';const {data,error}=await db.from("news_posts").select("id,title,excerpt,video_url,created_at").eq("category","KAL MULTIMEDIA").eq("status","published").not("video_url","is",null).order("created_at",{ascending:false});if(error){box.innerHTML='<div class="empty">Ba a iya ɗauko sabbin bidiyoyi ba: '+esc(error.message)+'</div>';return;}const rows=data||[];if(!rows.length){box.innerHTML="";return;}box.innerHTML=rows.map(v=>{
+ const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,""),url=safeURL(v.video_url)||"",player=buildPartnerVideoPlayer(url,v.title);
+ return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small><div id="kalComments-'+id+'" class="media-comments kal-media-comments"></div></article>';
+}).join("");
+refreshPartnerVideoEmbeds(box);
+for(const v of rows){const id="kal-post-"+String(v.id).replace(/[^a-zA-Z0-9_-]/g,"");await loadMediaComments("kal_video",id,"kalComments-"+id);}}
 function loadAbiCityTikTokProfile(){
  const box=document.getElementById("abiCityTikTokProfile");
  if(!box)return;
@@ -817,16 +845,10 @@ async function loadAbiCityDynamicVideos(){
  const rows=data||[];
  if(!rows.length){box.innerHTML='<div class="empty">Babu bidiyo tukuna. Da zarar an wallafa daga Admin, zai bayyana a nan.</div>';return;}
  box.innerHTML=rows.map(v=>{
-  const url=safeURL(v.video_url)||"";
-  let player="";
-  const yt=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/i);
-  if(yt)player='<iframe src="https://www.youtube.com/embed/'+yt[1]+'" title="'+esc(v.title)+'" loading="lazy" style="width:100%;aspect-ratio:16/9;border:0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
-  else if(/facebook\.com|fb\.watch/i.test(url))player='<div class="fb-video" data-href="'+esc(url)+'" data-width="500" data-show-text="true" data-allowfullscreen="true" style="width:100%;min-height:220px"></div><a class="kal-open-facebook" href="'+esc(url)+'" target="_blank" rel="noopener">▶️ Kalli a Facebook</a>';
-  else player='<video controls playsinline preload="metadata" style="width:100%;max-height:420px"><source src="'+esc(url)+'"></video>';
+  const url=safeURL(v.video_url)||"",player=buildPartnerVideoPlayer(url,v.title);
   return '<article class="kal-video-card"><h3>'+esc(v.title)+'</h3><div class="video-box">'+player+'</div><p>'+esc(v.excerpt||"")+'</p><small>'+formatDate(v.created_at)+'</small></article>';
  }).join("");
- if(window.FB&&window.FB.XFBML)window.FB.XFBML.parse(box);
- else if(rows.some(v=>/facebook\.com|fb\.watch/i.test(String(v.video_url||""))))loadKalFacebookSDK();
+ refreshPartnerVideoEmbeds(box);
 }
 async function showPage(page, options={}){
   const allowedPages=["home","opportunities","events","videos","community","gallery","audio","health","live","more","radio","ib","muslimyobe","kalmultimedia","abicity"];
