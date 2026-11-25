@@ -182,7 +182,7 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
 #uyAuthNotice{font-size:13px;line-height:1.6;color:#b42318;margin-top:12px;overflow-wrap:anywhere}
 </style>
 </head>
-<body class="uy-auth-checking"><div id="uyAuthGate"><div class="uy-auth-card"><img src="./74556.png" alt="USMAN YOBE TALK SHOW"><h1>USMAN YOBE TALK SHOW</h1><p><strong>TASHAR AL’UMMA</strong><br>Register once to join our community. If you already have an account, please log in.</p><div class="community-row" style="justify-content:center;gap:8px"><button class="community-btn" type="button" onclick="communityShowRegister()">Create Account / Register</button><button class="community-btn secondary" type="button" onclick="communityShowLogin()">Login</button></div><div id="communityAuthForm"></div><div id="communityNotice" role="status" style="font-size:13px;line-height:1.6;margin-top:10px"></div><div id="uyAuthNotice" role="status">Checking your session...</div></div></div><div id="pullRefreshNotice" role="status" aria-live="polite">Refreshing…</div>
+<body class="uy-auth-ready"><div id="uyAuthGate"><div class="uy-auth-card"><img src="./74556.png" alt="USMAN YOBE TALK SHOW"><h1>USMAN YOBE TALK SHOW</h1><p><strong>TASHAR AL’UMMA</strong><br>Register once to join our community. If you already have an account, please log in.</p><div class="community-row" style="justify-content:center;gap:8px"><button class="community-btn" type="button" onclick="communityShowRegister()">Create Account / Register</button><button class="community-btn secondary" type="button" onclick="communityShowLogin()">Login</button></div><div id="communityAuthForm"></div><div id="communityNotice" role="status" style="font-size:13px;line-height:1.6;margin-top:10px"></div><div id="uyAuthNotice" role="status">Checking your session...</div></div></div><div id="pullRefreshNotice" role="status" aria-live="polite">Refreshing…</div>
 <header><div class="brand"><img class="logo" src="./74556.png" alt="USMAN YOBE logo" onerror="this.style.display='none'"><div><h1>USMAN YOBE TALK SHOW</h1><p>TASHAR AL'UMMA • ...one voice, one community, one future</p></div><button class="header-more" onclick="showPage('more')" aria-label="More options"><span>☰</span><small>More</small></button></div>
 <div class="header-tools"><select id="languageSelect" class="language" aria-label="Select language" onchange="setLanguage(this.value)"><option value="en">English</option><option value="ha">Hausa</option><option value="ar">العربية</option></select><input id="searchInput" type="search" placeholder="Search news..."><button class="global-refresh" type="button" onclick="refreshToNews()" aria-label="Refresh current page">↻ <span>Refresh</span></button></div></header>
 <nav id="categoryNav"><button class="active" data-category="all">All</button><button data-category="News">News</button><button data-category="Politics">Politics</button><button data-category="Entertainment">Entertainment</button><button data-category="Business">Business</button><button data-category="Youth">Youth</button><button data-category="Sports">Sports</button><button data-category="Education">Education</button></nav>
@@ -1583,17 +1583,13 @@ try{await communityPostsLoadPromise;}finally{communityPostsLoadPromise=null;}
 }
 
 function setMemberAccess(allowed){
+ // Public app pages remain available without signing in; authentication is only for member features.
  document.body.classList.remove("uy-auth-checking");
  document.body.classList.add("uy-auth-ready");
  document.body.classList.toggle("uy-authenticated",!!allowed);
  const gate=document.getElementById("uyAuthGate");
- if(gate)gate.setAttribute("aria-hidden",allowed?"true":"false");
- if(!allowed){
-  const box=document.getElementById("communityAccount");if(box)renderCommunityAccount();
-  const notice=document.getElementById("uyAuthNotice");if(notice)notice.textContent="Shiga ko yi rajista domin ci gaba.";
- }else{
-  const notice=document.getElementById("uyAuthNotice");if(notice)notice.textContent="";
- }
+ if(gate){gate.setAttribute("aria-hidden","true");gate.style.display="none";}
+ const notice=document.getElementById("uyAuthNotice");if(notice)notice.textContent="";
 }
 
 async function subscribeCommunityRealtimeNotifications(){if(!communityUser||!db.channel)return;if(communityRealtimeChannel){await db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}communityRealtimeChannel=db.channel('community-notifications-'+communityUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'forum_notifications',filter:'recipient_id=eq.'+communityUser.id},()=>{refreshCommunityNotifications();const badge=document.getElementById('communityNotificationBadge');if(badge){badge.style.transform='scale(1.18)';setTimeout(()=>badge.style.transform='',250);}}).subscribe();}
@@ -1651,7 +1647,7 @@ async function socialLoadLive(){const box=document.getElementById('socialLiveLis
 async function socialLoadCreator(){const box=document.getElementById('socialCreatorStats');if(!box||!communityUser)return;box.textContent='Loading...';const [posts,reels,listings,groups]=await Promise.all([db.from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_marketplace').select('id',{count:'exact',head:true}).eq('seller_id',communityUser.id),db.from('social_groups').select('id',{count:'exact',head:true}).eq('owner_id',communityUser.id)]);const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];box.innerHTML=vals.map(v=>'<div class="social-stat"><strong>'+((v[2]?'—':v[1]||0))+'</strong>'+v[0]+'</div>').join('');}
 
 async function communityInit(){
-  document.body.classList.add('uy-auth-checking');
+  document.body.classList.remove('uy-auth-checking');
   const authNotice=document.getElementById('uyAuthNotice');
   if(authNotice)authNotice.textContent='Ana tabbatar da asusunka...';
   const safeTask=(name,task)=>Promise.resolve().then(task).catch(error=>console.warn('Startup task '+name+':',error?.message||error));
