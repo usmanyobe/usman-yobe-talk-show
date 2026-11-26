@@ -1020,7 +1020,24 @@ communitySection.insertAdjacentHTML('beforeend',`
 <h3>🔴 Live Sessions</h3><p class="community-muted">Create a live session and share a valid streaming/watch link. This schedules and lists live streams; it does not itself provide camera broadcasting.</p><input id="socialLiveTitle" class="community-input" maxlength="100" placeholder="Live session title"><input id="socialLiveUrl" class="community-input" type="url" placeholder="YouTube / streaming link"><input id="socialLiveTime" class="community-input" type="datetime-local"><button class="community-btn" onclick="socialCreateLive()">＋ Schedule Live</button><div id="socialLiveList" class="community-muted">Loading live sessions...</div>
 </section>
 <section id="socialCreatorPanel" class="social-hub-section" style="display:none">
-<h3>📊 Creator Studio</h3><p class="community-muted">Your publishing activity and audience indicators.</p><div id="socialCreatorStats" class="social-stat-grid">Loading your creator stats...</div><button class="community-btn secondary" onclick="socialLoadCreator()">↻ Refresh statistics</button>
+<h3>📊 USMAN YOBE Creator Studio</h3>
+<p class="community-muted">Rajista kyauta. Ka wallafa abubuwa na asali, gina masu kallo, sannan ka nemi shiga tsarin samun kuɗi idan ka cika sharudda.</p>
+<div id="socialCreatorStats" class="social-stat-grid">Loading creator statistics...</div>
+<div class="social-hub-card" style="margin-top:12px">
+<h4 style="margin:0 0 8px">📝 Neman zama Creator</h4>
+<p class="community-muted">Cika bayananka domin admin ya duba bukatarka.</p>
+<input id="creatorDisplayName" class="community-input" maxlength="80" placeholder="Sunan da kake son a nuna">
+<textarea id="creatorBio" class="community-input" maxlength="500" placeholder="Takaitaccen bayani game da irin abubuwan da kake wallafawa"></textarea>
+<input id="creatorSocialLink" class="community-input" maxlength="300" type="url" placeholder="Link na shafinka (optional)">
+<button class="community-btn" id="creatorApplyButton" onclick="socialApplyCreator()">＋ Nemi zama Creator</button>
+<div id="creatorApplicationStatus" class="community-muted" role="status"></div>
+</div>
+<div class="social-hub-card" style="margin-top:12px">
+<h4 style="margin:0 0 8px">💰 Creator Earnings</h4>
+<div id="creatorEarningsSummary" class="community-muted">Ana loda bayanan kuɗinka...</div>
+<p class="community-muted" style="font-size:12px">Muhimmi: views da likes ba sa zama kuɗi kai tsaye. Za a rubuta lada ne kawai idan an tabbatar da kuɗin talla ko sponsorship, an duba ingancin views, kuma admin ya amince.</p>
+</div>
+<button class="community-btn secondary" onclick="socialLoadCreator()">↻ Sabunta bayanai</button>
 </section>
 <p id="socialHubStatus" class="community-muted" role="status">Sign in to publish and connect with members.</p>
 </div>`);
@@ -1650,7 +1667,41 @@ async function socialCreateListing(){if(!socialRequireUser())return;const title=
 async function socialLoadMarket(){const box=document.getElementById('socialMarketList');if(!box)return;const {data,error}=await db.from('social_marketplace').select('id,seller_id,title,price_ngn,image_url,contact,description,created_at').eq('status','active').order('created_at',{ascending:false}).limit(50);if(error){box.textContent='Marketplace database is not ready. '+error.message;return;}box.innerHTML=(data||[]).map(x=>'<article class="social-hub-card"><strong>'+socialEsc(x.title)+'</strong><div style="font-weight:800;color:#0759c7;margin:5px 0">₦'+Number(x.price_ngn).toLocaleString('en-NG')+'</div><p>'+socialEsc(x.description||'')+'</p>'+(x.image_url?'<img loading="lazy" src="'+socialEsc(x.image_url)+'" alt="Product">':'')+(x.contact?'<p>Contact: '+socialEsc(x.contact)+'</p>':'')+'</article>').join('')||'<p>No items listed yet.</p>';}
 async function socialCreateLive(){if(!socialRequireUser())return;const title=document.getElementById('socialLiveTitle').value.trim(),url=document.getElementById('socialLiveUrl').value.trim(),starts=document.getElementById('socialLiveTime').value;if(!title||!url){socialHubStatus('Enter a title and stream link.',true);return;}try{new URL(url)}catch(e){socialHubStatus('Enter a valid stream URL.',true);return;}const {error}=await db.from('social_live_sessions').insert({host_id:communityUser.id,title,stream_url:url,starts_at:starts?new Date(starts).toISOString():new Date().toISOString(),status:'scheduled'});if(error){socialHubStatus('Could not schedule Live. Run setup SQL. '+error.message,true);return;}socialHubStatus('Live session scheduled.');socialLoadLive();}
 async function socialLoadLive(){const box=document.getElementById('socialLiveList');if(!box)return;const {data,error}=await db.from('social_live_sessions').select('id,host_id,title,stream_url,starts_at,status').order('starts_at',{ascending:true}).limit(50);if(error){box.textContent='Live sessions database is not ready. '+error.message;return;}box.innerHTML=(data||[]).map(x=>'<article class="social-hub-card"><strong>🔴 '+socialEsc(x.title)+'</strong><p>'+socialEsc(new Date(x.starts_at).toLocaleString())+' · '+socialEsc(x.status)+'</p><a href="'+socialEsc(x.stream_url)+'" target="_blank" rel="noopener">Open live stream ↗</a></article>').join('')||'<p>No live sessions scheduled.</p>';}
-async function socialLoadCreator(){const box=document.getElementById('socialCreatorStats');if(!box||!communityUser)return;box.textContent='Loading...';const [posts,reels,listings,groups]=await Promise.all([db.from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),db.from('social_marketplace').select('id',{count:'exact',head:true}).eq('seller_id',communityUser.id),db.from('social_groups').select('id',{count:'exact',head:true}).eq('owner_id',communityUser.id)]);const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];box.innerHTML=vals.map(v=>'<div class="social-stat"><strong>'+((v[2]?'—':v[1]||0))+'</strong>'+v[0]+'</div>').join('');}
+async function socialLoadCreator(){
+const box=document.getElementById('socialCreatorStats'),status=document.getElementById('creatorApplicationStatus'),earn=document.getElementById('creatorEarningsSummary'),apply=document.getElementById('creatorApplyButton');
+if(!box)return;
+if(!communityUser){box.innerHTML='<p class="community-muted">Da fatan ka yi rajista ko ka shiga account domin amfani da Creator Studio.</p>';if(status)status.textContent='Login is required to apply.';if(earn)earn.textContent='Shiga account domin ganin bayanan earnings.';if(apply)apply.disabled=true;return;}
+if(apply)apply.disabled=false;
+box.textContent='Ana loda bayanai...';
+const [posts,reels,listings,groups,application,earnings]=await Promise.all([
+db.from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),
+db.from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',communityUser.id),
+db.from('social_marketplace').select('id',{count:'exact',head:true}).eq('seller_id',communityUser.id),
+db.from('social_groups').select('id',{count:'exact',head:true}).eq('owner_id',communityUser.id),
+db.from('creator_applications').select('display_name,status,created_at').eq('user_id',communityUser.id).maybeSingle(),
+db.from('creator_earnings').select('amount,status').eq('user_id',communityUser.id)
+]);
+const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];
+box.innerHTML=vals.map(v=>'<div class="social-stat"><strong>'+((v[2]?'—':v[1]||0))+'</strong>'+v[0]+'</div>').join('');
+if(application.error&&/creator_applications|does not exist|schema cache/i.test(application.error.message||'')){if(status)status.textContent='Ana bukatar gudanar da creator-monetization-setup.sql a Supabase kafin neman zama Creator.';}
+else if(application.data){if(status)status.textContent='Application: '+application.data.status.toUpperCase()+' · '+socialEsc(application.data.display_name);if(apply){apply.disabled=true;apply.textContent='An riga an aika da bukata';}}
+else if(status)status.textContent='Ba ka aika da bukatar zama Creator ba tukuna.';
+if(earnings.error){if(earn)earn.textContent='Earnings ledger zai bayyana bayan an kunna database setup.';}
+else{const rows=earnings.data||[],approved=rows.filter(x=>x.status==='approved').reduce((a,x)=>a+Number(x.amount||0),0),pending=rows.filter(x=>x.status==='pending').reduce((a,x)=>a+Number(x.amount||0),0),paid=rows.filter(x=>x.status==='paid').reduce((a,x)=>a+Number(x.amount||0),0);if(earn)earn.innerHTML='<div class="social-stat-grid"><div class="social-stat"><strong>₦'+approved.toLocaleString('en-NG',{maximumFractionDigits:2})+'</strong>Available (approved)</div><div class="social-stat"><strong>₦'+pending.toLocaleString('en-NG',{maximumFractionDigits:2})+'</strong>Under review</div><div class="social-stat"><strong>₦'+paid.toLocaleString('en-NG',{maximumFractionDigits:2})+'</strong>Paid</div></div>';}
+}
+async function socialApplyCreator(){
+if(!socialRequireUser())return;
+const display_name=document.getElementById('creatorDisplayName')?.value.trim()||'',bio=document.getElementById('creatorBio')?.value.trim()||'',social_link=document.getElementById('creatorSocialLink')?.value.trim()||'',button=document.getElementById('creatorApplyButton'),status=document.getElementById('creatorApplicationStatus');
+if(display_name.length<2){socialHubStatus('Shigar da sunan da kake son a nuna.',true);return;}
+if(social_link){try{const u=new URL(social_link);if(!/^https?:$/.test(u.protocol))throw 0;}catch(e){socialHubStatus('Link ɗin da ka saka bai dace ba.',true);return;}}
+if(button){button.disabled=true;button.textContent='Ana aika bukata...';}
+const {error}=await db.from('creator_applications').insert({user_id:communityUser.id,display_name,bio,social_link,status:'pending'});
+if(error){if(status)status.textContent=/creator_applications|does not exist|schema cache/i.test(error.message||'')?'Da farko ka gudanar da creator-monetization-setup.sql a Supabase.':error.code==='23505'?'Ka riga ka aika da bukatar zama Creator.':'Ba a aika ba: '+error.message; if(button){button.disabled=error.code==='23505';button.textContent=error.code==='23505'?'An riga an aika da bukata':'＋ Nemi zama Creator';}return;}
+if(status)status.textContent='An aika da bukatarka. Admin zai duba ta kafin a amince.';
+['creatorDisplayName','creatorBio','creatorSocialLink'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+if(button){button.disabled=true;button.textContent='An aika da bukata';}
+await socialLoadCreator();
+}
 
 async function communityInit(){
   document.body.classList.remove('uy-auth-checking');
