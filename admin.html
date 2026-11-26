@@ -86,6 +86,26 @@ hr{border:0;border-top:1px solid #e1e5eb;margin:20px 0}
 <p class="status">ADMIN ACCESS ACTIVE</p>
 </div>
 
+<!-- CREATOR MONETIZATION ADMIN -->
+<div class="card" id="creatorAdmin">
+ <h3>💰 USMAN YOBE CREATOR MANAGER</h3>
+ <p class="help">Duba bukatun creators, amincewa ko ƙin nema, sannan ka rubuta ladan da aka samu daga tallace-tallace ko sponsorship da aka tabbatar.</p>
+ <div class="toprow"><h4>🧑‍🎤 Creator Applications</h4><button class="secondary" onclick="loadCreatorAdmin()">↻ Refresh</button></div>
+ <div id="creatorApplicationsList" class="help">Ana ɗauko bukatun creators...</div>
+ <hr>
+ <h4>➕ Rubuta Creator Earnings</h4>
+ <label>Creator User ID (UUID)</label><input id="creatorEarningUserId" placeholder="Manna User ID na creator">
+ <label>Asalin kuɗin</label><select id="creatorEarningSource"><option value="sponsor">Sponsorship</option><option value="platform_ads">Platform Ads</option><option value="bonus">Bonus</option><option value="adjustment">Adjustment</option></select>
+ <label>Bayanin kuɗin / sponsor</label><input id="creatorEarningLabel" maxlength="160" placeholder="Misali: Tallan kamfani XYZ — Nuwamba">
+ <label>Adadin kuɗi (₦)</label><input id="creatorEarningAmount" type="number" min="1" step="0.01" placeholder="Misali: 5000">
+ <label>Bayani (optional)</label><textarea id="creatorEarningNote" maxlength="500" placeholder="Dalilin wannan lada da reference na tallan"></textarea>
+ <button onclick="adminAddCreatorEarning()" id="creatorEarningSave">＋ Ajiye Earnings</button>
+ <div id="creatorEarningMessage" class="message"></div>
+ <hr>
+ <div class="toprow"><h4>📒 Earnings Ledger</h4><button class="secondary" onclick="loadCreatorEarningsAdmin()">↻ Refresh</button></div>
+ <div id="creatorEarningsAdminList" class="help">Ana ɗauko bayanan kuɗi...</div>
+</div>
+
 <!-- PHOTO GALLERY -->
 <div class="card" id="galleryAdmin">
 <h3>📸 PHOTO GALLERY – Hotunan Abubuwan da suka faru</h3>
@@ -403,13 +423,70 @@ async function checkAdmin(){
   await verifyAdmin();
   document.getElementById("loginSection").classList.add("hidden");
   document.getElementById("dashboard").classList.remove("hidden");
-  await Promise.all([loadPosts(),loadGallery(),loadKalAdminVideos(),loadAbiCityAdminVideos(),loadMuslimYobeAdminPosts()]);
+  await Promise.all([loadPosts(),loadGallery(),loadKalAdminVideos(),loadAbiCityAdminVideos(),loadMuslimYobeAdminPosts(),loadCreatorAdmin()]);
  }catch(e){
   await db.auth.signOut();
   showLogin();
   showMessage("loginMessage","Ba a tabbatar da Admin ba: "+e.message,"error");
  }
 }
+/* CREATOR MONETIZATION ADMIN */
+async function loadCreatorAdmin(){
+ const box=document.getElementById("creatorApplicationsList");
+ if(!box)return;
+ box.textContent="Ana ɗauko bukatun creators...";
+ const {data,error}=await db.from("creator_applications").select("user_id,display_name,bio,social_link,status,created_at").order("created_at",{ascending:false}).limit(100);
+ if(error){box.textContent="Ba a iya ɗauko creators ba. Duba creator-admin-permissions.sql: "+error.message;return;}
+ if(!data?.length){box.innerHTML='<p class="help">Babu bukatar Creator a yanzu.</p>';}
+ else box.innerHTML=data.map(x=>'<div class="post"><h4>'+escapeHTML(x.display_name)+'</h4><p>'+escapeHTML(x.bio||"")+'</p><p class="small">Status: <strong>'+escapeHTML(x.status)+'</strong> · '+escapeHTML(new Date(x.created_at).toLocaleString())+'</p><p class="small">User ID: '+escapeHTML(x.user_id)+'</p>'+(x.social_link?'<p><a href="'+escapeHTML(x.social_link)+'" target="_blank" rel="noopener">Social profile</a></p>':'')+'<button onclick="reviewCreator(\''+escapeHTML(x.user_id)+'\',\'approved\')">✓ Approve</button><button class="danger" onclick="reviewCreator(\''+escapeHTML(x.user_id)+'\',\'rejected\')">Reject</button><button class="secondary" onclick="reviewCreator(\''+escapeHTML(x.user_id)+'\',\'suspended\')">Suspend</button></div>').join("");
+ await loadCreatorEarningsAdmin();
+}
+async function reviewCreator(userId,status){
+ if(!["approved","rejected","suspended"].includes(status))return;
+ if(!confirm("Kana son canza matsayin wannan Creator zuwa "+status+"?"))return;
+ const {data:userData,error:userError}=await db.auth.getUser();
+ if(userError||!userData.user){alert("Ka sake shiga Admin.");return;}
+ const {error}=await db.from("creator_applications").update({status,reviewed_at:new Date().toISOString(),reviewed_by:userData.user.id}).eq("user_id",userId);
+ if(error){alert("Ba a iya sabunta status ba: "+error.message);return;}
+ await loadCreatorAdmin();
+}
+async function adminAddCreatorEarning(){
+ const userId=document.getElementById("creatorEarningUserId").value.trim();
+ const source_type=document.getElementById("creatorEarningSource").value;
+ const source_label=document.getElementById("creatorEarningLabel").value.trim();
+ const amount=Number(document.getElementById("creatorEarningAmount").value);
+ const note=document.getElementById("creatorEarningNote").value.trim();
+ const button=document.getElementById("creatorEarningSave");
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(userId)){showMessage("creatorEarningMessage","Saka ingantaccen Creator User ID (UUID).","error");return;}
+ if(!Number.isFinite(amount)||amount<=0){showMessage("creatorEarningMessage","Saka adadin kuɗi mafi girma da sifili.","error");return;}
+ if(!source_label){showMessage("creatorEarningMessage","Saka bayanin sponsor ko asalin kuɗin.","error");return;}
+ button.disabled=true;
+ try{
+  const {error}=await db.from("creator_earnings").insert({user_id:userId,source_type,source_label,amount,currency:"NGN",status:"pending",note});
+  if(error)throw error;
+  showMessage("creatorEarningMessage","An rubuta earnings a matsayin PENDING. Bayan tantancewa za ka iya amincewa ko yi marking paid.","success");
+  ["creatorEarningUserId","creatorEarningLabel","creatorEarningAmount","creatorEarningNote"].forEach(id=>document.getElementById(id).value="");
+  await loadCreatorEarningsAdmin();
+ }catch(e){showMessage("creatorEarningMessage","Ba a ajiye earnings ba: "+e.message,"error");}
+ finally{button.disabled=false;}
+}
+async function loadCreatorEarningsAdmin(){
+ const box=document.getElementById("creatorEarningsAdminList");if(!box)return;
+ const {data,error}=await db.from("creator_earnings").select("id,user_id,source_type,source_label,amount,status,created_at,note").order("created_at",{ascending:false}).limit(100);
+ if(error){box.textContent="Ba a iya ɗauko earnings: "+error.message;return;}
+ if(!data?.length){box.innerHTML='<p class="help">Babu earnings da aka rubuta tukuna.</p>';return;}
+ box.innerHTML=data.map(x=>'<div class="post"><strong>₦'+Number(x.amount).toLocaleString("en-NG",{maximumFractionDigits:2})+'</strong> — '+escapeHTML(x.source_label)+'<p class="small">Creator: '+escapeHTML(x.user_id)+' · '+escapeHTML(x.source_type)+' · <strong>'+escapeHTML(x.status)+'</strong></p><p class="small">'+escapeHTML(x.note||"")+'</p>'+(x.status==="pending"?'<button onclick="setCreatorEarningStatus(\''+escapeHTML(x.id)+'\',\'approved\')">Approve amount</button>':'')+(x.status==="approved"?'<button onclick="setCreatorEarningStatus(\''+escapeHTML(x.id)+'\',\'paid\')">Mark as PAID</button>':'')+(x.status!=="paid"&&x.status!=="reversed"?'<button class="danger" onclick="setCreatorEarningStatus(\''+escapeHTML(x.id)+'\',\'reversed\')">Reverse</button>':'')+'</div>').join("");
+}
+async function setCreatorEarningStatus(id,status){
+ if(!["approved","paid","reversed"].includes(status))return;
+ const promptText=status==="paid"?"Ka tabbatar an tura kuɗin creator ɗin a zahiri?":"Canza earnings status zuwa "+status+"?";
+ if(!confirm(promptText))return;
+ const patch={status};if(status==="paid")patch.paid_at=new Date().toISOString();
+ const {error}=await db.from("creator_earnings").update(patch).eq("id",id);
+ if(error){alert("Ba a iya canza status ba: "+error.message);return;}
+ await loadCreatorEarningsAdmin();
+}
+
 function showLogin(){
  document.getElementById("loginSection").classList.remove("hidden");
  document.getElementById("dashboard").classList.add("hidden");
