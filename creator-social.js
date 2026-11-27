@@ -108,8 +108,12 @@ async function enhanceCreatorProfile(id){
   ]);
  }
  if(!panel.isConnected)return;
- const stats=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Likes',likes.count,likes.error],['Comments',comments.count,comments.error]];
- panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="social-stat-grid">'+stats.map(x=>'<div class="social-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong>'+x[0]+'</div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
+ const views=ids.length?await db().from('social_reel_views').select('reel_id',{count:'exact',head:true}).in('reel_id',ids):{count:0,error:null};
+ const stats=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Reel Views',views.count,views.error],['Reel Likes',likes.count,likes.error],['Comments',comments.count,comments.error]];
+ if(!document.getElementById('uyPublicCreatorStatsStyle')){
+  const style=document.createElement('style');style.id='uyPublicCreatorStatsStyle';style.textContent='.uy-public-creator-stats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px 0}.uy-public-creator-stat{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:17px 8px;text-align:center;min-width:0;box-shadow:0 2px 8px #071b4908}.uy-public-creator-stat strong{display:block;color:#0759c7;font-size:27px;line-height:1.2;margin-bottom:5px}.uy-public-creator-stat span{display:block;color:#26344a;font-size:15px;line-height:1.3}';document.head.appendChild(style);
+ }
+ panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="uy-public-creator-stats">'+stats.map(x=>'<div class="uy-public-creator-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong><span>'+x[0]+'</span></div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
  const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
 }
 async function socialPublishCreatorPost(){
