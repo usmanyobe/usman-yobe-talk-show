@@ -89,10 +89,11 @@ async function loadCreatorDirectory(){
 async function enhanceCreatorProfile(id){
  const box=document.getElementById('memberProfileCard');if(!box||!validId(id))return;
  const old=document.getElementById('uyCreatorPublicStats');if(old)old.remove();
- const {data:creator,error}=await db().from('creator_applications').select('display_name,bio,social_link,status').eq('user_id',id).eq('status','approved').maybeSingle();
+ const {data:creator,error}=await db().from('creator_applications').select('display_name,bio,social_link,status,cover_image_url').eq('user_id',id).eq('status','approved').maybeSingle();
  if(error||!creator)return;
  const panel=document.createElement('section');panel.id='uyCreatorPublicStats';panel.className='social-hub-card';panel.style.margin='14px 0';panel.innerHTML='<h3 style="margin-top:0">🎬 Creator Channel</h3><p class="community-muted">Ana loda kididdigar channel...</p>';
  const wall=box.querySelector('.community-panel');if(wall)wall.insertAdjacentElement('beforebegin',panel);else box.appendChild(panel);
+ const profileResult=await db().from('community_profiles').select('avatar_url').eq('id',id).maybeSingle();
  const [posts,reels,followers,listings,groups]=await Promise.all([
   db().from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',id),
   db().from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',id),
@@ -115,7 +116,9 @@ async function enhanceCreatorProfile(id){
  if(!document.getElementById('uyPublicCreatorStatsStyle')){
   const style=document.createElement('style');style.id='uyPublicCreatorStatsStyle';style.textContent='.uy-public-creator-stats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px 0}.uy-public-creator-stat{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:17px 8px;text-align:center;min-width:0;box-shadow:0 2px 8px #071b4908}.uy-public-creator-stat strong{display:block;color:#0759c7;font-size:27px;line-height:1.2;margin-bottom:5px}.uy-public-creator-stat span{display:block;color:#26344a;font-size:15px;line-height:1.3}';document.head.appendChild(style);
  }
- panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="uy-public-creator-stats">'+stats.map(x=>'<div class="uy-public-creator-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong><span>'+x[0]+'</span></div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
+ const creatorAvatar=profileResult.data?.avatar_url||'';
+ const coverStyle=creator.cover_image_url?'background-image:linear-gradient(0deg,#071b49bb,#071b4933),url(\''+esc(creator.cover_image_url)+'\');background-size:cover;background-position:center':'background:linear-gradient(120deg,#071b49,#1769c2)';
+ panel.innerHTML='<div class="uy-creator-public-cover" style="'+coverStyle+'"><div class="uy-creator-public-identity">'+(creatorAvatar?'<img src="'+esc(creatorAvatar)+'" alt="Creator profile">':'<span>👤</span>')+'<div><h3>'+esc(creator.display_name||'Creator')+'</h3><small>🎬 USMAN YOBE Creator Channel</small></div></div></div><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="uy-public-creator-stats">'+stats.map(x=>'<div class="uy-public-creator-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong><span>'+x[0]+'</span></div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
  await mountPublicCreatorFeed(id,panel);
  const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
 }
@@ -146,6 +149,23 @@ async function mountPublicCreatorFeed(id,panel){
  await show('posts');
 }
 
+async function socialSaveCreatorBranding(){
+ if(!socialRequireUser())return;
+ const avatarInput=document.getElementById('uyCreatorAvatarFile'),coverInput=document.getElementById('uyCreatorCoverFile');
+ const avatarFile=avatarInput?.files?.[0],coverFile=coverInput?.files?.[0];
+ const status=document.getElementById('uyCreatorBrandingStatus'),button=document.getElementById('uyCreatorBrandingSave');
+ if(!avatarFile&&!coverFile){if(status)status.textContent='Da farko zaɓi hoton profile ko cover photo.';return;}
+ for(const f of [avatarFile,coverFile].filter(Boolean)){if(!f.type.startsWith('image/')){if(status)status.textContent='A zaɓi hotuna kawai.';return;}const max=f===avatarFile?5:8;if(f.size>max*1024*1024){if(status)status.textContent='Girman hoton bai wuce '+max+' MB ba.';return;}}
+ if(button){button.disabled=true;button.textContent='Ana ajiyewa...';}
+ try{
+  if(avatarFile){const ext=(avatarFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path='community/'+user().id+'/creator-avatar-'+Date.now()+'.'+ext;const up=await db().storage.from('news-images').upload(path,avatarFile,{upsert:false,contentType:avatarFile.type});if(up.error)throw up.error;const url=db().storage.from('news-images').getPublicUrl(path).data.publicUrl;const saved=await db().from('community_profiles').update({avatar_url:url}).eq('id',user().id);if(saved.error)throw saved.error;}
+  if(coverFile){const ext=(coverFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path='community/'+user().id+'/creator-cover-'+Date.now()+'.'+ext;const up=await db().storage.from('news-images').upload(path,coverFile,{upsert:false,contentType:coverFile.type});if(up.error)throw up.error;const url=db().storage.from('news-images').getPublicUrl(path).data.publicUrl;const saved=await db().from('creator_applications').update({cover_image_url:url}).eq('user_id',user().id).eq('status','approved');if(saved.error)throw saved.error;}
+  if(status)status.textContent='An ajiye hotunan channel cikin nasara. Sake buɗe profile domin ganin sabon salo.';
+  if(avatarInput)avatarInput.value='';if(coverInput)coverInput.value='';
+ }catch(e){if(status)status.textContent='Ba a iya ajiyewa ba: '+(e.message||String(e));}
+ finally{if(button){button.disabled=false;button.textContent='💾 Ajiye hotunan channel';}}
+}
+window.socialSaveCreatorBranding=socialSaveCreatorBranding;
 async function socialPublishCreatorPost(){
  if(!socialRequireUser())return;
  const panel=document.getElementById('uyCreatorPublishPanel'),status=document.getElementById('uyCreatorPublishStatus'),button=document.getElementById('uyCreatorPublishButton');
