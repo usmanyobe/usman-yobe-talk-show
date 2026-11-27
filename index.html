@@ -1789,14 +1789,14 @@ db.from('member_follows').select('follower_id',{count:'exact',head:true}).eq('fo
 db.from('social_reels').select('id').eq('user_id',communityUser.id)
 ]);
 const ownReelIds=(reelRows.data||[]).map(x=>x.id);
-let reelLikes={count:0,error:null},reelComments={count:0,error:null};
+let reelLikes={count:0,error:null},reelComments={count:0,error:null},reelViews={count:0,error:null};
 if(ownReelIds.length){
 [reelLikes,reelComments]=await Promise.all([
 db.from('social_reel_likes').select('reel_id',{count:'exact',head:true}).in('reel_id',ownReelIds),
-db.from('social_reel_comments').select('id',{count:'exact',head:true}).in('reel_id',ownReelIds)
+db.from('social_reel_comments').select('id',{count:'exact',head:true}).in('reel_id',ownReelIds),\n   db.from('social_reel_views').select('reel_id',{count:'exact',head:true}).in('reel_id',ownReelIds)
 ]);
 }
-const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Reel Likes',reelLikes.count,reelLikes.error],['Comments',reelComments.count,reelComments.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];
+const vals=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Reel Views',reelViews.count,reelViews.error],['Reel Likes',reelLikes.count,reelLikes.error],['Comments',reelComments.count,reelComments.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];
 box.innerHTML=vals.map(v=>'<div class="social-stat"><strong>'+((v[2]?'—':v[1]||0))+'</strong>'+v[0]+'</div>').join('');
 if(application.error&&/creator_applications|does not exist|schema cache/i.test(application.error.message||'')){if(status)status.textContent='Ana bukatar gudanar da creator-monetization-setup.sql a Supabase kafin neman zama Creator.';}
 else if(application.data){if(status)status.textContent='Application: '+application.data.status.toUpperCase()+' · '+socialEsc(application.data.display_name);if(apply){apply.disabled=true;apply.textContent='An riga an aika da bukata';}}
