@@ -1,11 +1,13 @@
 
-const CACHE_NAME = "usman-yobe-talk-show-v193";
+const CACHE_NAME = "usman-yobe-talk-show-v194";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./app-services.js",
+  "./community-advanced.js",
+  "./creator-social.js",
   "./kal-multimedia-icon.svg",
   "./abi-city-icon.svg"
 ];
