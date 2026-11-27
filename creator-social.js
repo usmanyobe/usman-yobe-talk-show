@@ -43,7 +43,8 @@ async function toggleLike(id){
  if(readError){note('Ba a iya duba Like ba: '+readError.message,true);return;}
  const result=existing?await db().from('social_reel_likes').delete().eq('reel_id',id).eq('user_id',user().id):await db().from('social_reel_likes').insert({reel_id:id,user_id:user().id});
  if(result.error){note('Ba a sabunta Like ba: '+result.error.message,true);return;}
- await loadReels(true);
+ const button=document.querySelector('[data-reel-like="'+CSS.escape(id)+'"]');
+ if(button){const match=button.textContent.match(/\((\d+)\)/);let count=match?Number(match[1]):0;const nowLiked=!existing;count=Math.max(0,count+(nowLiked?1:-1));button.textContent=(nowLiked?'❤️ Liked':'🤍 Like')+' ('+count+')';}
 }
 async function addComment(id){
  if(!user()){note('Shiga account domin yin comment.',true);return;}
@@ -52,7 +53,11 @@ async function addComment(id){
  if(content.length<1){note('Rubuta comment kafin aikawa.',true);return;}
  const {error}=await db().from('social_reel_comments').insert({reel_id:id,user_id:user().id,content});
  if(error){note('Ba a aika comment ba: '+error.message,true);return;}
- await loadReels(true);note('An aika comment.');
+ const list=document.querySelector('[data-reel="'+CSS.escape(id)+'"] .uy-reel-comments');
+ if(list){const empty=list.querySelector('.community-muted');if(empty)empty.remove();const item=document.createElement('div');item.className='uy-reel-comment';const who=document.createElement('b');who.textContent='Kai';const body=document.createElement('p');body.textContent=content;const when=document.createElement('small');when.textContent=new Date().toLocaleString();item.append(who,body,when);list.appendChild(item);}
+ const count=document.querySelector('[data-reel-comment-count="'+CSS.escape(id)+'"]');
+ if(count){const n=Number((count.textContent.match(/\d+/)||['0'])[0])+1;count.textContent=n+' comments';}
+ input.value='';note('An aika comment.');
 }
 async function loadCreatorDirectory(){
  const panel=document.getElementById('socialCreatorPanel');if(!panel)return;
@@ -82,6 +87,7 @@ async function loadCreatorDirectory(){
 function addStyles(){
  if(document.getElementById('uyCreatorSocialStyles'))return;
  const style=document.createElement('style');style.id='uyCreatorSocialStyles';style.textContent='.uy-reel-card video{display:block;width:100%;height:min(65vh,560px);aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:12px;margin:10px 0;flex:none}.uy-reel-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.uy-reel-author small{color:#778399;flex:1}.uy-reel-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}.uy-reel-actions span{font-size:12px;color:#6b778c}.uy-reel-comments{display:grid;gap:7px;margin-top:10px}.uy-reel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-reel-comment p{margin:5px 0;font-size:13px;white-space:pre-wrap}.uy-reel-comment small{color:#778399;font-size:10px}.uy-reel-comment-form{display:flex;gap:8px;margin-top:10px}.uy-reel-comment-form input{flex:1;min-width:0}.uy-creator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.uy-creator-card{background:#f7f9fd;border:1px solid #e5ebf4;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}.uy-creator-card>img,.uy-creator-card>span{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6edf8;display:grid;place-items:center;font-size:26px}.uy-creator-card>small{color:#68768b;font-size:11px}.uy-creator-card p{font-size:12px;line-height:1.5;margin:0}.uy-creator-card>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.uy-creator-card button{font-size:11px;padding:8px}.uy-reel-comment-form button{white-space:nowrap}';
+ style.textContent+=' html{scroll-behavior:auto!important} #socialReelsList{overflow-anchor:none} .uy-reel-card{overflow-anchor:none}';
  document.head.appendChild(style);
 }
 function init(){
