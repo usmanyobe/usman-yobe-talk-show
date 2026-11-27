@@ -6,9 +6,10 @@ const db=()=>window.db;
 const user=()=>window.communityUser;
 const note=(s,bad)=>{const e=document.getElementById('socialHubStatus');if(e){e.textContent=s;e.style.color=bad?'#b42318':'#087443';}};
 const validId=id=>/^[0-9a-f-]{30,40}$/i.test(String(id));
-async function loadReels(){
+async function loadReels(preservePosition=false){
  const box=document.getElementById('socialReelsList');if(!box)return;
- box.textContent='Ana loda Reels...';
+ const savedY=preservePosition?(window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0):null;
+ if(!box.children.length)box.textContent='Ana loda Reels...';
  const {data:reels,error}=await db().from('social_reels').select('id,user_id,title,video_url,caption,created_at').order('created_at',{ascending:false}).limit(30);
  if(error){box.textContent='Ba a iya loda Reels ba: '+error.message;return;}
  const rows=reels||[];if(!rows.length){box.innerHTML='<p class="community-muted">Babu Reel tukuna. Ka zama na farko da zai wallafa.</p>';return;}
@@ -29,6 +30,7 @@ async function loadReels(){
   const commentHtml=rc.map(c=>'<div class="uy-reel-comment"><b>'+esc(profiles.get(String(c.user_id))?.full_name||'Member')+'</b><p>'+esc(c.content)+'</p><small>'+esc(new Date(c.created_at).toLocaleString())+'</small></div>').join('');
   return '<article class="social-hub-card uy-reel-card" data-reel="'+esc(r.id)+'"><div class="uy-reel-author"><b>'+esc(authorName)+'</b><small>'+esc(new Date(r.created_at).toLocaleString())+'</small><button type="button" class="community-btn secondary" data-open-creator="'+esc(r.user_id)+'">View profile</button></div><h4>'+esc(r.title)+'</h4><p>'+esc(r.caption||'')+'</p><video controls playsinline preload="metadata" src="'+esc(r.video_url)+'"></video><div class="uy-reel-actions"><button type="button" class="community-btn secondary" data-reel-like="'+esc(r.id)+'">'+(mine?'❤️ Liked':'🤍 Like')+' ('+rl.length+')</button><span>'+rc.length+' comments</span><button type="button" class="community-btn secondary" data-reel-save="'+esc(r.id)+'">🔖 Save</button></div><div class="uy-reel-comments">'+(commentHtml||'<p class="community-muted">Babu comments tukuna.</p>')+'</div>'+(user()?'<div class="uy-reel-comment-form"><input maxlength="800" id="uyReelComment_'+esc(r.id)+'" class="community-input" placeholder="Rubuta comment..."><button type="button" class="community-btn" data-reel-comment="'+esc(r.id)+'">Aika</button></div>':'<p class="community-muted">Shiga account domin yin comment.</p>')+'</article>';
  }).join('');
+ if(savedY!==null){requestAnimationFrame(()=>{window.scrollTo({top:savedY,behavior:'instant'});requestAnimationFrame(()=>window.scrollTo({top:savedY,behavior:'instant'}));});}
  box.querySelectorAll('[data-reel-like]').forEach(b=>b.addEventListener('click',()=>toggleLike(b.dataset.reelLike)));
  box.querySelectorAll('[data-reel-comment]').forEach(b=>b.addEventListener('click',()=>addComment(b.dataset.reelComment)));
  box.querySelectorAll('[data-open-creator]').forEach(b=>b.addEventListener('click',()=>{if(typeof window.showMemberProfile==='function')window.showMemberProfile(b.dataset.openCreator);}));
@@ -41,7 +43,7 @@ async function toggleLike(id){
  if(readError){note('Ba a iya duba Like ba: '+readError.message,true);return;}
  const result=existing?await db().from('social_reel_likes').delete().eq('reel_id',id).eq('user_id',user().id):await db().from('social_reel_likes').insert({reel_id:id,user_id:user().id});
  if(result.error){note('Ba a sabunta Like ba: '+result.error.message,true);return;}
- await loadReels();
+ await loadReels(true);
 }
 async function addComment(id){
  if(!user()){note('Shiga account domin yin comment.',true);return;}
@@ -50,7 +52,7 @@ async function addComment(id){
  if(content.length<1){note('Rubuta comment kafin aikawa.',true);return;}
  const {error}=await db().from('social_reel_comments').insert({reel_id:id,user_id:user().id,content});
  if(error){note('Ba a aika comment ba: '+error.message,true);return;}
- await loadReels();note('An aika comment.');
+ await loadReels(true);note('An aika comment.');
 }
 async function loadCreatorDirectory(){
  const panel=document.getElementById('socialCreatorPanel');if(!panel)return;
@@ -79,7 +81,7 @@ async function loadCreatorDirectory(){
 }
 function addStyles(){
  if(document.getElementById('uyCreatorSocialStyles'))return;
- const style=document.createElement('style');style.id='uyCreatorSocialStyles';style.textContent='.uy-reel-card video{display:block;width:100%;max-height:65vh;background:#000;border-radius:12px;margin:10px 0}.uy-reel-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.uy-reel-author small{color:#778399;flex:1}.uy-reel-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}.uy-reel-actions span{font-size:12px;color:#6b778c}.uy-reel-comments{display:grid;gap:7px;margin-top:10px}.uy-reel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-reel-comment p{margin:5px 0;font-size:13px;white-space:pre-wrap}.uy-reel-comment small{color:#778399;font-size:10px}.uy-reel-comment-form{display:flex;gap:8px;margin-top:10px}.uy-reel-comment-form input{flex:1;min-width:0}.uy-creator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.uy-creator-card{background:#f7f9fd;border:1px solid #e5ebf4;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}.uy-creator-card>img,.uy-creator-card>span{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6edf8;display:grid;place-items:center;font-size:26px}.uy-creator-card>small{color:#68768b;font-size:11px}.uy-creator-card p{font-size:12px;line-height:1.5;margin:0}.uy-creator-card>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.uy-creator-card button{font-size:11px;padding:8px}.uy-reel-comment-form button{white-space:nowrap}';
+ const style=document.createElement('style');style.id='uyCreatorSocialStyles';style.textContent='.uy-reel-card video{display:block;width:100%;height:min(65vh,560px);aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:12px;margin:10px 0;flex:none}.uy-reel-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.uy-reel-author small{color:#778399;flex:1}.uy-reel-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}.uy-reel-actions span{font-size:12px;color:#6b778c}.uy-reel-comments{display:grid;gap:7px;margin-top:10px}.uy-reel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-reel-comment p{margin:5px 0;font-size:13px;white-space:pre-wrap}.uy-reel-comment small{color:#778399;font-size:10px}.uy-reel-comment-form{display:flex;gap:8px;margin-top:10px}.uy-reel-comment-form input{flex:1;min-width:0}.uy-creator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.uy-creator-card{background:#f7f9fd;border:1px solid #e5ebf4;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}.uy-creator-card>img,.uy-creator-card>span{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6edf8;display:grid;place-items:center;font-size:26px}.uy-creator-card>small{color:#68768b;font-size:11px}.uy-creator-card p{font-size:12px;line-height:1.5;margin:0}.uy-creator-card>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.uy-creator-card button{font-size:11px;padding:8px}.uy-reel-comment-form button{white-space:nowrap}';
  document.head.appendChild(style);
 }
 function init(){
