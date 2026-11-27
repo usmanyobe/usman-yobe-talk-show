@@ -116,8 +116,36 @@ async function enhanceCreatorProfile(id){
   const style=document.createElement('style');style.id='uyPublicCreatorStatsStyle';style.textContent='.uy-public-creator-stats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px 0}.uy-public-creator-stat{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:17px 8px;text-align:center;min-width:0;box-shadow:0 2px 8px #071b4908}.uy-public-creator-stat strong{display:block;color:#0759c7;font-size:27px;line-height:1.2;margin-bottom:5px}.uy-public-creator-stat span{display:block;color:#26344a;font-size:15px;line-height:1.3}';document.head.appendChild(style);
  }
  panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="uy-public-creator-stats">'+stats.map(x=>'<div class="uy-public-creator-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong><span>'+x[0]+'</span></div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
+ await mountPublicCreatorFeed(id,panel);
  const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
 }
+
+async function mountPublicCreatorFeed(id,panel){
+ const wrap=document.createElement('section');wrap.id='uyCreatorChannelFeed';wrap.style.marginTop='16px';
+ wrap.innerHTML='<h3 style="margin:0 0 10px">📺 Creator Posts & Reels</h3><div class="uy-channel-tabs"><button type="button" class="active" data-channel-tab="posts">📰 Posts</button><button type="button" data-channel-tab="reels">🎬 Reels</button></div><div id="uyCreatorChannelItems"><p class="community-muted">Ana loda abubuwan creator...</p></div>';
+ panel.appendChild(wrap);
+ const styleId='uyCreatorChannelFeedStyle';
+ if(!document.getElementById(styleId)){const st=document.createElement('style');st.id=styleId;st.textContent='.uy-channel-tabs{display:flex;gap:8px;margin:10px 0 12px}.uy-channel-tabs button{flex:1;border:1px solid #dce5f2;border-radius:9px;padding:11px;background:#f2f6fc;color:#18345f;font-weight:800}.uy-channel-tabs button.active{background:#0759c7;color:#fff;border-color:#0759c7}.uy-channel-item{background:#fff;border:1px solid #e6ebf3;border-radius:12px;padding:12px;margin:10px 0;overflow:hidden}.uy-channel-item p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}.uy-channel-item img,.uy-channel-item video{display:block;width:100%;max-height:420px;object-fit:contain;background:#080808;border-radius:9px;margin-top:9px}';document.head.appendChild(st);}
+ async function show(kind){
+  wrap.querySelectorAll('[data-channel-tab]').forEach(b=>b.classList.toggle('active',b.dataset.channelTab===kind));
+  const out=wrap.querySelector('#uyCreatorChannelItems');out.innerHTML='<p class="community-muted">Ana loda...</p>';
+  if(kind==='posts'){
+   let {data,error}=await db().from('forum_posts').select('id,author_name,content,media_url,media_type,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(30);
+   if(error&&/media_url|media_type|column/i.test(error.message||'')){const fallback=await db().from('forum_posts').select('id,author_name,content,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(30);data=fallback.data;error=fallback.error;}
+   if(error){out.innerHTML='<p class="community-muted">Ba a iya loda posts ba: '+esc(error.message)+'</p>';return;}
+   if(!data?.length){out.innerHTML='<p class="community-muted">Babu post a wannan channel tukuna.</p>';return;}
+   out.innerHTML=data.map(p=>'<article class="uy-channel-item"><small class="community-muted">'+esc(new Date(p.created_at).toLocaleString())+'</small><p>'+esc(p.content||'')+'</p>'+(p.media_url?(p.media_type==='video'?'<video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video>':'<img loading="lazy" src="'+esc(p.media_url)+'" alt="Creator post">'):'')+'</article>').join('');
+  }else{
+   const {data,error}=await db().from('social_reels').select('id,title,caption,video_url,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(30);
+   if(error){out.innerHTML='<p class="community-muted">Ba a iya loda Reels ba: '+esc(error.message)+'</p>';return;}
+   if(!data?.length){out.innerHTML='<p class="community-muted">Babu Reel a wannan channel tukuna.</p>';return;}
+   out.innerHTML=data.map(r=>'<article class="uy-channel-item"><strong>'+esc(r.title||'Reel')+'</strong><small class="community-muted" style="display:block;margin-top:5px">'+esc(new Date(r.created_at).toLocaleString())+'</small><p>'+esc(r.caption||'')+'</p><video controls playsinline preload="metadata" src="'+esc(r.video_url)+'"></video></article>').join('');
+  }
+ }
+ wrap.querySelectorAll('[data-channel-tab]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.channelTab)));
+ await show('posts');
+}
+
 async function socialPublishCreatorPost(){
  if(!socialRequireUser())return;
  const panel=document.getElementById('uyCreatorPublishPanel'),status=document.getElementById('uyCreatorPublishStatus'),button=document.getElementById('uyCreatorPublishButton');
