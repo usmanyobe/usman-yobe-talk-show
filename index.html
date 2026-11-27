@@ -507,7 +507,9 @@ body.uy-auth-checking #uyAuthGate,body.uy-auth-ready:not(.uy-authenticated) #uyA
   }
   window.addEventListener('error',function(event){
     var msg=event.message||event.error?.message||'Script failed to load';
-    showStartupError(msg);
+    var source=event.filename?(' | File: '+event.filename.split('/').pop()):'';
+    var line=event.lineno?(' | Line: '+event.lineno):'';
+    showStartupError(msg+source+line);
   },true);
   window.addEventListener('unhandledrejection',function(event){
     showStartupError(event.reason?.message||event.reason||'Unhandled promise rejection');
