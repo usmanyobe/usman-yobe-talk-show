@@ -93,10 +93,12 @@ async function enhanceCreatorProfile(id){
  if(error||!creator)return;
  const panel=document.createElement('section');panel.id='uyCreatorPublicStats';panel.className='social-hub-card';panel.style.margin='14px 0';panel.innerHTML='<h3 style="margin-top:0">🎬 Creator Channel</h3><p class="community-muted">Ana loda kididdigar channel...</p>';
  const wall=box.querySelector('.community-panel');if(wall)wall.insertAdjacentElement('beforebegin',panel);else box.appendChild(panel);
- const [posts,reels,followers]=await Promise.all([
+ const [posts,reels,followers,listings,groups]=await Promise.all([
   db().from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',id),
   db().from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',id),
-  db().from('member_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id)
+  db().from('member_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id),
+  db().from('social_marketplace').select('id',{count:'exact',head:true}).eq('seller_id',id),
+  db().from('social_groups').select('id',{count:'exact',head:true}).eq('owner_id',id)
  ]);
  const idsResult=await db().from('social_reels').select('id').eq('user_id',id);
  const ids=(idsResult.data||[]).map(x=>x.id);
@@ -109,7 +111,7 @@ async function enhanceCreatorProfile(id){
  }
  if(!panel.isConnected)return;
  const views=ids.length?await db().from('social_reel_views').select('reel_id',{count:'exact',head:true}).in('reel_id',ids):{count:0,error:null};
- const stats=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Reel Views',views.count,views.error],['Reel Likes',likes.count,likes.error],['Comments',comments.count,comments.error]];
+ const stats=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Reel Views',views.count,views.error],['Reel Likes',likes.count,likes.error],['Comments',comments.count,comments.error],['Listings',listings.count,listings.error],['Groups',groups.count,groups.error]];
  if(!document.getElementById('uyPublicCreatorStatsStyle')){
   const style=document.createElement('style');style.id='uyPublicCreatorStatsStyle';style.textContent='.uy-public-creator-stats{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:14px 0}.uy-public-creator-stat{background:#fff;border:1px solid #e6ebf3;border-radius:13px;padding:17px 8px;text-align:center;min-width:0;box-shadow:0 2px 8px #071b4908}.uy-public-creator-stat strong{display:block;color:#0759c7;font-size:27px;line-height:1.2;margin-bottom:5px}.uy-public-creator-stat span{display:block;color:#26344a;font-size:15px;line-height:1.3}';document.head.appendChild(style);
  }
