@@ -831,7 +831,10 @@ async function refreshToNews(){
  document.addEventListener("touchstart",e=>{
   if(e.touches.length!==1)return;
   startY=e.touches[0].clientY;startX=e.touches[0].clientX;
-  tracking=(window.scrollY<=2&&document.documentElement.scrollTop<=2&&document.body.scrollTop<=2);
+  const activePage=document.querySelector(".page.active");
+  // Do not trigger pull-to-refresh inside Community/Reels: it can reload the feed
+  // while a member is scrolling through comments and jump the page to the top.
+  tracking=activePage?.id!=="communityPage"&&(window.scrollY<=2&&document.documentElement.scrollTop<=2&&document.body.scrollTop<=2);
  },{passive:true});
  document.addEventListener("touchend",e=>{
   if(!tracking||!e.changedTouches.length)return;
