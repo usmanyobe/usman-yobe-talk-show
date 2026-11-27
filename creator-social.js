@@ -123,12 +123,65 @@ async function enhanceCreatorProfile(id){
  const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
 }
 
+async function channelEngagement(kind,id,card){
+ const table=kind==='post'?'social_post_likes':'social_reel_likes',key=kind==='post'?'post_id':'reel_id';
+ const member=user();if(!member){note('Shiga account domin yin Like ko Comment.',true);return;}
+ const button=card.querySelector('[data-channel-like]');
+ const {data:existing,error:readError}=await db().from(table).select(key).eq(key,id).eq('user_id',member.id).maybeSingle();
+ if(readError){note('Ba a iya duba Like ba: '+readError.message,true);return;}
+ const result=existing?await db().from(table).delete().eq(key,id).eq('user_id',member.id):await db().from(table).insert({[key]:id,user_id:member.id});
+ if(result.error){note('Ba a sabunta Like ba: '+result.error.message,true);return;}
+ const countEl=card.querySelector('[data-channel-like-count]');
+ let count=Number(countEl?.textContent||0)+(existing?-1:1);count=Math.max(0,count);
+ if(countEl)countEl.textContent=String(count);
+ if(button){button.textContent=existing?'🤍 Like':'❤️ Liked';button.dataset.liked=existing?'0':'1';}
+}
+async function channelAddComment(kind,id,card){
+ const member=user();if(!member){note('Shiga account domin yin comment.',true);return;}
+ const input=card.querySelector('[data-channel-comment-input]'),content=input?.value.trim()||'';
+ if(!content){note('Rubuta comment kafin aikawa.',true);return;}
+ const table=kind==='post'?'social_post_comments':'social_reel_comments',key=kind==='post'?'post_id':'reel_id';
+ const {data,error}=await db().from(table).insert({[key]:id,user_id:member.id,content}).select('id,user_id,content,created_at').single();
+ if(error){note('Ba a aika comment ba: '+error.message,true);return;}
+ const list=card.querySelector('[data-channel-comments]');
+ const item=document.createElement('div');item.className='uy-channel-comment';
+ const who=document.createElement('b');who.textContent=member.user_metadata?.full_name||member.email||'Kai';
+ const body=document.createElement('p');body.textContent=data.content;
+ const when=document.createElement('small');when.textContent=new Date(data.created_at).toLocaleString();
+ item.append(who,body,when);list?.appendChild(item);
+ const count=card.querySelector('[data-channel-comment-count]');
+ if(count)count.textContent=String(Number(count.textContent||0)+1);
+ if(input)input.value='';
+}
 async function mountPublicCreatorFeed(id,panel){
  const wrap=document.createElement('section');wrap.id='uyCreatorChannelFeed';wrap.style.marginTop='16px';
  wrap.innerHTML='<h3 style="margin:0 0 10px">📺 Creator Posts & Reels</h3><div class="uy-channel-tabs"><button type="button" class="active" data-channel-tab="posts">📰 Posts</button><button type="button" data-channel-tab="reels">🎬 Reels</button></div><div id="uyCreatorChannelItems"><p class="community-muted">Ana loda abubuwan creator...</p></div>';
  panel.appendChild(wrap);
  const styleId='uyCreatorChannelFeedStyle';
- if(!document.getElementById(styleId)){const st=document.createElement('style');st.id=styleId;st.textContent='.uy-channel-tabs{display:flex;gap:8px;margin:10px 0 12px}.uy-channel-tabs button{flex:1;border:1px solid #dce5f2;border-radius:9px;padding:11px;background:#f2f6fc;color:#18345f;font-weight:800}.uy-channel-tabs button.active{background:#0759c7;color:#fff;border-color:#0759c7}.uy-channel-item{background:#fff;border:1px solid #e6ebf3;border-radius:12px;padding:12px;margin:10px 0;overflow:hidden}.uy-channel-item p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}.uy-channel-item img,.uy-channel-item video{display:block;width:100%;max-height:420px;object-fit:contain;background:#080808;border-radius:9px;margin-top:9px}';document.head.appendChild(st);}
+ if(!document.getElementById(styleId)){const st=document.createElement('style');st.id=styleId;st.textContent='.uy-channel-tabs{display:flex;gap:8px;margin:10px 0 12px}.uy-channel-tabs button{flex:1;border:1px solid #dce5f2;border-radius:9px;padding:11px;background:#f2f6fc;color:#18345f;font-weight:800}.uy-channel-tabs button.active{background:#0759c7;color:#fff;border-color:#0759c7}.uy-channel-item{background:#fff;border:1px solid #e6ebf3;border-radius:12px;padding:12px;margin:10px 0;overflow:hidden}.uy-channel-item p{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}.uy-channel-item img,.uy-channel-item video{display:block;width:100%;max-height:420px;object-fit:contain;background:#080808;border-radius:9px;margin-top:9px}.uy-channel-engagement{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:10px 0}.uy-channel-engagement button{border:1px solid #dce5f2;border-radius:9px;background:#f4f7fc;color:#17345f;padding:8px 12px;font-weight:700}.uy-channel-comment-list{display:grid;gap:7px;margin:8px 0}.uy-channel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-channel-comment p{margin:4px 0;font-size:13px}.uy-channel-comment small{font-size:10px;color:#778399}.uy-channel-comment-form{display:flex;gap:7px;margin-top:9px}.uy-channel-comment-form input{flex:1;min-width:0;border:1px solid #dce5f2;border-radius:9px;padding:10px}.uy-channel-comment-form button{border:0;border-radius:9px;background:#0759c7;color:#fff;padding:9px 12px;font-weight:700}';document.head.appendChild(st);}
+ async function decorateCard(card,kind,item){
+  const key=kind==='post'?'post_id':'reel_id',likeTable=kind==='post'?'social_post_likes':'social_reel_likes',commentTable=kind==='post'?'social_post_comments':'social_reel_comments';
+  const [likes,comments]=await Promise.all([
+   db().from(likeTable).select('user_id',{count:'exact'}).eq(key,item.id),
+   db().from(commentTable).select('id,user_id,content,created_at').eq(key,item.id).order('created_at',{ascending:true}).limit(100)
+  ]);
+  const member=user(),liked=!!member&&(likes.data||[]).some(x=>String(x.user_id)===String(member.id));
+  const commentRows=comments.data||[],ids=[...new Set(commentRows.map(x=>x.user_id).filter(Boolean))];
+  const names=new Map();
+  if(ids.length){const pr=await db().from('community_profiles').select('id,full_name').in('id',ids);(pr.data||[]).forEach(p=>names.set(String(p.id),p.full_name||'Member'));}
+  const area=document.createElement('div');area.className='uy-channel-engagement';
+  area.innerHTML='<button type="button" data-channel-like>'+(liked?'❤️ Liked':'🤍 Like')+'</button><span><b data-channel-like-count>'+(likes.count??(likes.data||[]).length)+'</b> Likes</span><span><b data-channel-comment-count>'+(comments.count??commentRows.length)+'</b> Comments</span>';
+  const list=document.createElement('div');list.className='uy-channel-comment-list';list.dataset.channelComments='1';
+  commentRows.forEach(c=>{const row=document.createElement('div');row.className='uy-channel-comment';const who=document.createElement('b');who.textContent=names.get(String(c.user_id))||'Member';const body=document.createElement('p');body.textContent=c.content;const when=document.createElement('small');when.textContent=new Date(c.created_at).toLocaleString();row.append(who,body,when);list.appendChild(row);});
+  if(!commentRows.length){const empty=document.createElement('p');empty.className='community-muted';empty.textContent='Babu comment tukuna.';list.appendChild(empty);}
+  const form=document.createElement('div');form.className='uy-channel-comment-form';
+  form.innerHTML='<input data-channel-comment-input maxlength="800" placeholder="Rubuta comment..."><button type="button">Aika</button>';
+  area.querySelector('[data-channel-like]').dataset.liked=liked?'1':'0';
+  area.querySelector('[data-channel-like]').addEventListener('click',()=>channelEngagement(kind,item.id,card));
+  form.querySelector('button').addEventListener('click',()=>channelAddComment(kind,item.id,card));
+  form.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();channelAddComment(kind,item.id,card);}});
+  card.append(area,list,form);
+ }
  async function show(kind){
   wrap.querySelectorAll('[data-channel-tab]').forEach(b=>b.classList.toggle('active',b.dataset.channelTab===kind));
   const out=wrap.querySelector('#uyCreatorChannelItems');out.innerHTML='<p class="community-muted">Ana loda...</p>';
@@ -137,12 +190,14 @@ async function mountPublicCreatorFeed(id,panel){
    if(error&&/media_url|media_type|column/i.test(error.message||'')){const fallback=await db().from('forum_posts').select('id,author_name,content,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(30);data=fallback.data;error=fallback.error;}
    if(error){out.innerHTML='<p class="community-muted">Ba a iya loda posts ba: '+esc(error.message)+'</p>';return;}
    if(!data?.length){out.innerHTML='<p class="community-muted">Babu post a wannan channel tukuna.</p>';return;}
-   out.innerHTML=data.map(p=>'<article class="uy-channel-item"><small class="community-muted">'+esc(new Date(p.created_at).toLocaleString())+'</small><p>'+esc(p.content||'')+'</p>'+(p.media_url?(p.media_type==='video'?'<video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video>':'<img loading="lazy" src="'+esc(p.media_url)+'" alt="Creator post">'):'')+'</article>').join('');
+   out.innerHTML=data.map(p=>'<article class="uy-channel-item" data-channel-kind="post" data-channel-id="'+esc(p.id)+'"><small class="community-muted">'+esc(new Date(p.created_at).toLocaleString())+'</small><p>'+esc(p.content||'')+'</p>'+(p.media_url?(p.media_type==='video'?'<video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video>':'<img loading="lazy" src="'+esc(p.media_url)+'" alt="Creator post">'):'')+'</article>').join('');
+   for(const p of data){const card=out.querySelector('[data-channel-id="'+CSS.escape(String(p.id))+'"]');if(card)await decorateCard(card,'post',p);}
   }else{
    const {data,error}=await db().from('social_reels').select('id,title,caption,video_url,created_at').eq('user_id',id).order('created_at',{ascending:false}).limit(30);
    if(error){out.innerHTML='<p class="community-muted">Ba a iya loda Reels ba: '+esc(error.message)+'</p>';return;}
    if(!data?.length){out.innerHTML='<p class="community-muted">Babu Reel a wannan channel tukuna.</p>';return;}
-   out.innerHTML=data.map(r=>'<article class="uy-channel-item"><strong>'+esc(r.title||'Reel')+'</strong><small class="community-muted" style="display:block;margin-top:5px">'+esc(new Date(r.created_at).toLocaleString())+'</small><p>'+esc(r.caption||'')+'</p><video controls playsinline preload="metadata" src="'+esc(r.video_url)+'"></video></article>').join('');
+   out.innerHTML=data.map(r=>'<article class="uy-channel-item" data-channel-kind="reel" data-channel-id="'+esc(r.id)+'"><strong>'+esc(r.title||'Reel')+'</strong><small class="community-muted" style="display:block;margin-top:5px">'+esc(new Date(r.created_at).toLocaleString())+'</small><p>'+esc(r.caption||'')+'</p><video controls playsinline preload="metadata" src="'+esc(r.video_url)+'"></video></article>').join('');
+   for(const r of data){const card=out.querySelector('[data-channel-id="'+CSS.escape(String(r.id))+'"]');if(card)await decorateCard(card,'reel',r);}
   }
  }
  wrap.querySelectorAll('[data-channel-tab]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.channelTab)));
