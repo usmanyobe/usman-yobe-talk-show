@@ -84,6 +84,32 @@ async function loadCreatorDirectory(){
  section.querySelectorAll('[data-creator-profile]').forEach(b=>b.addEventListener('click',()=>{if(typeof window.showMemberProfile==='function')window.showMemberProfile(b.dataset.creatorProfile);}));
  section.querySelectorAll('[data-creator-follow]').forEach(b=>b.addEventListener('click',async()=>{if(!user()){note('Shiga account domin Follow.',true);return;}const id=b.dataset.creatorFollow;const exists=mine.has(String(id));const q=exists?db().from('member_follows').delete().eq('follower_id',user().id).eq('following_id',id):db().from('member_follows').insert({follower_id:user().id,following_id:id});const {error}=await q;if(error){note('Ba a sabunta Follow ba: '+error.message,true);return;}await loadCreatorDirectory();}));
 }
+async function enhanceCreatorProfile(id){
+ const box=document.getElementById('memberProfileCard');if(!box||!validId(id))return;
+ const old=document.getElementById('uyCreatorPublicStats');if(old)old.remove();
+ const {data:creator,error}=await db().from('creator_applications').select('display_name,bio,social_link,status').eq('user_id',id).eq('status','approved').maybeSingle();
+ if(error||!creator)return;
+ const panel=document.createElement('section');panel.id='uyCreatorPublicStats';panel.className='social-hub-card';panel.style.margin='14px 0';panel.innerHTML='<h3 style="margin-top:0">🎬 Creator Channel</h3><p class="community-muted">Ana loda kididdigar channel...</p>';
+ const wall=box.querySelector('.community-panel');if(wall)wall.insertAdjacentElement('beforebegin',panel);else box.appendChild(panel);
+ const [posts,reels,followers]=await Promise.all([
+  db().from('forum_posts').select('id',{count:'exact',head:true}).eq('user_id',id),
+  db().from('social_reels').select('id',{count:'exact',head:true}).eq('user_id',id),
+  db().from('member_follows').select('follower_id',{count:'exact',head:true}).eq('following_id',id)
+ ]);
+ const idsResult=await db().from('social_reels').select('id').eq('user_id',id);
+ const ids=(idsResult.data||[]).map(x=>x.id);
+ let likes={count:0,error:null},comments={count:0,error:null};
+ if(ids.length){
+  [likes,comments]=await Promise.all([
+   db().from('social_reel_likes').select('reel_id',{count:'exact',head:true}).in('reel_id',ids),
+   db().from('social_reel_comments').select('id',{count:'exact',head:true}).in('reel_id',ids)
+  ]);
+ }
+ if(!panel.isConnected)return;
+ const stats=[['Posts',posts.count,posts.error],['Reels',reels.count,reels.error],['Followers',followers.count,followers.error],['Likes',likes.count,likes.error],['Comments',comments.count,comments.error]];
+ panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="social-stat-grid">'+stats.map(x=>'<div class="social-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong>'+x[0]+'</div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
+ const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
+}
 function addStyles(){
  if(document.getElementById('uyCreatorSocialStyles'))return;
  const style=document.createElement('style');style.id='uyCreatorSocialStyles';style.textContent='.uy-reel-card video{display:block;width:100%;height:min(65vh,560px);aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:12px;margin:10px 0;flex:none}.uy-reel-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.uy-reel-author small{color:#778399;flex:1}.uy-reel-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}.uy-reel-actions span{font-size:12px;color:#6b778c}.uy-reel-comments{display:grid;gap:7px;margin-top:10px}.uy-reel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-reel-comment p{margin:5px 0;font-size:13px;white-space:pre-wrap}.uy-reel-comment small{color:#778399;font-size:10px}.uy-reel-comment-form{display:flex;gap:8px;margin-top:10px}.uy-reel-comment-form input{flex:1;min-width:0}.uy-creator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.uy-creator-card{background:#f7f9fd;border:1px solid #e5ebf4;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}.uy-creator-card>img,.uy-creator-card>span{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6edf8;display:grid;place-items:center;font-size:26px}.uy-creator-card>small{color:#68768b;font-size:11px}.uy-creator-card p{font-size:12px;line-height:1.5;margin:0}.uy-creator-card>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.uy-creator-card button{font-size:11px;padding:8px}.uy-reel-comment-form button{white-space:nowrap}';
@@ -96,6 +122,8 @@ function init(){
  if(typeof originalReels==='function'&&!originalReels.__uyEnhanced){const enhanced=async function(){await loadReels();};enhanced.__uyEnhanced=true;window.socialLoadReels=enhanced;}
  const originalCreator=window.socialLoadCreator;
  if(typeof originalCreator==='function'&&!originalCreator.__uyEnhanced){const enhanced=async function(){await originalCreator.apply(this,arguments);await loadCreatorDirectory();};enhanced.__uyEnhanced=true;window.socialLoadCreator=enhanced;}
+ const originalProfile=window.showMemberProfile;
+ if(typeof originalProfile==='function'&&!originalProfile.__uyCreatorEnhanced){const enhancedProfile=async function(id,options){await originalProfile.apply(this,arguments);await enhanceCreatorProfile(id);};enhancedProfile.__uyCreatorEnhanced=true;window.showMemberProfile=enhancedProfile;}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0));else init();
 window.uyLoadCreatorDirectory=loadCreatorDirectory;
