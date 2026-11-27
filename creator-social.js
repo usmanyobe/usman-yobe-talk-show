@@ -4,6 +4,7 @@
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const db=()=>window.db;
 const user=()=>window.communityUser;
+window.socialPublishCreatorPost=socialPublishCreatorPost;window.socialPreviewCreatorPost=socialPreviewCreatorPost;
 const note=(s,bad)=>{const e=document.getElementById('socialHubStatus');if(e){e.textContent=s;e.style.color=bad?'#b42318':'#087443';}};
 const validId=id=>/^[0-9a-f-]{30,40}$/i.test(String(id));
 async function loadReels(preservePosition=false){
@@ -110,6 +111,33 @@ async function enhanceCreatorProfile(id){
  panel.innerHTML='<h3 style="margin-top:0">🎬 '+esc(creator.display_name||'Creator')+' Channel</h3><p class="community-muted">'+esc(creator.bio||'Official Creator on USMAN YOBE TALK SHOW')+'</p><div class="social-stat-grid">'+stats.map(x=>'<div class="social-stat"><strong>'+(x[2]?'—':x[1]||0)+'</strong>'+x[0]+'</div>').join('')+'</div>'+(creator.social_link?'<p><a href="'+esc(creator.social_link)+'" target="_blank" rel="noopener">Visit creator link ↗</a></p>':'')+'<p class="community-muted" style="font-size:12px">Kididdigar jama’a ce ta abubuwan da aka wallafa a wannan channel.</p>';
  const follow=document.getElementById('memberFollowBtn');if(follow)follow.textContent='＋ Follow Creator';
 }
+async function socialPublishCreatorPost(){
+ if(!socialRequireUser())return;
+ const panel=document.getElementById('uyCreatorPublishPanel'),status=document.getElementById('uyCreatorPublishStatus'),button=document.getElementById('uyCreatorPublishButton');
+ const text=document.getElementById('uyCreatorPostText'),fileInput=document.getElementById('uyCreatorPostMedia'),content=text?.value.trim()||'',file=fileInput?.files?.[0];
+ if(!content&&!file){if(status)status.textContent='Rubuta bayani ko zaɓi hoto/bidiyo.';return;}
+ if(file){const image=file.type.startsWith('image/'),video=file.type.startsWith('video/');if(!image&&!video){if(status)status.textContent='Zaɓi hoto ko bidiyo mai inganci.';return;}if(file.size>(video?50:10)*1024*1024){if(status)status.textContent=video?'Bidiyo bai wuce 50 MB ba.':'Hoto bai wuce 10 MB ba.';return;}}
+ const {data:app,error:appError}=await db().from('creator_applications').select('status').eq('user_id',user().id).maybeSingle();
+ if(appError||app?.status!=='approved'){if(status)status.textContent='Wallafa ta Creator Studio na bukatar amincewar admin.';return;}
+ if(button){button.disabled=true;button.textContent='Ana wallafawa...';}
+ try{
+  let media_url=null,media_type=null;
+  if(file){const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';const path='community/'+user().id+'/creator-'+Date.now()+'.'+ext;const {error}=await db().storage.from('news-images').upload(path,file,{upsert:false,contentType:file.type});if(error)throw error;media_url=db().storage.from('news-images').getPublicUrl(path).data.publicUrl;media_type=file.type.startsWith('video/')?'video':'image';}
+  const author_name=user().user_metadata?.full_name||user().email||'Creator';
+  const {error}=await db().from('forum_posts').insert({user_id:user().id,author_name,content,media_url,media_type,audience:'public'});
+  if(error)throw error;
+  if(text)text.value='';if(fileInput)fileInput.value='';const preview=document.getElementById('uyCreatorPostPreview');if(preview)preview.innerHTML='';
+  if(status)status.textContent='An wallafa post ɗinka cikin nasara!';
+  if(typeof window.loadCommunityPosts==='function')await window.loadCommunityPosts();
+  if(typeof window.loadMyAccountPosts==='function')await window.loadMyAccountPosts();
+ }catch(e){if(status)status.textContent='Ba a wallafa ba: '+(e.message||String(e));}
+ finally{if(button){button.disabled=false;button.textContent='＋ Wallafa Post';}}
+}
+function socialPreviewCreatorPost(event){
+ const file=event.target.files?.[0],box=document.getElementById('uyCreatorPostPreview');if(!box)return;box.innerHTML='';if(!file)return;
+ if(!file.type.startsWith('image/')&&!file.type.startsWith('video/')){event.target.value='';return;}
+ const url=URL.createObjectURL(file);box.innerHTML=file.type.startsWith('video/')?'<video controls playsinline src="'+url+'" style="width:100%;max-height:240px"></video>':'<img alt="Preview" src="'+url+'" style="width:100%;max-height:240px;object-fit:contain">';
+}
 function addStyles(){
  if(document.getElementById('uyCreatorSocialStyles'))return;
  const style=document.createElement('style');style.id='uyCreatorSocialStyles';style.textContent='.uy-reel-card video{display:block;width:100%;height:min(65vh,560px);aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:12px;margin:10px 0;flex:none}.uy-reel-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.uy-reel-author small{color:#778399;flex:1}.uy-reel-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}.uy-reel-actions span{font-size:12px;color:#6b778c}.uy-reel-comments{display:grid;gap:7px;margin-top:10px}.uy-reel-comment{background:#f4f7fb;border-radius:9px;padding:9px}.uy-reel-comment p{margin:5px 0;font-size:13px;white-space:pre-wrap}.uy-reel-comment small{color:#778399;font-size:10px}.uy-reel-comment-form{display:flex;gap:8px;margin-top:10px}.uy-reel-comment-form input{flex:1;min-width:0}.uy-creator-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.uy-creator-card{background:#f7f9fd;border:1px solid #e5ebf4;border-radius:12px;padding:12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px}.uy-creator-card>img,.uy-creator-card>span{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#e6edf8;display:grid;place-items:center;font-size:26px}.uy-creator-card>small{color:#68768b;font-size:11px}.uy-creator-card p{font-size:12px;line-height:1.5;margin:0}.uy-creator-card>div{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}.uy-creator-card button{font-size:11px;padding:8px}.uy-reel-comment-form button{white-space:nowrap}';
@@ -121,7 +149,7 @@ function init(){
  const originalReels=window.socialLoadReels;
  if(typeof originalReels==='function'&&!originalReels.__uyEnhanced){const enhanced=async function(){await loadReels();};enhanced.__uyEnhanced=true;window.socialLoadReels=enhanced;}
  const originalCreator=window.socialLoadCreator;
- if(typeof originalCreator==='function'&&!originalCreator.__uyEnhanced){const enhanced=async function(){await originalCreator.apply(this,arguments);await loadCreatorDirectory();};enhanced.__uyEnhanced=true;window.socialLoadCreator=enhanced;}
+ if(typeof originalCreator==='function'&&!originalCreator.__uyEnhanced){const enhanced=async function(){await originalCreator.apply(this,arguments);const panel=document.getElementById('uyCreatorPublishPanel');if(panel){const {data:app}=await db().from('creator_applications').select('status').eq('user_id',user()?.id||'').maybeSingle();panel.style.display=app?.status==='approved'?'block':'none';}await loadCreatorDirectory();};enhanced.__uyEnhanced=true;window.socialLoadCreator=enhanced;}
  const originalProfile=window.showMemberProfile;
  if(typeof originalProfile==='function'&&!originalProfile.__uyCreatorEnhanced){const enhancedProfile=async function(id,options){await originalProfile.apply(this,arguments);await enhanceCreatorProfile(id);};enhancedProfile.__uyCreatorEnhanced=true;window.showMemberProfile=enhancedProfile;}
 }
