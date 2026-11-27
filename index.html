@@ -1101,6 +1101,16 @@ communitySection.insertAdjacentHTML('beforeend',`
 <h3>📊 USMAN YOBE Creator Studio</h3>
 <p class="community-muted">Rajista kyauta. Ka wallafa abubuwa na asali, gina masu kallo, sannan ka nemi shiga tsarin samun kuɗi idan ka cika sharudda.</p>
 <div id="socialCreatorStats" class="social-stat-grid">Loading creator statistics...</div>
+ <div id="uyCreatorPublishPanel" class="social-hub-card" style="display:none;margin-top:12px">
+ <h4 style="margin:0 0 8px">✍️ Creator Publishing Desk</h4>
+ <p class="community-muted">Wallafa rubutu, hoto ko bidiyo kai tsaye a Community. Za a nuna wallafarka a feed kamar sauran posts.</p>
+ <textarea id="uyCreatorPostText" class="community-input" rows="4" maxlength="3000" placeholder="Me kake son ka sanar da mabiyanka?"></textarea>
+ <label class="community-muted">📷 Hoto (har 10 MB) ko 🎥 bidiyo (har 50 MB)</label>
+ <input id="uyCreatorPostMedia" class="community-input" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" onchange="socialPreviewCreatorPost(event)">
+ <div id="uyCreatorPostPreview"></div>
+ <button class="community-btn" id="uyCreatorPublishButton" onclick="socialPublishCreatorPost()">＋ Wallafa Post</button>
+ <div id="uyCreatorPublishStatus" class="community-muted" role="status"></div>
+ </div>
 <div class="social-hub-card" style="margin-top:12px">
 <h4 style="margin:0 0 8px">📝 Neman zama Creator</h4>
 <p class="community-muted">Cika bayananka domin admin ya duba bukatarka.</p>
