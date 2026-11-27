@@ -1694,13 +1694,17 @@ try{await communityPostsLoadPromise;}finally{communityPostsLoadPromise=null;}
 }
 
 function setMemberAccess(allowed){
- // Public app pages remain available without signing in; authentication is only for member features.
+ // Keep the app visible for signed-in members; show the login gate when no session exists.
  document.body.classList.remove("uy-auth-checking");
  document.body.classList.add("uy-auth-ready");
  document.body.classList.toggle("uy-authenticated",!!allowed);
  const gate=document.getElementById("uyAuthGate");
- if(gate){gate.setAttribute("aria-hidden","true");gate.style.display="none";}
- const notice=document.getElementById("uyAuthNotice");if(notice)notice.textContent="";
+ if(gate){
+   gate.setAttribute("aria-hidden",allowed?"true":"false");
+   gate.style.display=allowed?"none":"flex";
+ }
+ const notice=document.getElementById("uyAuthNotice");
+ if(notice)notice.textContent="";
 }
 
 async function subscribeCommunityRealtimeNotifications(){if(!communityUser||!db.channel)return;if(communityRealtimeChannel){await db.removeChannel(communityRealtimeChannel);communityRealtimeChannel=null;}communityRealtimeChannel=db.channel('community-notifications-'+communityUser.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'forum_notifications',filter:'recipient_id=eq.'+communityUser.id},()=>{refreshCommunityNotifications();const badge=document.getElementById('communityNotificationBadge');if(badge){badge.style.transform='scale(1.18)';setTimeout(()=>badge.style.transform='',250);}}).subscribe();}
@@ -1882,6 +1886,7 @@ registerServiceWorker();setLanguage(currentLanguage);renderOpportunityCategories
 </script>
 <script src="./community-advanced.js?v=6"></script>
 <script src="./app-services.js?v=1"></script>
+<script src="./creator-social.js?v=1"></script>
 
 <script>
 /* Navigation repair: keep one copy of each tab and enforce the requested order. */
